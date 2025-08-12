@@ -1,0 +1,196 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000466506",
+      "dataCzasOdpisu": "12.08.2025 10:43:50",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "21.06.2013",
+      "numerOstatniegoWpisu": 6,
+      "dataOstatniegoWpisu": "09.05.2018",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/3950/18/752",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY  W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "18100675200000",
+            "nip": "7931625160"
+          },
+          "nazwa": "\"BIEGOMANIA LUBACZÓW\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "LUBACZOWSKI",
+            "gmina": "LUBACZÓW",
+            "miejscowosc": "LUBACZÓW"
+          },
+          "adres": {
+            "ulica": "RYNEK",
+            "nrDomu": "2",
+            "nrLokalu": "3",
+            "miejscowosc": "LUBACZÓW",
+            "kodPocztowy": "37-600",
+            "poczta": "LUBACZÓW",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "15.04.2013 R."
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "02.12.2016R. NOWY STATUT STOWARZYSZENIA W CAŁOŚCI"
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA LUBACZOWSKI"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "DO ZAWIERANIA UMÓW, POROZUMIEŃ, UDZIELANIA PEŁNOMOCNICTW I SKŁADANIA OŚWIADCZEŃ WOLI W SPRAWACH MAJĄTKOWYCH WYMAGANE JEST WSPÓŁDZIAŁANIE I PODPIS DWÓCH CZŁONKÓW ZARZĄDU STOWARZYSZENIA W TYM PREZESA (LUB POD JEGO NIEOBECNOŚĆ - WICEPREZESA) I JEDNEGO Z WICEPREZESÓW.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S********"
+              },
+              "imiona": {
+                "imie": "A***",
+                "imieDrugie": "I****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "R***"
+              },
+              "imiona": {
+                "imie": "A********",
+                "imieDrugie": "J******"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "SKARBNIK"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "B*****"
+              },
+              "imiona": {
+                "imie": "G*******",
+                "imieDrugie": "S********"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S********"
+              },
+              "imiona": {
+                "imie": "T*****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "P****"
+              },
+              "imiona": {
+                "imie": "M*****"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "SEKRETARZ"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S*******"
+              },
+              "imiona": {
+                "imie": "M****"
+              },
+              "identyfikator": {
+                "pesel": "6**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "K*****"
+                },
+                "imiona": {
+                  "imie": "G*******"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "M*****"
+                },
+                "imiona": {
+                  "imie": "J*****"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "P********"
+                },
+                "imiona": {
+                  "imie": "J****"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "CELAMI STOWARZYSZENIA SĄ:\n1. UPOWSZECHNIANIE KULTURY FIZYCZNEJ POPRZEZ DZIAŁALNOŚĆ W ZAKRESIE SPORTU, WYCHOWANIA FIZYCZNEGO, REKREACJI I REHABILITACJI RUCHOWEJ.\n2. PROPAGOWANIE ZDROWEGO TRYBU ŻYCIA, A W SZCZEGÓLNOŚCI BIEGANIA JAKO NAJPROSTSZEJ FORMY RUCHU. \n3. INICJOWANIE I ROZWIJANIE MASOWYCH IMPREZ BIEGOWYCH ORAZ INNYCH IMPREZ SPORTOWYCH.\n4. PRZYCZYNIANIE SIĘ DO PODNOSZENIA POZIOMU ORGANIZACYJNEGO IMPREZ SPORTOWYCH I ZAWODÓW BIEGOWYCH.\n5. ROZWIJANIE FORM RYWALIZACJI POPRZEZ MASOWE IMPREZY SPORTOWE ORAZ WYDARZENIA BIEGOWE. PONADTO TWORZENIE PRZYJAZNEGO KLIMATU DLA PODEJMOWANIA WSZELKICH INICJATYW PRZYCZYNIAJĄCYCH SIĘ DO ROZWOJU REGIONU.\n6. WSPIERANIE WSZELKICH INICJATYW SPOŁECZNYCH ZMIERZAJĄCYCH DO UPOWSZECHNIANIA BIEGANIA I INNYCH FORM AKTYWNOŚCI RUCHOWEJ.\n7. PROPAGOWANIE IMPREZ BIEGOWYCH W POLSCE I ZA GRANICĄ, A TAKŻE PODEJMOWANIE WSPÓLNYCH PRZEDSIĘWZIĘĆ Z PARTNERAMI POLSKIMI I ZAGRANICZNYMI.\n8. STWORZENIE WŚRÓD CZŁONKÓW STOWARZYSZENIA WIĘZI PRZYJAŹNI, KOLEŻEŃSTWA, WZAJEMNEGO ZROZUMIENIA ORAZ ODPOWIEDZIALNOŚCI SPOŁECZNEJ.\n9. PROMOWANIE POPRZEZ SPORT WALORÓW GOSPODARCZYCH I TURYSTYCZNYCH MIASTA.\n10. WSPÓŁPRACOWANIE Z ORGANIZACJAMI SPOŁECZNYMI I INSTYTUCJAMI.\n11. ZACHĘCANIE DO ODPOWIEDZIALNEGO DZIAŁANIA W SFERZE ŻYCIA PUBLICZNEGO I SPOŁECZNEGO. INICJOWANIE I WSPIERANIE INICJATYW ODDOLNYCH OPARTYCH NA ZAANGAŻOWANIU LOKALNEGO ŚRODOWISKA MIESZKAŃCÓW I SYMPATYKÓW LUBACZOWA.\n12. AKTYWIZACJA SPOŁECZEŃSTWA."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

@@ -1,0 +1,239 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000281817",
+      "dataCzasOdpisu": "12.08.2025 10:43:50",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "30.05.2007",
+      "numerOstatniegoWpisu": 10,
+      "dataOstatniegoWpisu": "13.11.2024",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/20925/24/584",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 4
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "18023700100000",
+            "nip": "7922178721"
+          },
+          "nazwa": "\"AEROKLUB ZIEMI JAROSŁAWSKIEJ\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "JAROSŁAWSKI",
+            "gmina": "LASZKI",
+            "miejscowosc": "LASZKI"
+          },
+          "adres": {
+            "ulica": "LĄDOWISKO LASZKI",
+            "miejscowosc": "LASZKI",
+            "kodPocztowy": "37-543",
+            "poczta": "LASZKI",
+            "kraj": "POLSKA"
+          },
+          "adresPocztyElektronicznej": "BIURO@AEROKLUBJAROSLAW.PL",
+          "adresStronyInternetowej": "HTTP://WWW.AEROKLUBJAROSLAW.PL"
+        },
+        "jednostkiTerenoweOddzialy": [
+          {
+            "nazwa": "STOWARZYSZENIE AEROKLUB ZIEMI JAROSŁAWSKIEJ ODDZIAŁ W JAROSŁAWIU",
+            "siedziba": {
+              "kraj": "POLSKA",
+              "wojewodztwo": "PODKARPACKIE",
+              "powiat": "JAROSŁAWSKI",
+              "gmina": "JAROSŁAW",
+              "miejscowosc": "JAROSŁAW"
+            },
+            "adres": {
+              "ulica": "UL. KSIĘDZA JAKUBA MAKARY",
+              "nrDomu": "1",
+              "nrLokalu": "20",
+              "miejscowosc": "JAROSŁAW",
+              "kodPocztowy": "37-500",
+              "poczta": "JAROSŁAW",
+              "kraj": "POLSKA"
+            }
+          },
+          {
+            "nazwa": "STOWARZYSZENIE AEROKLUB ZIEMI JAROSŁAWSKIEJ ODDZIAŁ W RZESZOWIE",
+            "siedziba": {
+              "kraj": "POLSKA",
+              "wojewodztwo": "PODKARPACKIE",
+              "powiat": "RZESZÓW",
+              "gmina": "RZESZÓW",
+              "miejscowosc": "RZESZÓW"
+            },
+            "adres": {
+              "ulica": "UL. KS. JÓZEFA JAŁOWEGO",
+              "nrDomu": "12",
+              "nrLokalu": "4",
+              "miejscowosc": "RZESZÓW",
+              "kodPocztowy": "35-010",
+              "poczta": "RZESZÓW",
+              "kraj": "POLSKA"
+            }
+          }
+        ],
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "15.04.2007 R."
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "13.07.2019R. - NOWA JEDNOLITA TREŚĆ STATUTU"
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA POWIATU JAROSŁAWSKIEGO"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "- DO WAŻNOŚCI UMÓW, ZOBOWIĄZAŃ, PEŁNOMOCNICTW I INNYCH OŚWIADCZEŃ WOLI BEZ OKREŚLENIA GÓRNEJ GRANICY ZOBOWIĄZAŃ WYMAGANY JEST WŁASNORĘCZNY LUB ELEKTRONICZNY PODPIS PREZESA ZARZĄDU AEROKLUBU ZIEMI JAROSŁAWSKIEJ (REPREZENTACJA JEDNOOSOBOWA),   \n- DO WAŻNOŚCI UMÓW, ZOBOWIĄZAŃ, PEŁNOMOCNICTW I INNYCH OŚWIADCZEŃ WOLI DO WYSOKOŚCI ZOBOWIĄZANIA W KWOCIE 10.000,00 ZŁ (DZIESIĘCIU TYSIĘCY ZŁOTYCH) WYMAGANY JEST WŁASNORĘCZNY LUB ELEKTRONICZNY PODPIS WICEPREZESA ZARZĄDU AEROKLUBU ZIEMI JAROSŁAWSKIEJ LUB DYREKTORA AEROKLUBU ZIEMI JAROSŁAWSKIEJ, JEŚLI ZOSTAŁ POWOŁANY (REPREZENTACJA JEDNOOSOBOWA), \n- DOKUMENTY I PISMA ZWIĄZANE Z BIEŻĄCĄ DZIAŁALNOŚCIĄ AEROKLUBU ZIEMI JAROSŁAWSKIEJ PODPISUJE PREZES, WICEPREZES LUB DYREKTOR AEROKLUBU ZIEMI JAROSŁAWSKIEJ, JEŚLI ZOSTAŁ POWOŁANY.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "Ć*******"
+              },
+              "imiona": {
+                "imie": "D*****"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "O*****"
+              },
+              "imiona": {
+                "imie": "S*****"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES ZARZĄDU"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "D****"
+                },
+                "imiona": {
+                  "imie": "P****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "H*****"
+                },
+                "imiona": {
+                  "imie": "D******"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "wzmiankiOZlozonychDokumentach": {
+          "wzmiankaOZlozeniuRocznegoSprawozdaniaFinansowego": [
+            {
+              "dataZlozenia": "12.02.2015",
+              "zaOkresOdDo": "OD 01.01.2007 DO 31.12.2007"
+            },
+            {
+              "dataZlozenia": "12.02.2015",
+              "zaOkresOdDo": "OD 01.01.2008 DO 31.12.2008"
+            },
+            {
+              "dataZlozenia": "12.02.2015",
+              "zaOkresOdDo": "OD 01.01.2009 DO 31.12.2009"
+            },
+            {
+              "dataZlozenia": "12.02.2015",
+              "zaOkresOdDo": "OD 01.01.2010 DO 31.12.2010"
+            },
+            {
+              "dataZlozenia": "12.02.2015",
+              "zaOkresOdDo": "OD 01.01.2011 DO 31.12.2011"
+            },
+            {
+              "dataZlozenia": "12.02.2015",
+              "zaOkresOdDo": "OD 01.01.2012 DO 31.12.2012"
+            },
+            {
+              "dataZlozenia": "12.02.2015",
+              "zaOkresOdDo": "OD 01.01.2013 DO 31.12.2013"
+            },
+            {
+              "dataZlozenia": "12.02.2015",
+              "zaOkresOdDo": "OD 01.01.2014 DO 31.12.2014"
+            }
+          ],
+          "wzmiankaOZlozeniuUchwalyPostanowieniaOZatwierdzeniuRocznegoSprawozdaniaFinansowego": [
+            {
+              "zaOkresOdDo": "OD 01.01.2007 DO 31.12.2007"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2008 DO 31.12.2008"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2009 DO 31.12.2009"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2010 DO 31.12.2010"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2011 DO 31.12.2011"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2012 DO 31.12.2012"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2013 DO 31.12.2013"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2014 DO 31.12.2014"
+            }
+          ]
+        },
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "AEROKLUB ZIEMI JAROSŁAWSKIEJ MA NASTĘPUJĄCE CELE:\n1) WSPIERANIE, PROMOCJA I UPOWSZECHNIANIE KULTURY FIZYCZNEJ I SPORTU, W SZCZEGÓLNOŚCI\nW ZAKRESIE SPORTÓW LOTNICZYCH,\n2) SZKOLENIE I UMOŻLIWIENIE TRENINGU W SPORTACH LOTNICZYCH CZŁONKOM AEROKLUBU ZIEMI\nJAROSŁAWSKIEJ,\n3) SZKOLENIE I DOSKONALENIE KADR LOTNICZYCH, W TYM TRENERSKICH I INSTRUKTORSKICH,\n4) STWARZANIE WARUNKÓW DO PROWADZENIA DZIAŁALNOŚCI LOTNICZEJ PRZEZ CZŁONKÓW AEROKLUBU\nZIEMI JAROSŁAWSKIEJ,\n5) REPREZENTOWANIE INTERESÓW ŚRODOWISKA LOTNICZEGO, A W SZCZEGÓLNOŚCI CZŁONKÓW\nAEROKLUBU ZIEMI JAROSŁAWSKIEJ WOBEC WŁADZ INSTYTUCJI KRAJOWYCH\nI MIĘDZYNARODOWYCH,\n6) INTEGRACJA ŚRODOWISKA LOTNICZEGO I SYMPATYKÓW LOTNICTWA,\n7) PROMOCJA LOTNICTWA,\n8) WSPIERANIE I ROZWÓJ INFRASTRUKTURY LOTNICZEJ,\n9) PODNOSZENIE KWALIFIKACJI ZAWODOWYCH ORAZ AKTYWIZACJA ZAWODOWA OSÓB POZOSTAJĄCYCH\nBEZ PRACY LUB ZAGROŻONYCH ZWOLNIENIEM Z PRACY, ZWŁASZCZA W BRANŻY LOTNICZEJ,\n10) DZIAŁANIE NA RZECZ UŁATWIEŃ W LOTNICTWIE CYWILNYM,\n11) UPOWSZECHNIANIE WIEDZY, UMIEJĘTNOŚCI I DOBRYCH PRAKTYK W LOTNICTWIE,\nW SZCZEGÓLNOŚCI DOTYCZĄCYCH BEZPIECZEŃSTWA LOTNICZEGO,\n12) POMOC SPOŁECZNA I DZIAŁALNOŚĆ CHARYTATYWNA NA RZECZ LUDZI LOTNICTWA, W TYM\nW SZCZEGÓLNOŚCI OSÓB POSZKODOWANYCH W WYPADKACH LOTNICZYCH I ICH RODZIN,\n13) PODTRZYMYWANIE I UPOWSZECHNIANIE TRADYCJI NARODOWEJ, PIELĘGNOWANIE POLSKOŚCI ORAZ\nROZWOJU ŚWIADOMOŚCI NARODOWEJ, OBYWATELSKIEJ I KULTUROWEJ,\n14) OCHRONA I PROMOCJA ZDROWIA,\n15) DZIAŁALNOŚĆ NA RZECZ OSÓB NIEPEŁNOSPRAWNYCH,\n16) DZIAŁALNOŚĆ NA RZECZ RÓWNYCH PRAW KOBIET I MĘŻCZYZN,\n17) DZIAŁALNOŚĆ WSPOMAGAJĄCĄ ROZWÓJ TECHNIKI, WYNALAZCZOŚCI I INNOWACYJNOŚCI ORAZ\nROZPOWSZECHNIANIE I WDRAŻANIE NOWYCH ROZWIĄZAŃ TECHNICZNYCH W SZCZEGÓLNOŚCI\nW LOTNICTWIE,\n18) DZIAŁALNOŚĆ W SFERZE NAUKI, SZKOLNICTWA WYŻSZEGO, EDUKACJI, OŚWIATY I WYCHOWANIA,\n19) WSPIERANIE I ORGANIZOWANIE WYPOCZYNKU DZIECI I MŁODZIEŻY,\n20) DZIAŁALNOŚĆ W ZAKRESIE KULTURY, SZTUKI, OCHRONY DÓBR KULTURY I DZIEDZICTWA NARODOWEGO,\nA ZWŁASZCZA DOROBKU I HISTORII POLSKIEGO LOTNICTWA,\n21) WSPIERANIE, ORGANIZACJA I UCZESTNICTWO W ZADANIACH ZWIĄZANYCH Z RATOWNICTWEM,\nOCHRONĄ LUDNOŚCI, PORZĄDKIEM I BEZPIECZEŃSTWEM PUBLICZNYM ORAZ OBRONNOŚCIĄ\nPAŃSTWA I DZIAŁALNOŚCIĄ SIŁ ZBROJNYCH RZECZYPOSPOLITEJ POLSKIEJ,\n22) SZKOLENIE I DOSKONALENIE UMIEJĘTNOŚCI CZŁONKÓW ORGANIZACJI DLA POTRZEB LOTNICTWA\nWOJSKOWEGO I PAŃSTWOWEGO, TRANSPORTU LOTNICZEGO, RATOWNICTWA I SŁUŻB PAŃSTWOWYCH,\n23) POMOC OFIAROM KATASTROF, KLĘSK ŻYWIOŁOWYCH, KONFLIKTÓW ZBROJNYCH I WOJEN W KRAJU\nI ZA GRANICĄ,\n24) DZIAŁALNOŚĆ W ZAKRESIE KRAJOZNAWSTWA I TURYSTYKI, ZWŁASZCZA LOTNICZEJ,\n25) PROMOCJA I ORGANIZACJA WOLONTARIATU,\n26) DZIAŁALNOŚĆ NA RZECZ KOMBATANTÓW I OSÓB REPRESJONOWANYCH,\n27) PRZECIWDZIAŁANIE UZALEŻNIENIOM I PATOLOGIOM SPOŁECZNYM,\n28) WSPIERANIE ORAZ REALIZOWANIE INICJATYW LOKALNYCH, DZIAŁALNOŚĆ WSPOMAGAJĄCA ROZWÓJ\nWSPÓLNOT I SPOŁECZNOŚCI LOKALNYCH,\n29) DZIAŁALNOŚĆ NA RZECZ INNYCH ORGANIZACJI POZARZĄDOWYCH I ORGANIZACJI POŻYTKU\nPUBLICZNEGO W ZAKRESIE DZIAŁALNOŚCI POŻYTKU PUBLICZNEGO."
+        },
+        "informacjaODniuKonczacymRokObrotowy": {
+          "dzienKonczacyPierwszyRokObrotowy": "31.12.2007"
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

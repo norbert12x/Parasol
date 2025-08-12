@@ -1,0 +1,212 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000175882",
+      "dataCzasOdpisu": "12.08.2025 10:43:50",
+      "stanZDnia": "28.01.2025",
+      "dataRejestracjiWKRS": "09.10.2003",
+      "numerOstatniegoWpisu": 7,
+      "dataOstatniegoWpisu": "30.06.2008",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/5806/08/593",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY  W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "37116210000000"
+          },
+          "nazwa": "\"AKTYWNA MŁODZIEŻ PODKARPACIA\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "JASIELSKI",
+            "gmina": "JASŁO",
+            "miejscowosc": "JASŁO"
+          },
+          "adres": {
+            "ulica": "SZKOLNA",
+            "nrDomu": "1",
+            "nrLokalu": "36",
+            "miejscowosc": "JASŁO",
+            "kodPocztowy": "38-200",
+            "poczta": "JASŁO 1",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "19.05.2003R."
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "01.03.2006 R.\nPAR.7 PKT 12,\nPAR.7 PKT 13,\nPAR.8 PKT 14,\nPAR.8 PKT 15,\nPAR.51 PKT 1."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA POWIATU JASIELSKIEGO"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "DLA WAŻNOŚCI OŚWIADCZENIA WOLI W ZAKRESIE PRAW I OBOWIĄZKÓW MAJĄTKOWYCH WYMAGANE JEST ZGODNE WSPÓŁDZIAŁANIE PREZESA ZARZĄDU ŁĄCZNIE Z JEDNYM CZŁONKIEM ZARZĄDU.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "C*****"
+              },
+              "imiona": {
+                "imie": "J****",
+                "imieDrugie": "R****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "B**********"
+              },
+              "imiona": {
+                "imie": "J*****"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "ZASTĘPCA PREZESA"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "P*******"
+              },
+              "imiona": {
+                "imie": "B****",
+                "imieDrugie": "J******"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "SEKRETARZ"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "K***"
+              },
+              "imiona": {
+                "imie": "J****",
+                "imieDrugie": "P****"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "SKARBNIK"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "K******"
+              },
+              "imiona": {
+                "imie": "U******"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "F****"
+              },
+              "imiona": {
+                "imie": "A********",
+                "imieDrugie": "B****"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "J*****"
+              },
+              "imiona": {
+                "imie": "W*****",
+                "imieDrugie": "P****"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "J****"
+                },
+                "imiona": {
+                  "imie": "M*****",
+                  "imieDrugie": "W*****"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "S*********"
+                },
+                "imiona": {
+                  "imie": "A***",
+                  "imieDrugie": "B******"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "M********"
+                },
+                "imiona": {
+                  "imie": "J******",
+                  "imieDrugie": "M********"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "1. PROMOCJA I ROZWÓJ REGIONU PODKARPACIE, \n2. ROZWÓJ TURYSTYKI I AGROTURYSTYKI, \n3. ORGANIZOWANIE IMPREZ KULTURALNO-OŚWIATOWYCH, \n4. INSPIROWANIE DZIAŁAŃ NA RZECZ OŚWIATY, KULTURY, SZTUKI I RZEMIOSŁA ARTYSTYCZNEGO, \n5. WSPIERANIE I PROMOWANIE ZDOLNEJ MŁODZIEŻY, \n6. POPULARYZOWANIE I DOKUMENTOWANIE WIEDZY O HISTORII REGIONU PODKARPACIE, \n7. WSPÓŁPRACA Z JEDNOSTKAMI SAMORZĄDU TERYTORIALNEGO, \n8. WSPIERANIE I PROWADZENIE DZIAŁALNOŚCI WYDAWNICZEJ, \n9. PROWADZENIE DZIAŁALNOŚCI CHARATATYWNEJ, \n10. POPIERANIE DZIAŁAŃ NA RZECZ OCHRONY ŚRODOWISKA NATURALNEGO, \n11. PROPAGOWANIE IDEI SAMORZĄDNOŚCI WŚRÓD MŁODYCH LUDZI, \n12. DZIAŁALNOŚĆ WYDAWNICZO-INFORMACYJNA.\n13. PROMOCJA KULTURY FIZYCZNEJ."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000588668",
+      "dataCzasOdpisu": "12.08.2025 08:47:22",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "27.11.2015",
+      "numerOstatniegoWpisu": 3,
+      "dataOstatniegoWpisu": "27.11.2015",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/20305/15/338/REGON",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "FUNDACJA",
+          "identyfikatory": {
+            "regon": "36308804800000",
+            "nip": "7922293505"
+          },
+          "nazwa": "\"CO DALEJ\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "JAROSŁAWSKI",
+            "gmina": "JAROSŁAW",
+            "miejscowosc": "JAROSŁAW"
+          },
+          "adres": {
+            "ulica": "UL. JANA DŁUGOSZA",
+            "nrDomu": "48",
+            "miejscowosc": "JAROSŁAW",
+            "kodPocztowy": "37-500",
+            "poczta": "JAROSŁAW",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "30.09.2015R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "MINISTER RODZINY PRACY I POLITYKI SPOŁECZNEJ"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "OŚWIADCZENIA WOLI W IMIENIU FUNDACJI SKŁADAJĄ: W PRZYPADKU ZARZĄDU JEDNOSODOWEGO - PREZES ZARZĄDU SAMODZIELNIE. \nW PRZYPADKU ZARZĄDU WIELOOSOBOWEGO - DZIAŁAJĄCY ŁĄCZNIE DWAJ CZŁONKOWIE ZARZĄDU Z TYM, ŻE JEDNYM Z TYM CZŁONKÓW ZARZĄDU MUSI BYĆ PREZES ZARZĄDU.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "T********"
+              },
+              "imiona": {
+                "imie": "M******",
+                "imieDrugie": "R*****"
+              },
+              "identyfikator": {
+                "pesel": "6**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            }
+          ]
+        }
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "1. UDZIELANIE POMOCY, WSPARCIA PSYCHOLOGICZNEGO, MATERIALNEGO OSOBOM ZAGROŻONYM WYKLUCZENIEM SPOŁECZNYM, OSOBOM ODBYWAJĄCYM KARY W WARUNKACH WOLNOŚCIOWYCH I IZOLACJI ORAZ ICH RODZINOM W PROCESIE PROFILAKTYKI RESOCJALIZACYJNEJ, READAPTACJI PRZY KSZTAŁTOWANIU POSTAWY ZGODNEJ Z ZASADAMI WSPÓŁŻYCIA SPOŁECZNEGO.\n2. POMOC OSOBOM DOTKNIĘTYM SZEROKO ROZUMIANEJ PRZEMOCY FIZYCZNEJ, PSYCHICZNEJ, SEKSUALNEJ, EKONOMICZNEJ I INNEJ.\n3. POPULARYZACJA IDEI MEDIACJI RODZINNEJ I SPOŁECZNEJ."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

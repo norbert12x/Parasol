@@ -1,0 +1,316 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000431452",
+      "dataCzasOdpisu": "12.08.2025 08:55:52",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "30.08.2012",
+      "numerOstatniegoWpisu": 10,
+      "dataOstatniegoWpisu": "31.05.2023",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/3964/23/663",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "18095209200000",
+            "nip": "8133677183"
+          },
+          "nazwa": "\"MEDIATORZY POLSCY\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": true
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "RZESZÓW",
+            "gmina": "RZESZÓW",
+            "miejscowosc": "RZESZÓW"
+          },
+          "adres": {
+            "ulica": "UL. LWOWSKA",
+            "nrDomu": "173",
+            "miejscowosc": "RZESZÓW",
+            "kodPocztowy": "35-301",
+            "poczta": "RZESZÓW",
+            "kraj": "POLSKA"
+          }
+        },
+        "jednostkiTerenoweOddzialy": [
+          {
+            "nazwa": "\"MEDIATORZY POLSCY\" ODDZIAŁ W KRAKOWIE",
+            "siedziba": {
+              "kraj": "POLSKA",
+              "wojewodztwo": "MAŁOPOLSKIE",
+              "powiat": "KRAKÓW",
+              "gmina": "KRAKÓW",
+              "miejscowosc": "KRAKÓW"
+            },
+            "adres": {
+              "ulica": "UL. BARTOSZA GŁOWACKIEGO",
+              "nrDomu": "2",
+              "nrLokalu": "1",
+              "miejscowosc": "KRAKÓW",
+              "kodPocztowy": "30-085",
+              "poczta": "KRAKÓW",
+              "kraj": "POLSKA"
+            }
+          },
+          {
+            "nazwa": "STOWARZYSZENIE \"MEDIATORZY POLSCY\" ODDZIAŁ W LUBLINIE",
+            "siedziba": {
+              "kraj": "POLSKA",
+              "wojewodztwo": "LUBELSKIE",
+              "powiat": "LUBLIN",
+              "gmina": "LUBLIN",
+              "miejscowosc": "LUBLIN"
+            },
+            "adres": {
+              "ulica": "UL. WŁADYSŁAWA ORKANA",
+              "nrDomu": "23",
+              "nrLokalu": "11",
+              "miejscowosc": "LUBLIN",
+              "kodPocztowy": "20-504",
+              "poczta": "LUBLIN",
+              "kraj": "POLSKA"
+            }
+          },
+          {
+            "nazwa": "STOWARZYSZENIE \"MEDIATORZY POLSCY\" ODDZIAŁ W WARSZAWIE",
+            "siedziba": {
+              "kraj": "POLSKA",
+              "wojewodztwo": "MAZOWIECKIE",
+              "powiat": "WARSZAWA",
+              "gmina": "WARSZAWA",
+              "miejscowosc": "WARSZAWA"
+            },
+            "adres": {
+              "ulica": "UL. ANTONIEGO CZECHOWA",
+              "nrDomu": "2",
+              "nrLokalu": "36",
+              "miejscowosc": "WARSZAWA",
+              "kodPocztowy": "01-912",
+              "poczta": "WARSZAWA",
+              "kraj": "POLSKA"
+            }
+          },
+          {
+            "nazwa": "STOWARZYSZENIE \"MEDIATORZY POLSCY\" ODDZIAŁ WE WROCŁAWIU",
+            "siedziba": {
+              "kraj": "POLSKA",
+              "wojewodztwo": "DOLNOŚLĄSKIE",
+              "powiat": "WROCŁAW",
+              "gmina": "WROCŁAW",
+              "miejscowosc": "WROCŁAW"
+            },
+            "adres": {
+              "ulica": "UL. ROMANA DMOWSKIEGO",
+              "nrDomu": "3",
+              "nrLokalu": "9",
+              "miejscowosc": "WROCŁAW",
+              "kodPocztowy": "50-203",
+              "poczta": "WROCŁAW",
+              "kraj": "POLSKA"
+            }
+          },
+          {
+            "nazwa": "\"MEDIATORZY POLSCY\" ODDZIAŁ W KRZESZOWICACH",
+            "siedziba": {
+              "kraj": "POLSKA",
+              "wojewodztwo": "MAŁOPOLSKIE",
+              "powiat": "KRAKOWSKI",
+              "gmina": "KRZESZOWICE",
+              "miejscowosc": "KRZESZOWICE"
+            },
+            "adres": {
+              "ulica": "UL. KRAKOWSKA",
+              "nrDomu": "31",
+              "nrLokalu": "221",
+              "miejscowosc": "KRZESZOWICE",
+              "kodPocztowy": "32-065",
+              "poczta": "KRZESZOWICE",
+              "kraj": "POLSKA"
+            }
+          },
+          {
+            "nazwa": "\"MEDIATORZY POLSCY\" ODDZIAŁ JAROSŁAW",
+            "siedziba": {
+              "kraj": "POLSKA",
+              "wojewodztwo": "PODKARPACKIE",
+              "powiat": "JAROSŁAWSKI",
+              "gmina": "JAROSŁAW",
+              "miejscowosc": "JAROSŁAW"
+            },
+            "adres": {
+              "ulica": "UL. GRODZKA",
+              "nrDomu": "7",
+              "miejscowosc": "JAROSŁAW",
+              "kodPocztowy": "37-500",
+              "poczta": "JAROSŁAW",
+              "kraj": "POLSKA"
+            }
+          }
+        ],
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "27.07.2012 R."
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "ZMIANA STATUTU Z DNIA 22.04.2015 R.\nZMIENIONE PAR: PAR.3 UST.1, PAR.4 UST.2, PAR.5 UST.2 PKT I ORAZ J, PAR.19 UST.5, \nUSUNIĘTE PKT: PAR.5 UST.2 PKT K, L, Ł"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "ZMIANA STATUTU: 30.07.2015 R.\nDODANE PUNKTY:\n- PAR.5 UST.1 PKT H, I, J\n- PAR.5 UST.2 PKT K, L"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "09.09.2016R. - STATUT W NOWYM BRZMIENIU"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "19.03.2018R., DODANY PUNKT PAR. 7 UST. 2 PKT 14"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "25.01.2019 R., ZMIANA: PAR. 28 UST. 2, PAR. 42"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "04.09.2021 R., ZMIANA PAR. 7 UST. 2 STATUTU"
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "PREZYDENT MIASTA RZESZOWA"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "SMP REPREZENTUJE PREZES ZARZĄDU SAMODZIELNIE LUB DWÓCH CZŁONKÓW ZARZĄDU ŁĄCZNIE, KTÓRZY SĄ UPOWAŻNIENI DO SKŁADANIA OŚWIADCZEŃ I PODPISYWANIA W IMIENIU SMP WSZELKICH PISM, JAK RÓWNIEŻ PISM W PRZEDMIOCIE PRAW I OBOWIĄZKÓW MAJĄTKOWYCH.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "D***"
+              },
+              "imiona": {
+                "imie": "E*******"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "PREZES"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "B********"
+              },
+              "imiona": {
+                "imie": "T*****",
+                "imieDrugie": "D******"
+              },
+              "identyfikator": {
+                "pesel": "6**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "D***",
+                "nazwiskoIICzlon": "M*******"
+              },
+              "imiona": {
+                "imie": "A***",
+                "imieDrugie": "K*******"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "SEKRETARZ ZARZĄDU"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "Z*******",
+                  "nazwiskoIICzlon": "P********"
+                },
+                "imiona": {
+                  "imie": "K********"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "S******"
+                },
+                "imiona": {
+                  "imie": "T*****",
+                  "imieDrugie": "J*****"
+                },
+                "identyfikator": {
+                  "pesel": "9**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "1.POWIĘKSZANIA DOROBKU SPRAWIEDLIWOŚCI NAPRAWCZEJ I MEDIACJI W POLSCE, \n2.INICJOWANIE, OPINIOWANIE I WYPOWIADANIE SIĘ W SPRAWACH DOTYCZĄCYCH MEDIACJI I JEJ UREGULOWAŃ PRAWNYCH, \n3. PROPAGOWANIE SZEROKO ROZUMIANEJ IDEI MEDIACJI W SPOŁECZEŃSTWIE POLSKIM I NA FORUM MIĘDZYNARODOWYM, \n4. EDUKACJA W ZAKRESIE SPRAWIEDLIWOŚCI NAPRAWCZEJ I MEDIACJI, PROFILAKTYKI KONFLIKTÓW I PRZECIWDZIAŁANIA PRZEMOCY I AGRESJI, \n5. ROZWIJANIE I PROPAGOWANIE INICJATYW, POSTAW I DZIAŁAŃ ZWIĄZANYCH Z PRZESTRZEGANIEM I RESPEKTOWANIEM PRAW CZŁOWIEKA, \n6. INICJOWANIE ORAZ ROZWIJANIE KONTAKTÓW SMP Z FIRMAMI, ORGANIZACJAMI I INSTYTUCJAMI W OBSZARZE MEDIACJI, \n7. OCHRONA PRAW MEDIATORÓW, A W SZCZEGÓLNOŚCI CZŁONKÓW SMP,\n8. DZIAŁANIE NA RZECZ OSÓB NIEPEŁNOSPRAWNYCH I STARSZYCH POWYŻEJ 60 R.Ż.,\n9. DZIAŁANIE NA RZECZ ŚRODOWISK ZAGROŻONYCH WYKLUCZENIEM SPOŁECZNYM,\n10. WSPÓŁPRACA Z ORGANIZACJAMI ZWIĄZANYMI Z PROFILAKTYKĄ UZALEŻNIEŃ."
+        },
+        "przedmiotDzialalnosciOPP": {
+          "odplatnyPkd": [
+            {
+              "opis": "PORADNICTWO PRAWNE W TYM W SZCZEGÓLNOŚCI DOTYCZĄCE MEDIACJI",
+              "kodDzial": "69",
+              "kodKlasa": "10",
+              "kodPodklasa": "Z"
+            },
+            {
+              "opis": "ORGANIZOWANIE SZKOLEŃ, KURSÓW I PRELEKCJI TEMATYCZNYCH, SEMINARIÓW I KONFERENCJI",
+              "kodDzial": "85",
+              "kodKlasa": "59",
+              "kodPodklasa": "B"
+            },
+            {
+              "opis": "DZIAŁALNOŚĆ EDUKACYJNA ZESPOŁÓW PRZEDSZKOLI I SZKÓŁ",
+              "kodDzial": "85",
+              "kodKlasa": "60",
+              "kodPodklasa": "Z"
+            }
+          ],
+          "nieodplatnyPkd": [
+            {
+              "opis": "ORGANIZOWANIE SZKOLEŃ, KURSÓW I PRELEKCJI TEMATYCZNYCH, SEMINARIÓW I KONFERENCJI",
+              "kodDzial": "85",
+              "kodKlasa": "59",
+              "kodPodklasa": "B"
+            },
+            {
+              "opis": "DZIAŁALNOŚĆ EDUKACYJNA ZESPOŁÓW PRZEDSZKOLI I SZKÓŁ, DORADZTWO EDUKACYJNO-ZAWODOWE",
+              "kodDzial": "85",
+              "kodKlasa": "60",
+              "kodPodklasa": "Z"
+            }
+          ]
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

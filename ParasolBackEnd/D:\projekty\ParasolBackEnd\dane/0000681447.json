@@ -1,0 +1,92 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000681447",
+      "dataCzasOdpisu": "12.08.2025 10:43:51",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "20.06.2017",
+      "numerOstatniegoWpisu": 4,
+      "dataOstatniegoWpisu": "04.04.2022",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "WA.XII NS-REJ.KRS/16287/22/18",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY DLA M.ST. WARSZAWY W WARSZAWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "FUNDACJA",
+          "identyfikatory": {
+            "regon": "36759153100000",
+            "nip": "7010700636"
+          },
+          "nazwa": "\"INSTYTUT OPTOMETRII I ZDROWIA OCZU\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "KROŚNIEŃSKI",
+            "gmina": "JEDLICZE",
+            "miejscowosc": "JEDLICZE"
+          },
+          "adres": {
+            "ulica": "UL. IGNACEGO ŁUKASIEWICZA",
+            "nrDomu": "66",
+            "miejscowosc": "JEDLICZE",
+            "kodPocztowy": "38-460",
+            "poczta": "JEDLICZE",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "06.04.2017R.\n22.05.2017R. - ZMIENIONO §7 UST. 1"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "17.10.2021R. - ZMIENIONO §2 UST. 1"
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "MINISTER ZDROWIA, STAROSTA KROŚNIEŃSKI"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "W PRZYPADKU ZARZĄDU JEDNOOSOBOWEGO ZARZĄDU OŚWIADCZENIA WOLI W IMIENIU FUNDACJI SKŁADA PREZES ZARZĄDU. W PRZYPADKU WIELOOSOBOWEGO ZARZĄDU OŚWIADCZENIA WOLI W IMIENIU FUNDACJI SKŁADA PREZES ZARZĄDU DZIAŁAJĄCY ŁĄCZNIE Z INNYM CZŁONKIEM ZARZĄDU.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "N****"
+              },
+              "imiona": {
+                "imie": "K*******"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            }
+          ]
+        }
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "1) ORGANIZOWANIE, WSPOMAGANIE I PROMOWANIE INICJATYW W ZAKRESIE ROZWOJU OPTOMETII,\n2) ORGANIZOWANIE, WSPOMAGANIE I PROMOWANIE INICJATYW PROZDROWOTNYCH W SPOŁECZEŃSTWIE,\n3) INICJOWANIE, ORGANIZOWANIE I WSPIERANIE BADAŃ NAUKOWYCH W ZAKRESIE OPTOMETRII I ZDROWIA OCZU,\n4) KRZEWIENIE MEDYCZNEJ INFORMACJI NAUKOWEJ W ŚRODOWISKU MEDYCZNYM,\n5) POPULARYZOWANIE WIEDZY Z DZIEDZINY OPTOMTERII W SPOŁECZEŃSTWIE,\n6) KRZEWIENIE SZEROKO ROZUMIANEJ TEMATYKI MEDYCZNEJ WŚRÓD SPOŁECZEŃSTWA, ZE SZCZEGÓLNYM UWZGLĘDNIENIEM PROBLEMATYKI ZDROWIA OCZU,\n7) TWORZENIE PŁASZCZYZNY WYMIANY INFORMACJI POMIĘDZY OSOBAMI I INSTYTUCJAMI ZAJMUJĄCYMI SIĘ DZIAŁALNOŚCIĄ W DZIEDZINIE OPTOMETRII I ZDROWIA OCZU."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

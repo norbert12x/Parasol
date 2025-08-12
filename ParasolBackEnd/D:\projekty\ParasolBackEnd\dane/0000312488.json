@@ -1,0 +1,354 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000312488",
+      "dataCzasOdpisu": "12.08.2025 10:43:52",
+      "stanZDnia": "29.07.2025",
+      "dataRejestracjiWKRS": "27.08.2008",
+      "numerOstatniegoWpisu": 20,
+      "dataOstatniegoWpisu": "29.07.2025",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/10943/25/420",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 4
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE KULTURY FIZYCZNEJ",
+          "identyfikatory": {
+            "regon": "18035846600000",
+            "nip": "8151756680"
+          },
+          "nazwa": "\"MIEJSKI KLUB SPORTOWY ŁAŃCUT\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "ŁAŃCUCKI",
+            "gmina": "ŁAŃCUT",
+            "miejscowosc": "ŁAŃCUT"
+          },
+          "adres": {
+            "ulica": "A. KRAJOWEJ",
+            "nrDomu": "57",
+            "miejscowosc": "ŁAŃCUT",
+            "kodPocztowy": "37-100",
+            "poczta": "ŁAŃCUT",
+            "kraj": "POLSKA"
+          },
+          "adresDoDoreczenElektronicznychWpisanyDoBAE": "AE:PL-10817-37396-DRBAB-31"
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "STATUT UCHWALONY PRZEZ ZEBRANIE ZAŁOŻYCIELI STOWARZYSZENIA W DNIU 21.07.2008 R."
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "15.09.2008 R. - SKREŚLONO PAR.20 UST.7, ZMIENIONO PAR.16 UST.5, PAR.22, PAR.29"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "15.06.2010 R. - W §9 DODANO PKT 11 I 12, ZMIENIONO §23 PKT 4 PPKT 4, ZMIENIONO §23 PKT 1, ZMIENIONO §34"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "27.06.2019R. - W PAR. 9 WYKREŚLONO PKT. 9 I 10, PAR. 11 WYKREŚLONO W CAŁOŚCI, DOKONANO ZMIAN REDAKCYJNYCH DOSTOSOWUJĄCYCH NUMERACJĘ PARAGRAFÓW"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "23.10.2024R. ZMIANA STATUTU STOWARZYSZENIA POPRZEZ PRZYJĘCIE NOWEGO STATUTU"
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "komitetZalozycielski": [
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "G********"
+            },
+            "imiona": {
+              "imie": "R*****"
+            },
+            "identyfikator": {
+              "pesel": "6**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "C*****"
+            },
+            "imiona": {
+              "imie": "B*****",
+              "imieDrugie": "M****"
+            },
+            "identyfikator": {
+              "pesel": "6**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "S****"
+            },
+            "imiona": {
+              "imie": "J****",
+              "imieDrugie": "G*******"
+            },
+            "identyfikator": {
+              "pesel": "6**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "A****"
+            },
+            "imiona": {
+              "imie": "K********"
+            },
+            "identyfikator": {
+              "pesel": "7**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "S*****"
+            },
+            "imiona": {
+              "imie": "J****"
+            },
+            "identyfikator": {
+              "pesel": "6**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "M*******"
+            },
+            "imiona": {
+              "imie": "H*****"
+            },
+            "identyfikator": {
+              "pesel": "5**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "B*******"
+            },
+            "imiona": {
+              "imie": "R*****"
+            },
+            "identyfikator": {
+              "pesel": "6**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "P***"
+            },
+            "imiona": {
+              "imie": "M*****"
+            },
+            "identyfikator": {
+              "pesel": "8**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "D****"
+            },
+            "imiona": {
+              "imie": "A******"
+            },
+            "identyfikator": {
+              "pesel": "8**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "D****"
+            },
+            "imiona": {
+              "imie": "T*****"
+            },
+            "identyfikator": {
+              "pesel": "7**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "P***"
+            },
+            "imiona": {
+              "imie": "P****"
+            },
+            "identyfikator": {
+              "pesel": "9**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "B********"
+            },
+            "imiona": {
+              "imie": "M*****"
+            },
+            "identyfikator": {
+              "pesel": "7**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "L******"
+            },
+            "imiona": {
+              "imie": "M*****"
+            },
+            "identyfikator": {
+              "pesel": "8**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "M*********"
+            },
+            "imiona": {
+              "imie": "P****"
+            },
+            "identyfikator": {
+              "pesel": "8**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "G********"
+            },
+            "imiona": {
+              "imie": "S********"
+            },
+            "identyfikator": {
+              "pesel": "4**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "D********"
+            },
+            "imiona": {
+              "imie": "K*****"
+            },
+            "identyfikator": {
+              "pesel": "8**********"
+            }
+          }
+        ],
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA ŁAŃCUCKI"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "DLA WAŻNOŚCI OŚWIADCZEŃ WOLI W ZAKRESIE PODEJMOWANIA PRAW I ZOBOWIĄZAŃ FINANSOWYCH ORAZ UDZIELANIA PEŁNOMOCNICTW WYMAGANE JEST WSPÓŁDZIAŁANIE PREZESA ZARZĄDU I CZŁONKA ZARZĄDU LUB WSPÓŁDZIAŁANIE DWÓCH CZŁONKÓW ZARZĄDU.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "D****"
+              },
+              "imiona": {
+                "imie": "B*****",
+                "imieDrugie": "J****"
+              },
+              "identyfikator": {
+                "pesel": "5**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "P***"
+              },
+              "imiona": {
+                "imie": "M*****",
+                "imieDrugie": "A***"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "P********"
+              },
+              "imiona": {
+                "imie": "D*****",
+                "imieDrugie": "K********"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "PREZES"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "R*****"
+                },
+                "imiona": {
+                  "imie": "A********",
+                  "imieDrugie": "P******"
+                },
+                "identyfikator": {
+                  "pesel": "9**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "D*****"
+                },
+                "imiona": {
+                  "imie": "Ł*****",
+                  "imieDrugie": "J****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "G********"
+                },
+                "imiona": {
+                  "imie": "R*****"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "1. PROPAGOWANIE CZYNNEGO UPRAWIANIA SPORTU JAKO SPOSOBU NA DOSKONALENIE WŁASNEJ OSOBOWOWOŚCI, PRZECIWDZIAŁANIA UZALEŻNIENIOM I PATOLOGIOM SPOŁECZNYM ORAZ KSZTAŁTOWANIE DUCHA RYWALIZACJI WEDŁUG ZASAD FAIR PLAY,\n2. PLANOWANIE I ORGANIZOWANIE ŻYCIA SPORTOWEGO WSZYSTKICH CZŁONKÓW, W OPRACIU O ICH WŁASNY UDZIAŁ ORAZ POMOC ORGANIZACYJNĄ I MATERIALNĄ MIEJSKIEGO OŚRODKA SPORTU I REKREACJI W ŁAŃCUCIE,\n3. ORGANIZOWANIE DZIAŁALNOŚCI SPORTOWEJ I WIELORAKICH FORM WSPÓŁZAWODNICTWA SPORTOWEGO, ZE SZCZEGÓLNYM UWZGLĘDNIENIEM PIŁKI SIATKOWEJ,\n4. NAWIĄZANIE WSPÓLPRACY Z INNYMI KLUBAMI SPORTOWYMI."
+        },
+        "informacjaODniuKonczacymRokObrotowy": {
+          "dzienKonczacyPierwszyRokObrotowy": "31.12.2025"
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

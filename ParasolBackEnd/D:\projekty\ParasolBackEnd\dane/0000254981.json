@@ -1,0 +1,151 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000254981",
+      "dataCzasOdpisu": "12.08.2025 10:43:51",
+      "stanZDnia": "28.01.2025",
+      "dataRejestracjiWKRS": "11.04.2006",
+      "numerOstatniegoWpisu": 2,
+      "dataOstatniegoWpisu": "14.12.2006",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/18194/06/187",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY  W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "18012619300000"
+          },
+          "nazwa": "\"LASOWIACY SZKOLE\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "TARNOBRZESKI",
+            "gmina": "NOWA DĘBA",
+            "miejscowosc": "ROZALIN"
+          },
+          "adres": {
+            "nrDomu": "36",
+            "miejscowosc": "ROZALIN",
+            "kodPocztowy": "39-460",
+            "poczta": "NOWA DĘBA",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "20.02.2006 R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA POWIATU TARNOBRZESKIEGO"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "DLA WAŻNOŚCI PISM DOTYCZĄCYCH SPRAW I OBOWIĄZKÓW MAJĄTKOWYCH STOWARZYSZENIA WYMAGANE SĄ PODPISY PREZESA LUB DWÓCH OSÓB ZARZĄDU.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "G**"
+              },
+              "imiona": {
+                "imie": "J****"
+              },
+              "identyfikator": {
+                "pesel": "5**********"
+              },
+              "funkcjaWOrganie": "PREZES"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "Z********"
+              },
+              "imiona": {
+                "imie": "T*****"
+              },
+              "identyfikator": {
+                "pesel": "6**********"
+              },
+              "funkcjaWOrganie": "SEKRETARZ"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "C**********"
+              },
+              "imiona": {
+                "imie": "M*********"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "SKARBNIK"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "J*********"
+                },
+                "imiona": {
+                  "imie": "J******"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "W***"
+                },
+                "imiona": {
+                  "imie": "W******"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "K*****"
+                },
+                "imiona": {
+                  "imie": "J*****"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "1. WSPIERANIE SZKOŁY PODSTAWOWEJ W ROZALINIE W JEJ PRACY DYDAKTYCZNEJ I WYCHOWAWCZEJ;\n2. DZIAŁANIE NA RZECZ SWOBODNEGO DOSTĘPU DO INFORMACJI, NIEZBĘDNEJ DLA ROZWOJU SPOŁECZEŃSTWA OBYWATELSKIEGO;\n3. PROPAGOWANIE WSPÓŁPRACY DOTYCZĄCEJ POMOCY SZKOLE WŚRÓD ORGANIZACJI POZARZĄDOWYCH W ŚRODOWISKU;\n4. POZYSKIWANIE ŚRODKÓW NA PRZEPROWADZANIE IMPREZ SPORTOWYCH I REKREACYJNYCH DLA DZIECI ZE SZKOŁY;\n5. POZYSKIWANIE ŚRODKÓW NA POZASZKOLNE ZAJĘCIA KULTURALNO-OŚWIATOWE DZIECI;\n6. POZYSKIWANIE ŚRODKÓW NA ZAGOSPODAROWANIE CZASU WOLNEGO OD ZAJĘĆ W OKRESIE WAKACJI I FERII;\n7. PROPAGOWANIE WŚRÓD DZIECI KULTURY LASOWIACKIEJ, SZERZENIE WIEDZY O ZASOBACH ŚRODOWISKOWYCH REGIONU."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

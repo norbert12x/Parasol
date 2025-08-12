@@ -1,0 +1,159 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000865131",
+      "dataCzasOdpisu": "12.08.2025 10:43:50",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "23.11.2020",
+      "numerOstatniegoWpisu": 4,
+      "dataOstatniegoWpisu": "30.07.2021",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/5547/21/956",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "FUNDACJA",
+          "identyfikatory": {
+            "regon": "38755747000000",
+            "nip": "7931633509"
+          },
+          "nazwa": "\"AZYL DLA FUTRZATYCH - WYSTARCZY CHCIEĆ - W LIKWIDACJI\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "LUBACZOWSKI",
+            "gmina": "LUBACZÓW",
+            "miejscowosc": "LUBACZÓW"
+          },
+          "adres": {
+            "ulica": "UL. REJTANA",
+            "nrDomu": "10",
+            "miejscowosc": "LUBACZÓW",
+            "kodPocztowy": "37-600",
+            "poczta": "LUBACZÓW",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "20.08.2020"
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "MINISTER WŁAŚCIWY DO SPRAW ŚRODOWISKA, STAROSTA POWIATU LUBACZOWSKIEGO"
+        }
+      },
+      "dzial2": {
+        "organNadzoru": [
+          {
+            "nazwa": "RADA FUNDACJI",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "D*******",
+                  "nazwiskoIICzlon": "H*****"
+                },
+                "imiona": {
+                  "imie": "B****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "J******"
+                },
+                "imiona": {
+                  "imie": "J******"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "S***********"
+                },
+                "imiona": {
+                  "imie": "M*****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "W*********"
+                },
+                "imiona": {
+                  "imie": "A********"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "1. DZIAŁANIE NA RZECZ ZWIERZĄT SKRZYWDZONYCH, CHORYCH I PORZUCONYCH ORAZ ZAGUBIONYCH.\n2. WSPIERANIE DZIAŁAŃ MAJĄCYCH NA CELU ZAPOBIEGANIE I ZWALCZANIE BEZDOMNOŚCI ZWIERZĄT.\n3. PROPAGOWANIE ADOPCJI ZWIERZĄT ZE SCHRONISK.\n4. PRZECIWDZIAŁANIE WSZELKIM FORMOM OKRUCIEŃSTWA WOBEC ZWIERZĄT.\n5. UŚWIADAMIANIE O KONIECZNOŚCI KASTRACJI PSÓW I KOTÓW W CELU ZMNIEJSZENIA POPULACJI ORAZ OZNACZANIA ZWIERZĄT POPRZEZ CZIPOWANIE.\n6. TWORZENIE INTERNETOWYCH STRON UŁATWIAJĄCYCH ZNAJDOWANIE DOMÓW DLA PORZUCONYCH PSÓW.\n7. PROPAGOWANIE IDEI OCHRONY ZWIERZĄT W SPOŁECZEŃSTWIE.\n8. WSPÓŁPRACA Z INSTYTUCJAMI PAŃSTWOWYMI, SAMORZĄDOWYMI, SEKTOREM GOSPODARCZYM, ŚRODKAMI MASOWEGO PRZEKAZU, OSOBAMI PUBLICZNYMI, ORGANIZACJAMI POZARZĄDOWYMI.\n9. PROPAGOWANIE I WSPIERANIE PRZYTULISK, HOTELI I DOMÓW TYMCZASOWYCH DLA ZWIERZĄT PORZUCONYCH.\n10. WSPOMAGANIE OSÓB UBOGICH W OPIECE NAD POSIADANYMI PRZEZ NIE ZWIERZĘTAMI.\n11. WSPÓŁDZIAŁANIE Z WŁAŚCIWYMI INSTYTUCJAMI TJ. POLICJĄ, STRAŻĄ MIEJSKĄ ORAZ ADMINISTRACJĄ PUBLICZNĄ W ZAKRESIE UJAWNIANIA I ŚCIGANIA PRZESTĘPSTW I WYKROCZEŃ WOBEC ZWIERZĄT."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {
+        "likwidacja": [
+          {
+            "otwarcieLikwidacji": "08.01.2021 R.\nUCHWAŁA NR 1/2021 ZARZĄDU I RADY FUNDACJI \"AZYL DLA FUTRZATYCH - WYSTARCZY CHCIEĆ\". ,",
+            "sposobReprezentacjiPodmiotuPrzezLikwidatorow": "DWÓCH CZŁONKÓW ZARZĄDU FUNDACJI DZIAŁAJĄCYCH ŁĄCZNIE",
+            "likwidatorzy": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "Z*******"
+                },
+                "imiona": {
+                  "imie": "M******",
+                  "imieDrugie": "J******"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "M******"
+                },
+                "imiona": {
+                  "imie": "J*****"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              }
+            ]
+          }
+        ],
+        "rozwiazanieUniewaznienie": {
+          "okreslenieOkolicznosci": "ROZWIĄZANIE",
+          "informacjaORozwiazaniuUniewaznieniu": "08.01.2021 R.\nUCHWAŁA NR 1/2021 ZARZĄDU I RADY FUNDACJI \"AZYL DLA FUTRZATYCH - WYSTARCZY CHCIEĆ\". ,"
+        }
+      }
+    }
+  }
+}

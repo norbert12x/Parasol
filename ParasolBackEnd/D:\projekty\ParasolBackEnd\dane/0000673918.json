@@ -1,0 +1,138 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000673918",
+      "dataCzasOdpisu": "12.08.2025 10:43:51",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "19.04.2017",
+      "numerOstatniegoWpisu": 5,
+      "dataOstatniegoWpisu": "17.05.2022",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/5615/22/295",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "36707820700000",
+            "nip": "6891234144"
+          },
+          "nazwa": "\"INKUBATOR ZAWODOWCÓW\" STOWARZYSZENIE PRZY BIESZCZADZKIM ZESPOLE SZKÓŁ ZAWODOWYCH W LIKWIDACJI",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "BIESZCZADZKI",
+            "gmina": "USTRZYKI DOLNE",
+            "miejscowosc": "USTRZYKI DOLNE"
+          },
+          "adres": {
+            "ulica": "UL. PRZEMYSŁOWA",
+            "nrDomu": "15",
+            "miejscowosc": "USTRZYKI DOLNE",
+            "kodPocztowy": "38-700",
+            "poczta": "USTRZYKI DOLNE",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "27.02.2017R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA POWIATU BIESZCZADZKIEGO"
+        }
+      },
+      "dzial2": {
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "M*****"
+                },
+                "imiona": {
+                  "imie": "A*******",
+                  "imieDrugie": "M****"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "K*******"
+                },
+                "imiona": {
+                  "imie": "J*****"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "R*****",
+                  "nazwiskoIICzlon": "D*******"
+                },
+                "imiona": {
+                  "imie": "M*****"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "CELEM DZIAŁANIA STOWARZYSZENIA JEST WSPÓŁDZIAŁANIE Z BIESZCZADZKIM ZESPOŁEM SZKÓŁ ZAWODOWYCH W ŚRODOWISKU LOKALNYM POPRZEZ PROWADZENIE DZIAŁALNOŚCI EDUKACYJNEJ I KULTURALNEJ ZWŁASZCZA W ZAKRESIE INICJOWANIA, WSPIERANIA I POMOCY W PRZEDSIĘWZIĘCIACH EDUKACYJNO-KULTURALNYCH, W SZCZEGÓLNOŚCI NA RZECZ DZIECI I MŁODZIEŻY, A TAKŻE WSPIERANIE DZIECI I MŁODZIEŻY ORAZ RODZIN W TRUDNEJ SYTUACJI ŻYCIOWEJ ORAZ PROMOCJA I DZIAŁALNOŚĆ NA RZECZ ROZWOJU SZKOŁY W ŚRODOWISKU LOKALNYM."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {
+        "likwidacja": [
+          {
+            "otwarcieLikwidacji": "31.12.2021 R., UCHWAŁA NR 3/2021 WALNEGO ZEBRANIA CZŁONKÓW O ROZWIĄZANIU STOWARZYSZENIA ,",
+            "sposobReprezentacjiPodmiotuPrzezLikwidatorow": "LIKWIDATOR JEDNOOSOBOWO",
+            "likwidatorzy": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "W*******"
+                },
+                "imiona": {
+                  "imie": "W*******",
+                  "imieDrugie": "E**"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              }
+            ]
+          }
+        ],
+        "rozwiazanieUniewaznienie": {
+          "okreslenieOkolicznosci": "ROZWIĄZANIE",
+          "informacjaORozwiazaniuUniewaznieniu": "31.12.2021 R., UCHWAŁA NR 3/2021 WALNEGO ZEBRANIA CZŁONKÓW O ROZWIĄZANIU STOWARZYSZENIA ,"
+        }
+      }
+    }
+  }
+}

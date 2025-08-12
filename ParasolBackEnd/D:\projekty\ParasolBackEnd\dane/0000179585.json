@@ -1,0 +1,195 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000179585",
+      "dataCzasOdpisu": "12.08.2025 10:43:51",
+      "stanZDnia": "28.01.2025",
+      "dataRejestracjiWKRS": "14.11.2003",
+      "numerOstatniegoWpisu": 3,
+      "dataOstatniegoWpisu": "09.03.2010",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/2397/10/142",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY  W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "37116719000000",
+            "nip": "6871791077"
+          },
+          "nazwa": "\"KARPACKIE CENTRUM WSPIERANIA INICJATYW I ROZWOJU\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "SANOCKI",
+            "gmina": "SANOK",
+            "miejscowosc": "SANOK"
+          },
+          "adres": {
+            "ulica": "KOCHANOWSKIEGO",
+            "nrDomu": "27",
+            "miejscowosc": "SANOK",
+            "kodPocztowy": "38-500",
+            "poczta": "SANOK",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "20.07.2003R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "komitetZalozycielski": [
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "W**********"
+            },
+            "imiona": {
+              "imie": "P****",
+              "imieDrugie": "M*****"
+            },
+            "identyfikator": {
+              "pesel": "7**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "K***********"
+            },
+            "imiona": {
+              "imie": "P****",
+              "imieDrugie": "I*******"
+            },
+            "identyfikator": {
+              "pesel": "7**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "S*******"
+            },
+            "imiona": {
+              "imie": "M****",
+              "imieDrugie": "K****"
+            },
+            "identyfikator": {
+              "pesel": "7**********"
+            }
+          }
+        ],
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA POWIATOWY W SANOKU"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD STOWARZYSZENIA",
+          "sposobReprezentacji": "DO ZAWIERANIA UMÓW, UDZIELANIA PEŁNOMOCNICTWA I SKŁADANIA INNYCH OŚWIDACZEŃ WOLI W SPRAWACH MAJĄTKOWYCH WYMAGANE SĄ PODPISY DWÓCH OSÓB PREZESA ZARZĄDU ORAZ JEDNEGO Z WICEPREZESÓW.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S*******"
+              },
+              "imiona": {
+                "imie": "M****",
+                "imieDrugie": "K****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "W**********"
+              },
+              "imiona": {
+                "imie": "P****",
+                "imieDrugie": "M*****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S****"
+              },
+              "imiona": {
+                "imie": "B*****",
+                "imieDrugie": "M****"
+              },
+              "identyfikator": {
+                "pesel": "5**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "S*******"
+                },
+                "imiona": {
+                  "imie": "G*******"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "B******"
+                },
+                "imiona": {
+                  "imie": "R*****",
+                  "imieDrugie": "J****"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "B****"
+                },
+                "imiona": {
+                  "imie": "R*****"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "- DZIAŁANIE NA RZECZ ROZWOJU GOSPODARCZEGO, KULTURALNEGO, NAUKOWEGO I SPORTOWEGO,\n- ZAPOBIEGANIE POWSTAWANIA RÓŻNIC KULTUROWYCH I PATOLOGII SPOŁECZNYCH,\n- WSZECHSTRONNE PROPAGOWANIE INFORMACJI, METOD I TECHNIK W ZAKRESIE DZIAŁALNOŚCI GOSPODARCZEJ, KULTURALNEJ, NAUKOWEJ I SPORTOWEJ,\n- PROMOCJA I POPIERANIE IDEI: UNII EUROPEJSKIEJ, SAMORZĄDNOŚCI I PRZEDSIĘBIORCZOŚCI,\n- POBUDZANIE ŚWIADOMOŚCI DEMOKRATYCZNYCH SPOŁECZEŃSTWA,\n- OCHRONA DÓBR KULTURY I ŚRODOWISKA NATURALNEGO,\n- PROMOWANIE I WSPIERANIE MŁODYCH TALENTÓW."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

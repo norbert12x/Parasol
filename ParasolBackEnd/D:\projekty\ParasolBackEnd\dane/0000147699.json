@@ -1,0 +1,182 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000147699",
+      "dataCzasOdpisu": "12.08.2025 10:43:51",
+      "stanZDnia": "28.01.2025",
+      "dataRejestracjiWKRS": "16.01.2003",
+      "numerOstatniegoWpisu": 3,
+      "dataOstatniegoWpisu": "14.12.2020",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/14458/20/510/NIP",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "FUNDACJA",
+          "identyfikatory": {
+            "regon": "37041485800000",
+            "nip": "6861429245"
+          },
+          "nazwa": "\"FUNDACJA - BUCZEK\"",
+          "daneOWczesniejszejRejestracji": {
+            "nazwaPoprzedniegoRejestru": "REJESTR FUNDACJI",
+            "numerWPoprzednimRejestrze": "5376",
+            "sadProwadzacyRejestr": "SĄD REJONOWY DLA MIASTA WARSZAWY WYDZIAŁ XVI GOSPODARCZY REJESTROWY"
+          },
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "BRZOZOWSKI",
+            "gmina": "JASIENICA ROSIELNA",
+            "miejscowosc": "ORZECHÓWKA"
+          },
+          "adres": {
+            "nrDomu": "5",
+            "miejscowosc": "ORZECHÓWKA",
+            "kodPocztowy": "36-220",
+            "poczta": "JASIENICA ROSIELNA",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "13.02.1998R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "MINISTER EDUKACJI NARODOWEJ I SPORTU"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "ZARZĄD KIERUJE DZIAŁALNOŚCIĄ FUNDACJI, REPREZENTUJE JĄ NA ZEWNĄTRZ I ODPOWIADA ZA REALIZACJĘ JEJ CELÓW STATUTOWYCH.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "M*****"
+              },
+              "imiona": {
+                "imie": "M*********"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "G*****"
+              },
+              "imiona": {
+                "imie": "M*********",
+                "imieDrugie": "M****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "P***"
+              },
+              "imiona": {
+                "imie": "B****",
+                "imieDrugie": "E**"
+              },
+              "identyfikator": {
+                "pesel": "6**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "N******"
+              },
+              "imiona": {
+                "imie": "E**",
+                "imieDrugie": "D*****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "M*****"
+              },
+              "imiona": {
+                "imie": "A***"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "SEKRETARZ, SKARBNIK"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "RADA NADZORCZA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "Ż**"
+                },
+                "imiona": {
+                  "imie": "B********"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "N*****"
+                },
+                "imiona": {
+                  "imie": "M*********"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "G******"
+                },
+                "imiona": {
+                  "imie": "E**"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "ROZWÓJ NAUKI, KULTURY, OŚWIATY I WYCHOWANIA POPRZEZ WZBUDZANIE I PODNOSZENIE ASPIRACJI ORAZ AMBICJI DO ZDOBYWANIA WIEDZY I PRACY NAD SOBĄ WŚRÓD UCZNIÓW I UCZENNIC SZKOŁY PODSTAWOWEJ IM. KRÓLA JAGIEŁŁY I KRÓLOWEJ JADWIGI W ORZECHÓWCE."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

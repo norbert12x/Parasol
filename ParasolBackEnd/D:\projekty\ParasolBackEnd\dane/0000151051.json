@@ -1,0 +1,298 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000151051",
+      "dataCzasOdpisu": "12.08.2025 10:43:51",
+      "stanZDnia": "27.03.2025",
+      "dataRejestracjiWKRS": "10.02.2003",
+      "numerOstatniegoWpisu": 39,
+      "dataOstatniegoWpisu": "27.03.2025",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/5206/25/980",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 4
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE KULTURY FIZYCZNEJ",
+          "identyfikatory": {
+            "regon": "69047814100000",
+            "nip": "8171609574"
+          },
+          "nazwa": "\"FKS STAL MIELEC\"",
+          "daneOWczesniejszejRejestracji": {
+            "nazwaPoprzedniegoRejestru": "REJESTR STOWARZYSZEŃ KULTURY FIZYCZNEJ I ZWIĄZKÓW SPORTOWYCH",
+            "numerWPoprzednimRejestrze": "176",
+            "sadProwadzacyRejestr": "SĄD REJONOWY W RZESZOWIE"
+          },
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "MIELECKI",
+            "gmina": "MIELEC",
+            "miejscowosc": "MIELEC"
+          },
+          "adres": {
+            "ulica": "SOLSKIEGO",
+            "nrDomu": "1",
+            "miejscowosc": "MIELEC",
+            "kodPocztowy": "39-300",
+            "poczta": "MIELEC",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "16.05.1997R.\n17.09.2002R. ZMIANA ARTYKUŁÓW STATUTU: PAR.1, PAR.3, PAR.5, PAR.6, PAR.8, PAR.9, PAR.10, PAR.11, PAR.12, PAR.14, PAR.15 PKT 5, PAR.19 PKT 3, PAR.21 PKT 11, PAR.22, PAR.23, PAR.24, PAR.25, PAR.27 PKT 1, PAR.28, PAR.29, PAR.30, PAR.31, PAR.32, PAR.34, PAR.39, PAR.37 \n31.01.2003R. ZMIANA ARTYKUŁÓW STATUTU: PAR.1, PAR.9 PKT 3"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "30.09.2004R. ZMIANA ARTYKUŁÓW STATUTU: PAR.1. PAR.3, PAR.13, PAR.15, PAR.20, PAR.21, PAR.23, PAR.24, PAR.25, PAR.26, PAR.27 PAR.28\nDODAJE SIĘ: PAR.41, PAR.42, PAR.43, PAR.44"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "ZMIANA NASTĄPIŁA 07.02.2012 R. W § 24."
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "07.02.2016R. - UCHYLENIE DOTYCHCZASOWEJ TREŚCI STATUTU I UCHWALENIE NOWEJ TREŚCI STATUTU;\n29.06.2016R. - ZMIANA: PAR.1 UST.1 I 2, PAR.17 UST. 4, PAR.29, PAR.32, PAR.43 UST.1 ORAZ UCHYLONO TREŚĆ STATUTU Z 07.02.2016R. I UCHWALONO NOWĄ TREŚĆ"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "18.04.2019R. - UCHYLENIE DOTYCHCZASOWEJ TREŚCI STATUTU I USTALENIE NOWEGO BRZMIENIA"
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA POWIATU MIELECKIEGO"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "DO REPREZENTOWANIA ZARZĄDU NA ZEWNĄTRZ UPRAWNIENI SĄ PREZES LUB DWAJ CZŁONKOWIE ZARZĄDU DZIAŁAJĄCY ŁĄCZNIE. W SPRAWACH MAJĄTKOWYCH UPRAWNIONYMI SĄ PREZES LUB SKARBNIK DZIAŁAJĄCY ŁĄCZNIE Z INNYM CZŁONKIEM ZARZĄDU.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "K******"
+              },
+              "imiona": {
+                "imie": "K********"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S*********"
+              },
+              "imiona": {
+                "imie": "W*****",
+                "imieDrugie": "R*****"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "P****"
+              },
+              "imiona": {
+                "imie": "D*****",
+                "imieDrugie": "P****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "K*****"
+                },
+                "imiona": {
+                  "imie": "M*****",
+                  "imieDrugie": "J****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "Z******"
+                },
+                "imiona": {
+                  "imie": "M******"
+                },
+                "identyfikator": {
+                  "pesel": "9**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "S*******"
+                },
+                "imiona": {
+                  "imie": "R*****",
+                  "imieDrugie": "A*****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "wzmiankiOZlozonychDokumentach": {
+          "wzmiankaOZlozeniuRocznegoSprawozdaniaFinansowego": [
+            {
+              "dataZlozenia": "27.07.2007",
+              "zaOkresOdDo": "01.01.2006 - 31.12.2006"
+            },
+            {
+              "dataZlozenia": "12.02.2009",
+              "zaOkresOdDo": "01.01.2007 - 31.12.2007"
+            },
+            {
+              "dataZlozenia": "13.07.2009",
+              "zaOkresOdDo": "01.01.2008 - 31.12.2008"
+            },
+            {
+              "dataZlozenia": "15.12.2011",
+              "zaOkresOdDo": "01.01.2010 R. - 31.12.2010 R."
+            },
+            {
+              "dataZlozenia": "04.07.2012",
+              "zaOkresOdDo": "OD 01.01.2011 DO 31.12.2011"
+            },
+            {
+              "dataZlozenia": "31.03.2014",
+              "zaOkresOdDo": "OD 01.01.2012 DO 31.12.2012"
+            },
+            {
+              "dataZlozenia": "15.07.2014",
+              "zaOkresOdDo": "OD 01.01.2013 DO 31.12.2013"
+            },
+            {
+              "dataZlozenia": "07.07.2015",
+              "zaOkresOdDo": "OD 01.01.2014 DO 31.12.2014"
+            },
+            {
+              "dataZlozenia": "24.08.2016",
+              "zaOkresOdDo": "OD 01.01.2015 DO 31.12.2015"
+            },
+            {
+              "dataZlozenia": "07.07.2017",
+              "zaOkresOdDo": "OD 01.01.2016 DO 31.12.2016"
+            },
+            {
+              "dataZlozenia": "16.07.2018",
+              "zaOkresOdDo": "OD 01.01.2017 DO 31.12.2017"
+            },
+            {
+              "dataZlozenia": "15.10.2020",
+              "zaOkresOdDo": "OD 01.01.2019 DO 31.12.2019"
+            },
+            {
+              "dataZlozenia": "07.03.2022",
+              "zaOkresOdDo": "OD 01.01.2020 DO 31.12.2020"
+            },
+            {
+              "dataZlozenia": "09.03.2022",
+              "zaOkresOdDo": "OD 01.01.2018 DO 31.12.2018"
+            },
+            {
+              "dataZlozenia": "28.10.2022",
+              "zaOkresOdDo": "OD 01.01.2021 DO 31.12.2021"
+            },
+            {
+              "dataZlozenia": "01.08.2023",
+              "zaOkresOdDo": "OD 01.01.2022 DO 31.12.2022"
+            },
+            {
+              "dataZlozenia": "17.07.2024",
+              "zaOkresOdDo": "OD 01.01.2023 DO 31.12.2023"
+            }
+          ],
+          "wzmiankaOZlozeniuUchwalyPostanowieniaOZatwierdzeniuRocznegoSprawozdaniaFinansowego": [
+            {
+              "zaOkresOdDo": "01.01.2006 - 31.12.2006"
+            },
+            {
+              "zaOkresOdDo": "01.01.2007 - 31.12.2007"
+            },
+            {
+              "zaOkresOdDo": "01.01.2008 - 31.12.2008"
+            },
+            {
+              "zaOkresOdDo": "01.01.2010 R. - 31.12.2010 R."
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2011 DO 31.12.2011"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2012 DO 31.12.2012"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2013 DO 31.12.2013"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2014 DO 31.12.2014"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2015 DO 31.12.2015"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2016 DO 31.12.2016"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2018 DO 31.12.2018"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2019 DO 31.12.2019"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2020 DO 31.12.2020"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2021 DO 31.12.2021"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2022 DO 31.12.2022"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2023 DO 31.12.2023"
+            }
+          ]
+        },
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "- ROZWÓJ KULTURY FIZYCZNEJ,\n- WYTWORZENIE ATMOSFERY ZAUFANIA I SZACUNKU DO KULTURY FIZYCZNEJ,\n- POPULARYZACJA I STAŁE PODNOSZENIE POZIOMU SPORTOWEGO GŁÓWNIE WŚRÓD DZIECI I MŁODZIEŻY."
+        },
+        "informacjaODniuKonczacymRokObrotowy": {
+          "dzienKonczacyPierwszyRokObrotowy": "31.12.2003"
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

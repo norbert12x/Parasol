@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ParasolBackEnd</name>
+    </assembly>
+    <members>
+        <member name="M:ParasolBackEnd.Controllers.KrsController.GetCategories">
+            <summary>
+            Returns the list of supported category phrases.
+            </summary>
+            <returns>Array of category phrases.</returns>
+        </member>
+        <member name="M:ParasolBackEnd.Controllers.KrsController.GetEntities(System.String[],System.String[])">
+            <summary>
+            Returns KRS entities optionally filtered by KRS numbers and/or categories.
+            </summary>
+            <param name="krsNumbers">Optional list of KRS numbers to include.</param>
+            <param name="categories">Optional list of categories to match against activity descriptions.</param>
+            <returns>Collection of KRS entities.</returns>
+        </member>
+        <member name="M:ParasolBackEnd.Controllers.KrsController.GetNames(System.String,System.String[])">
+            <summary>
+            Returns only organization names for a given category or set of categories.
+            </summary>
+            <param name="category">Single category to match.</param>
+            <param name="categories">Multiple categories to match. Use repeated query parameters.</param>
+            <returns>Distinct list of organization names.</returns>
+        </member>
+    </members>
+</doc>

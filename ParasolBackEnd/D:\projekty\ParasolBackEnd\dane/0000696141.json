@@ -1,0 +1,137 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000696141",
+      "dataCzasOdpisu": "12.08.2025 10:43:51",
+      "stanZDnia": "13.02.2025",
+      "dataRejestracjiWKRS": "26.09.2017",
+      "numerOstatniegoWpisu": 4,
+      "dataOstatniegoWpisu": "13.02.2025",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/25069/24/918",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "36835401700000",
+            "nip": "8181722007"
+          },
+          "nazwa": "\"COMBAT SHOOTING TEAM\" W LIKWIDACJI",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "ROPCZYCKO-SĘDZISZOWSKI",
+            "gmina": "ROPCZYCE",
+            "miejscowosc": "ROPCZYCE"
+          },
+          "adres": {
+            "ulica": "UL. ZIELONA",
+            "nrDomu": "4C",
+            "miejscowosc": "ROPCZYCE",
+            "kodPocztowy": "39-100",
+            "poczta": "ROPCZYCE",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "02.08.2017 R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA POWIATU ROPCZYCKO-SĘDZISZOWSKIEGO"
+        }
+      },
+      "dzial2": {
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "R**"
+                },
+                "imiona": {
+                  "imie": "D******",
+                  "imieDrugie": "J**"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "N*******"
+                },
+                "imiona": {
+                  "imie": "P****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "S******"
+                },
+                "imiona": {
+                  "imie": "R****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "CELEM STOWARZYSZENIA JEST DZIAŁALNOŚĆ W ZAKRESIE:\n1) DZIAŁANIA NA RZECZ STRZELECTWA, SPORTU STRZELECKIEGO I KOLEKCJONERSTWA BRONI PALNEJ,\n2) POPULARYZOWANIA WIEDZY Z DZIEDZINY STRZELECTWA, SPORTU STRZELECKIEGO, KOLEKCJONERSTWA BRONI, OBRONNOŚCI KRAJU,\n3) ROZPOWSZECHNIANIA KOLEKCJONERSTWA BRONI PALNEJ WŚRÓD OBYWATELI, W SZCZEGÓLNOŚCI PROPAGOWANIE WIEDZY I EDUKOWANIE W DZIEDZINIE KOLEKCJONERSTWA BRONI, STRZELECTWA REKREACYJNEGO I STRZELECTWA SPORTOWEGO,\n4) OPRACOWYWANIA I WYDAWANIA PUBLIKACJI ORAZ PROGRAMÓW EDUKACYJNYCH POPULARYZUJĄCYCH WIEDZĘ O KOLEKCJONERSTWIE BRONI, OBRONNOŚCI KRAJU ORAZ DOSTĘPIE DO BRONI;\n5) WSPÓŁPRACY Z ORGANAMI WŁADZY PUBLICZNEJ - USTAWODAWCZEJ, WYKONAWCZEJ I SAMORZĄDOWEJ, W CELU PROPAGOWANIA WIEDZY O MOŻLIWOŚCI UZYSKANIA POZWOLENIA NA BROŃ PALNĄ, PROPAGOWANIA IDEI POWSZECHNEGO OBOWIĄZKU OBRONY RZECZYPOSPOLITEJ POLSKIEJ,\n6) PRZEDSTAWIANIA WŁAŚCIWYM ORGANOM WŁADZY PUBLICZNEJ, ORGANIZACJOM I INSTYTUCJOM OCEN I WNIOSKÓW ZMIERZAJĄCYCH DO ZAPEWNIENIA SKUTECZNEJ OBRONY KRAJU\nI BEZPIECZEŃSTWA OBYWATELI;\n7) WSPÓŁPRACY Z INNYMI ORGANIZACJAMI POZARZĄDOWYMI, SPOŁECZNYMI I ZAWODOWYMI, DO KTÓRYCH CELÓW STATUTOWYCH NALEŻY PROPAGOWANIE IDEI PATRIOTYCZNYCH, ZWIĄZANYCH\nZ OBRONNOŚCIĄ KRAJU ORAZ BEZPIECZEŃSTWEM OBYWATELI;\n8) POMOCY PRAWNEJ OSOBOM PRAGNĄCYM UZYSKAĆ POZWOLENIE NA BROŃ PALNĄ\nW SZCZEGÓLNOŚCI W REDAGOWANIU STOSOWNYCH WNIOSKÓW CZY INNYCH PISM DO WŁAŚCIWYCH ORGANÓW, W ZAKRESIE UZYSKANIA BORNI PALNEJ DO CELÓW KOLEKCJONERSKICH,\n9) OCHRONY WOLNOŚCI I PRAW OBYWATELSKICH, PRAW CZŁOWIEKA I SWOBÓD OBYWATELSKICH,\n10) PROWADZENIA DZIAŁALNOŚCI KULTURALNO-EDUKACYJNEJ,\n11) PROPAGOWANIA WIEDZY O STOWARZYSZENIU I JEGO CELACH."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {
+        "likwidacja": [
+          {
+            "otwarcieLikwidacji": "POSTANOWIENIE SĄDU REJONOWEGO W RZESZOWIE XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO SYGN AKT RZ.XII NS REJ. KRS 20082/24/398  , 12.11.2024",
+            "sposobReprezentacjiPodmiotuPrzezLikwidatorow": "LIKWIDATOR JEDNOOSOBOWO",
+            "likwidatorzy": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "M*****"
+                },
+                "imiona": {
+                  "imie": "C*****",
+                  "imieDrugie": "W*******"
+                },
+                "identyfikator": {
+                  "pesel": "9**********"
+                }
+              }
+            ]
+          }
+        ],
+        "rozwiazanieUniewaznienie": {
+          "okreslenieOkolicznosci": "ROZWIĄZANIE",
+          "informacjaORozwiazaniuUniewaznieniu": "POSTANOWIENIE SĄDU REJONOWEGO W RZESZOWIE XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO SYGN AKT RZ.XII NS REJ. KRS 20082/24/398  , 12.11.2024"
+        }
+      }
+    }
+  }
+}

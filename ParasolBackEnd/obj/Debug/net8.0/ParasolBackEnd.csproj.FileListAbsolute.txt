@@ -1,0 +1,2 @@
+/Users/szymonboratyn/Downloads/Parasol-main/ParasolBackEnd/ParasolBackEnd/obj/Debug/net8.0/ParasolBackEnd.csproj.AssemblyReference.cache
+/Users/szymonboratyn/Downloads/Parasol-main/ParasolBackEnd/ParasolBackEnd/obj/Debug/net8.0/rpswa.dswa.cache.json

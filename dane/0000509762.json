@@ -1,0 +1,165 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000509762",
+      "dataCzasOdpisu": "12.08.2025 08:47:21",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "19.05.2014",
+      "numerOstatniegoWpisu": 4,
+      "dataOstatniegoWpisu": "06.07.2015",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/6206/15/50/NIP",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE KULTURY FIZYCZNEJ",
+          "identyfikatory": {
+            "regon": "18111407400000",
+            "nip": "7931625467"
+          },
+          "nazwa": "\"AKADEMIA SPORTU W LUBACZOWIE\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "LUBACZOWSKI",
+            "gmina": "LUBACZÓW",
+            "miejscowosc": "LUBACZÓW"
+          },
+          "adres": {
+            "ulica": "SPORTOWA",
+            "nrDomu": "1",
+            "miejscowosc": "LUBACZÓW",
+            "kodPocztowy": "37-600",
+            "poczta": "LUBACZÓW",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "04.10.2013 R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA LUBACZOWSKI"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "1. DO SKŁADANIA OŚWIADCZEŃ WOLI W IMIENIU STOWARZYSZENIA UPRAWNIONY JEST PREZES ZARZĄDU DZIAŁAJACY ŁĄCZNIE Z WICEPREZESEM.\n2. W SPRAWACH WYMAGAJĄCYCH ZŁOŻENIA OŚWIADCZENIA WOLI WOBEC CZŁONKA ZARZĄDU, STOWARZYSZENIE REPREZENTUJE KOMISJA REWIZYJNA.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S****"
+              },
+              "imiona": {
+                "imie": "P****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "N**********"
+              },
+              "imiona": {
+                "imie": "P****",
+                "imieDrugie": "W*******"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "Ł*****"
+              },
+              "imiona": {
+                "imie": "W*******"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "SKARBNIK"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "W******"
+              },
+              "imiona": {
+                "imie": "E****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "SEKRETARZ"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "S****"
+                },
+                "imiona": {
+                  "imie": "J****"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "M**********"
+                },
+                "imiona": {
+                  "imie": "R*****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "K***"
+                },
+                "imiona": {
+                  "imie": "T*****"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "CELEM STOWARZYSZENIA JEST ZAKŁADANIE I PROWADZENIE SEKCJI SPORTOWYCH, UCZESTNICTWO W WSPÓŁZAWODNICTWIE SPORTOWYM, ORGANIZACJA SZKOLEŃ SPORTOWYCH, ORGANIZACJA WYPOCZYNKU DLA DZIECI I MŁODZIEŻY, ORGANIZACJA IMPREZ SPORTOWO-REKREACYJNYCH PROMUJĄCYCH ZDROWY TRYB ŻYCIA, ORGANIZACJA OBOZÓW SPORTOWYCH"
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}
