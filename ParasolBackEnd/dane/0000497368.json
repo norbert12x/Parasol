@@ -1,0 +1,103 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000497368",
+      "dataCzasOdpisu": "12.08.2025 08:47:22",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "17.02.2014",
+      "numerOstatniegoWpisu": 2,
+      "dataOstatniegoWpisu": "11.04.2014",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/6168/14/674",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY  W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "FUNDACJA",
+          "identyfikatory": {
+            "regon": "18107488300000",
+            "nip": "8172175310"
+          },
+          "nazwa": "\"CENTRUM BADAWCZE ELEKTRONIKI POWERLABS\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "MIELECKI",
+            "gmina": "MIELEC",
+            "miejscowosc": "MIELEC"
+          },
+          "adres": {
+            "ulica": "KILIŃSKIEGO",
+            "nrDomu": "18",
+            "miejscowosc": "MIELEC",
+            "kodPocztowy": "39-300",
+            "poczta": "MIELEC",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "14.01.2014 R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "MINISTER NAUKI I SZKOLNICTWA WYŻSZEGO"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "1. DLA WAŻNOŚCI OŚWIADCZEŃ WOLI, PISM I DOKUMENTÓW WYMAGANY JEST PODPIS PREZESA ZARZĄDU LUB WICEPREZESA ZARZĄDU.\n2. W SPRAWACH MAJĄTKOWYCH WYMAGANY JEST PODPIS DWÓCH CZŁONKÓW ZARZĄDU DZIAŁAJĄCYCH ŁĄCZNIE, W TYM PREZESA ZARZĄDU.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "R******"
+              },
+              "imiona": {
+                "imie": "M****",
+                "imieDrugie": "S*******"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "R******"
+              },
+              "imiona": {
+                "imie": "A***",
+                "imieDrugie": "M****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES ZARZĄDU"
+            }
+          ]
+        }
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "PODSTAWOWYM CELEM FUNDACJI JEST PROWADZENIE PRAC BADAWCZYCH W DZIEDZINIE ELEKTRONIKI, ELEKTROTECHNIKI I PÓŁPRZEWODNIKÓW, REALIZACJA PRZEDSIĘWZIĘĆ NA RZECZ PRZEDSIĘBIORCÓW I WSPÓŁPRACY PRZEDSIĘBIORCÓW Z INSTYTUCJAMI OTOCZENIA BIZNESU ORAZ ORGANIZACJAMI BADAWCZYMI, PROPAGOWANIE PROFESJONALNEGO KSZTAŁCENIA MENEDŻERSKIEGO, PROMOCJA GOSPODARCZA W KRAJU I ZAGRANICĄ, AKTYWIZACJA ZAWODOWA I SPOŁECZNA MŁODZIEŻY I OSÓB DOROSŁYCH, UPOWSZECHNIANIE ZASAD ZRÓWNOWAŻONEGO ROZWOJU I SPOŁECZNEJ ODPOWIEDZIALNOŚCI BIZNESU ORAZ WSPIERANIE ROZWOJU SPOŁECZEŃSTWA OBYWATELSKIEGO."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

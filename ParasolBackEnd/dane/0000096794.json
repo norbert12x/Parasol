@@ -1,0 +1,246 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000096794",
+      "dataCzasOdpisu": "12.08.2025 08:47:22",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "04.03.2002",
+      "numerOstatniegoWpisu": 4,
+      "dataOstatniegoWpisu": "28.05.2015",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/5307/15/481",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY  W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "37109197200000",
+            "nip": "6891178090"
+          },
+          "nazwa": "\"BIESZCZADZKIE STOWARZYSZENIE NA RZECZ POPRAWY BEZPIECZEŃSTWA\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "BIESZCZADZKI",
+            "gmina": "USTRZYKI DOLNE",
+            "miejscowosc": "USTRZYKI DOLNE"
+          },
+          "adres": {
+            "ulica": "RYNEK",
+            "nrDomu": "6",
+            "miejscowosc": "USTRZYKI DOLNE",
+            "kodPocztowy": "38-700",
+            "poczta": "USTRZYKI DOLNE",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "21 LUTY 2002 ROKU"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "27.06.2006 R. PAR.5 UST.2 PKT 3, PAR.12A, PAR.15A, PAR.16 UST.5 PKT 12, PAR.18 UST.1"
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "komitetZalozycielski": [
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "S****"
+            },
+            "imiona": {
+              "imie": "E**",
+              "imieDrugie": "G******"
+            },
+            "identyfikator": {
+              "pesel": "6**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "H*****"
+            },
+            "imiona": {
+              "imie": "R*****",
+              "imieDrugie": "M****"
+            },
+            "identyfikator": {
+              "pesel": "6**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "P*****"
+            },
+            "imiona": {
+              "imie": "W**********",
+              "imieDrugie": "M*********"
+            },
+            "identyfikator": {
+              "pesel": "4**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "J*********"
+            },
+            "imiona": {
+              "imie": "B********",
+              "imieDrugie": "W********"
+            },
+            "identyfikator": {
+              "pesel": "4**********"
+            }
+          },
+          {
+            "nazwisko": {
+              "nazwiskoICzlon": "B*****"
+            },
+            "imiona": {
+              "imie": "J**"
+            },
+            "identyfikator": {
+              "pesel": "5**********"
+            }
+          }
+        ],
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA POWIATU BIESZCZADZKIEGO"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "DO REPREZENTOWANIA STOWARZYSZENIA ORAZ ZACIĄGANIA ZOBOWIĄZAŃ MAJĄTKOWYCH UPOWAŻNIONY JEST PREZES LUB WICEPREZES I CZŁONEK ZARZĄDU DZIAŁAJACY ŁĄCZNIE.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "K******"
+              },
+              "imiona": {
+                "imie": "P****"
+              },
+              "identyfikator": {
+                "pesel": "6**********"
+              },
+              "funkcjaWOrganie": "PREZES"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "B*****"
+              },
+              "imiona": {
+                "imie": "D*****",
+                "imieDrugie": "T*****"
+              },
+              "identyfikator": {
+                "pesel": "5**********"
+              },
+              "funkcjaWOrganie": "SKARBNIK"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "B*****"
+              },
+              "imiona": {
+                "imie": "J**"
+              },
+              "identyfikator": {
+                "pesel": "5**********"
+              },
+              "funkcjaWOrganie": "SEKRETARZ"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "J*********"
+              },
+              "imiona": {
+                "imie": "B********"
+              },
+              "identyfikator": {
+                "pesel": "4**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "O******"
+              },
+              "imiona": {
+                "imie": "J****",
+                "imieDrugie": "A******"
+              },
+              "identyfikator": {
+                "pesel": "6**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES ZARZĄDU"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "M******"
+                },
+                "imiona": {
+                  "imie": "B******",
+                  "imieDrugie": "L****"
+                },
+                "identyfikator": {
+                  "pesel": "4**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "P*****"
+                },
+                "imiona": {
+                  "imie": "W**********",
+                  "imieDrugie": "M*********"
+                },
+                "identyfikator": {
+                  "pesel": "4**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "D******"
+                },
+                "imiona": {
+                  "imie": "S********",
+                  "imieDrugie": "A*****"
+                },
+                "identyfikator": {
+                  "pesel": "5**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "POPRAWA BEZPIECZEŃSTWA W POWIECIE BIESZCZADZKIM, W SZCZEGÓLNOŚCI PRZEZ :\nWSPIERANIE POLICJI, WŁADZ SAMORZĄDOWYCH, STRAŻY POŻARNEJ I INNYCH INSTYTUCJI W ZAKRESIE POPRAWY BEZPIECZEŃSTWA,\nZORGANIZOWANIE I WPROWADZENIE MONITORINGU NA TERENIE MIASTA,\nPOMOC OFIAROM PRZEMOCY I WYPADKÓW,\nPROWADZENIE DZIAŁALNOŚCI WYCHOWAWCZEJ I POPULARYZATORSKIEJ W ZAKRESIE BEZPIECZEŃSTWA,\nORGANIZOWANIE SPOTKAŃ I SZKOLEŃ POŚWIĘCONYM SPRAWOM BEZPIECZEŃSTWA, JAK RÓWNIEŻ ZBIERANIE FUNDUSZY NA STOSOWNE DZIAŁANIA W TYM, ZAKRESIE."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

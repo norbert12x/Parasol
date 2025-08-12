@@ -1,0 +1,144 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000251833",
+      "dataCzasOdpisu": "12.08.2025 08:48:58",
+      "stanZDnia": "28.01.2025",
+      "dataRejestracjiWKRS": "24.02.2006",
+      "numerOstatniegoWpisu": 8,
+      "dataOstatniegoWpisu": "09.12.2013",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/20944/13/821",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY  W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 5
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "FUNDACJA",
+          "identyfikatory": {
+            "regon": "14068682000000",
+            "nip": "5252525199"
+          },
+          "nazwa": "\"EQUANTE-FUNDACJA NOWYCH MOŻLIWOŚCI\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "BRZOZOWSKI",
+            "gmina": "DYDNIA",
+            "miejscowosc": "JABŁONKA"
+          },
+          "adres": {
+            "ulica": "JABŁONKA",
+            "nrDomu": "18",
+            "miejscowosc": "JABŁONKA",
+            "kodPocztowy": "36-204",
+            "poczta": "DYDNIA",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "24 LUTEGO 2006 R."
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "20 LISTOPADA 2006R., ZMIENIONO PAR.2 UST.3 STATUTU, PRZYJĘTO TEKST JEDNOLITY."
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "16.03.2011 USUNIĘTO § 2 PKT 3 STATUTU\n20.06.2011 ZMIENIONO § 5 PKT 1 STATUTU"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "23.03.2013R. CAŁY STATUT"
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "MINISTER EDUKACJI I NAUKI"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "DO SKŁADANIA I PRZYJMOWANIA OŚWIADCZEŃ WOLI W IMIENIU FUNDACJI UPRAWNIENI SĄ PREZES LUB DWAJ CZŁONKOWIE ZARZĄDU ŁĄCZNIE",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "B******"
+              },
+              "imiona": {
+                "imie": "J*****",
+                "imieDrugie": "A********"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "B******"
+              },
+              "imiona": {
+                "imie": "K*******"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "B******"
+              },
+              "imiona": {
+                "imie": "B******",
+                "imieDrugie": "Ł*****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            }
+          ]
+        }
+      },
+      "dzial3": {
+        "wzmiankiOZlozonychDokumentach": {
+          "wzmiankaOZlozeniuRocznegoSprawozdaniaFinansowego": [
+            {
+              "dataZlozenia": "14.05.2012",
+              "zaOkresOdDo": "2011"
+            },
+            {
+              "dataZlozenia": "27.03.2013",
+              "zaOkresOdDo": "01.01.2012-31.12.2012"
+            }
+          ],
+          "wzmiankaOZlozeniuUchwalyPostanowieniaOZatwierdzeniuRocznegoSprawozdaniaFinansowego": [
+            {
+              "zaOkresOdDo": "2011"
+            },
+            {
+              "zaOkresOdDo": "01.01.2012-31.12.2012"
+            }
+          ]
+        },
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "CELEM FUNDACJI JEST WSZECHSTRONNA DZIAŁALNOŚĆ EDUKACYJNA, KULTURALNA I PROMOCYJNA SŁUŻĄCA WSPIERANIU SPOŁECZEŃSTWA OBYWATELSKIEGO I WYRÓWNYWANIU SZANS W ŻYCIU SPOŁECZNYM I ZAWODOWYM KOBIET I MĘŻCZYZN, INTEGRALNEGO ROZWOJU DZIECI, OSÓB NIEPEŁNOSPRAWNYCH, GRUP ZAGROŻONYCH WYKLUCZENIEM, DYSKRYMINOWANYCH, PROMOWANIU ZRÓWNOWAŻONEGO, PRZYJAZNEGO ŚRODOWISKU I ZDROWEGO STYLU ŻYCIA, ZINTEGROWANEGO ROZWOJU OSOBISTEGO ORAZ KOMUNIKACJI BEZ PRZEMOCY."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}
