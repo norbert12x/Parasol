@@ -11,8 +11,14 @@ namespace ParasolBackEnd.Services
 {
     public class OrganizacjaService
     {
-        private readonly string _dataFolder = @"D:\projekty\Parasol\ParasolBackEnd\dane";
-        private readonly string _apiKey = "pk.8db67e501d12eeee6462b7332848ecd4";
+        private readonly string _dataFolder;
+        private readonly string _apiKey;
+
+        public OrganizacjaService(string dataFolder, string apiKey)
+        {
+            _dataFolder = dataFolder;
+            _apiKey = apiKey;
+        }
 
         public async Task<Organizacja?> WczytajOrganizacjeAsync(string krs)
         {
