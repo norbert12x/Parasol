@@ -1,0 +1,8 @@
+/Users/szymonboratyn/Downloads/Parasol-main/ParasolBackEnd/obj/Debug/net8.0/ParasolBackEnd.csproj.AssemblyReference.cache
+/Users/szymonboratyn/Downloads/Parasol-main/ParasolBackEnd/obj/Debug/net8.0/rpswa.dswa.cache.json
+/Users/szymonboratyn/Downloads/Parasol-main/ParasolBackEnd/obj/Debug/net8.0/ParasolBackEnd.GeneratedMSBuildEditorConfig.editorconfig
+/Users/szymonboratyn/Downloads/Parasol-main/ParasolBackEnd/obj/Debug/net8.0/ParasolBackEnd.AssemblyInfoInputs.cache
+/Users/szymonboratyn/Downloads/Parasol-main/ParasolBackEnd/obj/Debug/net8.0/ParasolBackEnd.AssemblyInfo.cs
+/Users/szymonboratyn/Downloads/Parasol-main/ParasolBackEnd/obj/Debug/net8.0/ParasolBackEnd.csproj.CoreCompileInputs.cache
+/Users/szymonboratyn/Downloads/Parasol-main/ParasolBackEnd/obj/Debug/net8.0/ParasolBackEnd.MvcApplicationPartsAssemblyInfo.cs
+/Users/szymonboratyn/Downloads/Parasol-main/ParasolBackEnd/obj/Debug/net8.0/ParasolBackEnd.MvcApplicationPartsAssemblyInfo.cache

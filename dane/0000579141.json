@@ -1,0 +1,152 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000579141",
+      "dataCzasOdpisu": "12.08.2025 08:47:21",
+      "stanZDnia": "29.01.2025",
+      "dataRejestracjiWKRS": "23.10.2015",
+      "numerOstatniegoWpisu": 4,
+      "dataOstatniegoWpisu": "11.02.2016",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/22765/15/810",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY  W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "36280338800000",
+            "nip": "7952534422"
+          },
+          "nazwa": "\"AKTYWNI LOKALNIE\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "PRZEMYSKI",
+            "gmina": "BIRCZA",
+            "miejscowosc": "STARA BIRCZA"
+          },
+          "adres": {
+            "nrDomu": "110",
+            "miejscowosc": "STARA BIRCZA",
+            "kodPocztowy": "37-740",
+            "poczta": "BIRCZA",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "08.03.2015R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA POWIATU PRZEMYSKIEGO"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "DO ZAWIERANIA UMÓW, UDZIELANIA PEŁNOMOCNICTWA I SKŁADANIA INNYCH OŚWIADCZEŃ WOLI, W SZCZEGÓLNOŚCI W SPRAWACH MAJĄTKOWYCH WYMAGANY JEST PODPIS PREZESA LUB PODPISY DWÓCH CZŁONKÓW ZARZĄDU DZIAŁAJĄCYCH ŁĄCZNIE.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "W*********"
+              },
+              "imiona": {
+                "imie": "A****"
+              },
+              "identyfikator": {
+                "pesel": "6**********"
+              },
+              "funkcjaWOrganie": "PREZES"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "W*********"
+              },
+              "imiona": {
+                "imie": "W*******"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "W*********"
+              },
+              "imiona": {
+                "imie": "L******"
+              },
+              "identyfikator": {
+                "pesel": "4**********"
+              },
+              "funkcjaWOrganie": "SKARBNIK"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "P***"
+                },
+                "imiona": {
+                  "imie": "S********"
+                },
+                "identyfikator": {
+                  "pesel": "6**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "B****"
+                },
+                "imiona": {
+                  "imie": "J*****"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "L*********"
+                },
+                "imiona": {
+                  "imie": "Ł*****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "CELEM STOWARZYSZENIA JEST DZIAŁALNOŚĆ NA RZECZ:\n1) OCHRONY DZIEDZICTWA ORAZ ŚRODOWISKA PRZYRODNICZEGO I KULTUROWEGO, KSZTAŁTOWANIE ŚWIADOMOŚCI EKOLOGICZNEJ.\n2) OPIEKI NAD WSZELKIMI FORMAMI ZABYTKÓW HISTORII POLSKIEJ I WSZYSTKICH INNYCH NARODÓW, KTÓRYCH DOROBEK ZNAJDUJE SIĘ NA TERENIE EUROPY.\n3) DOKUMENTOWANIA I ZABEZPIECZANIA WSZELKICH FORM DZIEDZICTWA KULTUROWEGO: ARCHITEKTURY, SZTUKI, PARKÓW, OGRODÓW, KRAJOBRAZU WIEJSKIEGO I MIEJSKIEGO.\n4) KULTYWOWANIA TRADYCYJNYCH FORM ŻYCIA MIKROREGIONÓW, FOLKLORU MIEJSKIEGO, MAŁYCH MIAST I WSI, KULTURY GOSPODARCZEJ MIAST I WSI.\n5) DZIAŁALNOŚCI WSPOMAGAJĄCEJ ROZWÓJ WSPÓLNOT I SPOŁECZNOŚCI LOKALNYCH, WSPÓŁPRACY MIĘDZY SPOŁECZNOŚCIAMI.\n6) DZIAŁALNOŚCI WSPIERAJĄCEJ PODNOSZENIE POZIOMU WYKSZTAŁCENIA WŚRÓD RODZIN NARODOWOŚCI POLSKIEJ MIESZKAJĄCYCH (URODZONYCH) POZA GRANICAMI RP.\n7) DZIAŁALNOŚCI NA RZECZ PODNOSZENIA ŚWIADOMOŚCI EKOLOGICZNEJ ORAZ EDUKACJI FORMALNEJ I NIEFORMALNEJ, NA RZECZ ZRÓWNOWAŻONEGO ROZWOJU.\n8) ROZWOJU KULTURY W KRAJU I POZA JEGO GRANICAMI\n9) PROMOCJA I ROZWÓJ TURYSTYKI, SPORTU I REKREACJI, DZIAŁALNOŚĆ NA RZECZ OCHRONY I PROMOCJI ZDROWIA ORAZ ROZWOJU KULTURY FIZYCZNEJ I SPORTU,\n10) PROMOCJA I ROZWÓJ WSPIERAJĄCEJ PODNOSZENIE I ODTWARZANIE TRADYCJI HODOWLI I UPRAWY ZANIKAJĄCYCH LUB RZADKICH, ZAPOMNIANYCH GATUNKÓW ZWIERZĄT, PTAKÓW, RYB I ROŚLIN\n11) AKTYWIZACJA I WSZECHSTRONNE WSPIERANIE ROZWOJU DZIECI I MŁODZIEŻY,\n12) WSPÓŁPRACA MIĘDZYNARODOWA,\n13) WYRÓWNYWANIE SZANS EDUKACYJNYCH DZIECI I MŁODZIEŻY Z TERENÓW WIEJSKICH,\n14) PRZECIWDZIAŁANIE WYKLUCZENIU SPOŁECZNEMU, PATOLOGIOM SPOŁECZNYM I UZALEŻNIENIOM,\n15) POMOC W ROZWIĄZYWANIU PROBLEMÓW RYNKU PRACY, W TYM DZIAŁANIA NA RZECZ PROMOCJI ZATRUDNIENIA, PROMOCJA KSZTAŁCENIA USTAWICZNEGO,\n16) AKTYWIZACJA ZAWODOWA I TWORZENIE SYSTEMOWYCH ROZWIĄZAŃ UKIERUNKOWANYCH NA OSOBY BEZROBOTNE, POSZUKUJĄCE PRACY I ZAGROŻONE BEZROBOCIEM,\n17) ROZWÓJ OBSZARÓW WIEJSKICH,\nCD. CELÓW DZIAŁANIA W STATUCIE"
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

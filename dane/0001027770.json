@@ -1,0 +1,168 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0001027770",
+      "dataCzasOdpisu": "12.08.2025 08:47:21",
+      "stanZDnia": "30.01.2025",
+      "dataRejestracjiWKRS": "28.03.2023",
+      "numerOstatniegoWpisu": 4,
+      "dataOstatniegoWpisu": "07.09.2023",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/8630/23/148",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SĄD REJONOWY W RZESZOWIE, XII WYDZIAŁ GOSPODARCZY KRAJOWEGO REJESTRU SĄDOWEGO",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "52485559800000",
+            "nip": "8133895738"
+          },
+          "nazwa": "\"AKTYWNY SENIOR\" STOWARZYSZENIE NA RZECZ WSPIERANIA AKTYWNOŚCI SENIORÓW AS",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "RZESZÓW",
+            "gmina": "RZESZÓW",
+            "miejscowosc": "RZESZÓW"
+          },
+          "adres": {
+            "ulica": "UL. POWSTAŃCÓW ŚLĄSKICH",
+            "nrDomu": "4",
+            "miejscowosc": "RZESZÓW",
+            "kodPocztowy": "35-610",
+            "poczta": "RZESZÓW",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "06.03.2023 R.\n16.03.2023 R. ZM. PAR. 1 UST. 1, PAR. 2"
+            },
+            {
+              "zawarcieZmianaUmowyStatutu": "06 KWIETNIA 2023 R. - ZMIANY W PAR. 9 STSTUTU STOWARZYSZENIA"
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "PREZYDENT MIASTA RZESZOWA"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "REPREZENTACJA ŁĄCZNA - DWÓCH CZŁONKÓW ZARZĄDU.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "C*************"
+              },
+              "imiona": {
+                "imie": "M********"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "F****"
+              },
+              "imiona": {
+                "imie": "M*****"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "P********"
+              },
+              "imiona": {
+                "imie": "I******"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "SEKRETARZ"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "M****"
+              },
+              "imiona": {
+                "imie": "D*****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "SKARBNIK"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "W****"
+                },
+                "imiona": {
+                  "imie": "H*****"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "L****"
+                },
+                "imiona": {
+                  "imie": "M******"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "L****"
+                },
+                "imiona": {
+                  "imie": "A********"
+                },
+                "identyfikator": {
+                  "pesel": "7**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "WSPIERANIE DZIAŁAŃ STATUTOWYCH DOMU POMOCY SPOŁECZNEJ DLA KOMBATANTÓW W RZESZOWIE, A W SZCZEGÓLNOŚCI TERAPII ZAJĘCIOWEJ, REHABILITACJI LECZNICZEJ I SPOŁECZNEJ, UŁATWIENIA DOSTĘPU DO KULTURY I REKREACJI, ROZBUDOWY, MODERNIZACJI ORAZ REMONTU DPS DLA KOMBATANTÓW W RZESZOWIE."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

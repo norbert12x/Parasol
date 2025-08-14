@@ -1,0 +1,167 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0001172496",
+      "dataCzasOdpisu": "12.08.2025 08:55:52",
+      "stanZDnia": "14.05.2025",
+      "dataRejestracjiWKRS": "14.05.2025",
+      "numerOstatniegoWpisu": 3,
+      "dataOstatniegoWpisu": "14.05.2025",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/9180/25/325/REGON",
+      "stanPozycji": 3
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "STOWARZYSZENIE",
+          "identyfikatory": {
+            "regon": "54171755500000",
+            "nip": "8722454401"
+          },
+          "nazwa": "\"JODŁOWIANKI W AKCJI\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "DĘBICKI",
+            "gmina": "JODŁOWA",
+            "miejscowosc": "JODŁOWA"
+          },
+          "adres": {
+            "nrDomu": "56",
+            "miejscowosc": "JODŁOWA",
+            "kodPocztowy": "39-225",
+            "poczta": "JODŁOWA",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "13.03.2025 R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "STAROSTA POWIATU DĘBICKIEGO"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "DO ZAWIERANIA UMÓW, UDZIELANIA PEŁNOMOCNICTWA I SKŁADANIA INNYCH OŚWIADCZEŃ WOLI W SZCZEGÓLNOŚCI W SPRAWACH MAJĄTKOWYCH STOWARZYSZENIE REPREZENTUJE PREZES ZARZĄDU, A W PRZYPADKU JEGO NIEOBECNOŚCI LUB INNEJ WAŻNEJ PRZYCZYNY - DWÓCH CZŁONKÓW ZARZĄDU DZIAŁAJĄCYCH ŁĄCZNIE.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "W*******"
+              },
+              "imiona": {
+                "imie": "A********",
+                "imieDrugie": "A***"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "SEKRETARZ"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "K******"
+              },
+              "imiona": {
+                "imie": "B******"
+              },
+              "identyfikator": {
+                "pesel": "9**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "M*********"
+              },
+              "imiona": {
+                "imie": "B******"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S****"
+              },
+              "imiona": {
+                "imie": "E*******",
+                "imieDrugie": "J******"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES"
+            }
+          ]
+        },
+        "organNadzoru": [
+          {
+            "nazwa": "KOMISJA REWIZYJNA",
+            "sklad": [
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "B***"
+                },
+                "imiona": {
+                  "imie": "A****",
+                  "imieDrugie": "H*******"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "B****"
+                },
+                "imiona": {
+                  "imie": "K********",
+                  "imieDrugie": "E*******"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              },
+              {
+                "nazwisko": {
+                  "nazwiskoICzlon": "B****"
+                },
+                "imiona": {
+                  "imie": "M****"
+                },
+                "identyfikator": {
+                  "pesel": "8**********"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "CELEM STOWARZYSZENIA JEST:\n- DZIAŁALNOŚĆ WSPOMAGAJĄCA ROZWÓJ WSPÓLNOT I SPOŁECZNOŚCI NA TERENIE LOKALNYM, REGIONALNYM, OGÓLNOPOLSKIM I MIĘDZYNARODOWYM,   \n- WSPIERANIE SPOŁECZNEJ AKTYWNOŚCI OBYWATELI,   \n- PROMOCJA I ORGANIZACJA WOLONTARIATU,   \n- INTEGROWANIE ORGANIZACJI POZARZĄDOWYCH,   \n- PROMOWANIE WSPÓŁDZIAŁANIA Z SAMORZĄDEM TERYTORIALNYM, SEKTOREM PAŃSTWOWYM I GOSPODARCZYM, ZAINTERESOWANYMI ROZWOJEM SPOŁECZEŃSTWA OBYWATELSKIEGO,   \n- DZIAŁALNOŚĆ EDUKACYJNA, KULTURALNA I WYCHOWAWCZA,   \n- PROWADZENIE DZIAŁALNOŚCI OŚWIATOWO-WYCHOWAWCZEJ, W TYM W SZCZEGÓLNOŚCI: PRZEDSZKOLI, SZKÓŁ PODSTAWOWYCH, GIMNAZJÓW,   \n- ORGANIZOWANIE WYPOCZYNKU DZIECI I MŁODZIEŻY, W TYM TAKŻE KRAJOZNAWSTWO ZE SZCZEGÓLNYM UWZGLĘDNIENIEM OBSZARU WOJEWÓDZTWA PODKARPACKIEGO I MAŁOPOLSKIEGO   \n- PROMOCJA ZDROWIA W TYM PROPAGOWANIE ZDROWEGO TRYBU ŻYCIA,   \n- PROMOCJA RÓŻNYCH FORM AMATORSKIEJ AKTYWNOŚCI SPORTOWEJ,   \n- DZIAŁANIA MAJĄCE NA CELU OCHRONĘ ŚRODOWISKA NATURALNEGO, W TYM EDUKACJA EKOLOGICZNA,   \n- PROPAGOWANIE WIEDZY HISTORYCZNEJ, W TYM OCHRONA MIEJSC PAMIĘCI I KULTURY,   \n- OBRONA PRAW, REPREZENTOWANIE INTERESÓW I DZIAŁANIE NA RZECZ POPRAWY SYTUACJI SPOŁECZNO-ZAWODOWEJ LOKALNYCH MIESZKAŃCÓW ORAZ WYRÓWNYWANIE SZANS,   \n- INICJOWANIE I PODEJMOWANIE DZIAŁAŃ NA RZECZ POPRAWY WARUNKÓW ŻYCIA I PRACY LOKALNYCH SPOŁECZNOŚCI I ICH RODZIN,  \n- ZWIĘKSZANIE SZANS EDUKACYJNYCH DZIECI I MŁODZIEŻY.   \n- INTEGRACJA POKOLEŃ,   \n- PODNOSZENIE STATUSU SPOŁECZNEGO MIESZKAŃCÓW SPOŁECZNOŚCI LOKALNYCH I REGIONALNYCH - ICH WIEDZY PRAWNEJ, EKONOMICZNEJ, ZAWODOWEJ, PROZDROWOTNEJ ORAZ UDZIELANIA POMOCY W WYKONYWANIU PRZEZ NICH FUNKCJI, - KULTYWOWANIE TRADYCYJNYCH OBRZĘDÓW, INICJOWANIE I PODEJMOWANIE DZIAŁAŃ NA RZECZ UPIĘKSZANIA MIEJSCOWOŚCI, \n- ORGANIZOWANIE MIESZKAŃCÓW DO DZIAŁALNOŚCI NA RZECZ POPRAWY WARUNKÓW SPOŁECZNO-BYTOWYCH, ROZWOJU RÓŻNYCH FORM POMOCY SPOŁECZNEJ, - ROZWÓJ PRZEDSIĘBIORCZOŚCI WŚRÓD MIESZKAŃCÓW, ZWIĘKSZANIE UDZIAŁU KOBIET I MIESZKAŃCÓW WSI W DZIAŁANIACH MAJĄCYCH NA CELU ODNOWĘ WSI - M .IN. OBSZAR EKOLOGII, OCHRONY ŚRODOWISKA, TURYSTYKI, AGROTURYSTYKI I SPORTU, \n- ROZBUDZANIE PATRIOTYZMU POPRZEZ PROMOCJĘ DZIEDZICTWA REGIONU,\n- PROMOCJA I ORGANIZACJA WOLONTARIATU."
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

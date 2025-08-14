@@ -1,0 +1,148 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0000981190",
+      "dataCzasOdpisu": "12.08.2025 08:48:58",
+      "stanZDnia": "10.04.2025",
+      "dataRejestracjiWKRS": "20.07.2022",
+      "numerOstatniegoWpisu": 9,
+      "dataOstatniegoWpisu": "10.04.2025",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RDF/710708/25/255",
+      "oznaczenieSaduDokonujacegoOstatniegoWpisu": "SYSTEM",
+      "stanPozycji": 4
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "FUNDACJA",
+          "identyfikatory": {
+            "regon": "52261974100000",
+            "nip": "7952570487"
+          },
+          "nazwa": "\"CZAS NA LEPSZE JUTRO\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "PRZEMYŚL",
+            "gmina": "PRZEMYŚL",
+            "miejscowosc": "PRZEMYŚL"
+          },
+          "adres": {
+            "ulica": "UL. SEWERYNA GOSZCZYŃSKIEGO",
+            "nrDomu": "8",
+            "nrLokalu": "9",
+            "miejscowosc": "PRZEMYŚL",
+            "kodPocztowy": "37-700",
+            "poczta": "PRZEMYŚL",
+            "kraj": "POLSKA"
+          },
+          "adresStronyInternetowej": "FUNDACJA.CZASNALEPSZEJUTRO@GMAIL.COM"
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "14.06.2022R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "MINISTER DO SPRAW RODZINY I POLITYKI SPOŁECZNEJ"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "REPREZENTACJA FUNDACJI JEST DWUOSOBOWA, W TYM PREZES LUB WICEPREZES ZARZĄDU DZIAŁAJĄCYCH ŁĄCZNIE WRAZ Z CZŁONKIEM ZARZĄDU",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "P******",
+                "nazwiskoIICzlon": "M****"
+              },
+              "imiona": {
+                "imie": "I****"
+              },
+              "identyfikator": {
+                "pesel": "7**********"
+              },
+              "funkcjaWOrganie": "PREZES"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "T****"
+              },
+              "imiona": {
+                "imie": "Z*******",
+                "imieDrugie": "A******"
+              },
+              "identyfikator": {
+                "pesel": "6**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "B******"
+              },
+              "imiona": {
+                "imie": "P******",
+                "imieDrugie": "K********"
+              },
+              "identyfikator": {
+                "pesel": "9**********"
+              },
+              "funkcjaWOrganie": "CZŁONEK ZARZĄDU"
+            }
+          ]
+        }
+      },
+      "dzial3": {
+        "wzmiankiOZlozonychDokumentach": {
+          "wzmiankaOZlozeniuRocznegoSprawozdaniaFinansowego": [
+            {
+              "dataZlozenia": "17.12.2024",
+              "zaOkresOdDo": "OD 20.07.2022 DO 31.12.2022"
+            },
+            {
+              "dataZlozenia": "19.12.2024",
+              "zaOkresOdDo": "OD 01.01.2023 DO 31.12.2023"
+            },
+            {
+              "dataZlozenia": "10.04.2025",
+              "zaOkresOdDo": "OD 01.01.2024 DO 31.12.2024"
+            }
+          ],
+          "wzmiankaOZlozeniuUchwalyPostanowieniaOZatwierdzeniuRocznegoSprawozdaniaFinansowego": [
+            {
+              "zaOkresOdDo": "OD 20.07.2022 DO 31.12.2022"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2023 DO 31.12.2023"
+            },
+            {
+              "zaOkresOdDo": "OD 01.01.2024 DO 31.12.2024"
+            }
+          ]
+        },
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "REALIZACJA DORAŹNYCH ZBIÓREK RZECZOWYCH I FINANSOWYCH; PROWADZENIA WSZECHSTRONNYCH DZIAŁAŃ W ZAKRESIE WSPIERANIA ROZWOJU DZIECI I MŁODZIEŻY; WSPÓŁPRACA Z DOMAMI DZIECKA ORAZ Z PLACÓWKAMI EDUKACYJNYMI NA TERENIE RP I POZA JEJ GRANICAMI; WSPIERANIE REALIZACJI MARZEŃ OBECNIE  PRZEBYWAJĄCYCH W PLACÓWKACH ORAZ WKRACZAJĄCYCH W DOROSŁOŚĆ PODOPIECZNYCH; PROWADZENIE RÓŻNORODNEJ DZIAŁALNOŚCI W ZAKRESIE DORADZTWA ZAWODOWEGO; ROZPOWSZECHNIANIE WIEDZY O PROBLEMACH I POTRZEBACH DZIECI Z DOMÓW DZIECKA ORAZ PLACÓWEK EDUKACYJNYCH POPRZEZ SOCIAL MEDIA; DZIAŁALNOŚĆ DOBROCZYNNA I PROSPOŁECZNA NA RZECZ DZIECI I MŁODZIEŻY PRZEBYWAJACYCH I OPUSZCZAJACYCH DOMY DZIECKA; DZIAŁALNOŚĆ DOBROCZYNNA I PROSPOŁECZNA NA RZECZ DZIECI I MŁODZIEŻY PRZEBYWAJĄCYCH W PLACÓWKACH EDUKACYJNYCH; PRZECIWDZIAŁANIE DEMORALIZACJI W PLACÓWKACH; POMOC I WSPARCIE OSÓB POTRZEBUJĄCYCH ORAZ WYKLUCZONYCH SPOŁECZNIE; POMOC W UZYSKIWANIU LOKALI MIESZKALNYCH DLA OSÓB OPUSZCZAJĄCYCH DOMY DZIECKA Z RACJI ROZPOCZĘCIA SAMODZIELNEGO , DOROSŁEGO ŻYCIA; WSPIERANIE FINANSOWE I RZECZOWE DZIECI I MŁODZIEŻY Z PLACÓWEK I INSTYTUCJI ORAZ OSÓB DOROSŁYCH; ZAKUP SPRZĘTU, URZĄDZEŃ I MATERIAŁÓW DLA DZIECI, MŁODZIEŻY I OSÓB DOROSŁYCH; PROWADZENIE PROGRAMÓW SPORTOWYCH, EDUKACYJNYCH, ZIELONYCH SZKÓŁ NA TERENIE RP ORAZ POZA JEJ GRANICAMI ORAZ BAZ DANYCH ZWIĄZANYCH Z TYMI PROGRAMAMI; UDZIELANIE POMOCY SPOŁECZNEJ W ZAKRESIE POPRAWY STANU EDUKACJI I NAUCZANIA W FORMIE RZECZOWEJ, FINANSOWEJ LUB ŚWIADCZEŃ STYPENDIALNYCH, NAUKOWYCH LUB SPORTOWYCH, A TAKŻE W FORMIE POMOCY ORGANIZACYJNEJ OSOBOM, KTÓRYCH PRZYPADKI MAJĄ CHARAKTER SZCZEGÓLNY, WG.ZASAD OBOWIĄZUJĄCYCH W FUNDACJI UWZGLĘDNIAJĄCYCH RODZAJ POMOCY EDUKACYJNEJ, SYTUACJĘ RODZINNĄ I MAJĄTKOWĄ; PROWADZENIE SZKOLEŃ ZWIĄZANYCH Z CELAMI FUNDACJI;  PROWADZENIE SZKOLEŃ W ZAKRESIE RATOWNICTWA MEDYCZNEGO I UDZIELANIA PIERWSZEJ POMOCY; PRZYZNAWANIE STYPENDIÓW I NAGRÓD DLA OSÓB BIORĄCYCH UDZIAŁ W REALIZACJI CELU FUNDACJI; ORGANIZOWANIE I FINANSOWANIE NIEODPŁATNYCH KONFERENCJI I SEMINARÓWZ ZWIĄZANYCH Z CELAMI FUNDACJI; SKUPIENIE WOKÓŁ IDEI FUNDACJILUDZI W POLSCE I POZA JEJ GRANICAMI, W TYM SZCZEGÓLNIE MŁODZIEŻY ORAZ PRZEDSTAWICIELI ŚRODOWISK TWÓRCZYCH, INTELEKTUALNYCH I NAUKOWYCH; WSPÓŁPRACA Z INSTYTUCJAMI PAŃSTWOWYMI I SAMORZĄDOWYMI, PLACÓWKAMI OŚWIATY, DOMAMI DZIECKA, ORGANIZACJAMI POZARZĄDOWYMI, STOWARZYSZENIAMI I FUNDACJAMI ORAZ OSOBAMI FIZYCZNYMI, FIRMAMI DZIAŁAJĄCYMI W ZAKRESIE OBJĘTYM CELAMI FUNDACJI; UPOWSZECHNIANIE W INTERNECIE, ŚRODKACH MASOWEGO PRZEKAZU, W FORMIE AUDYCJI RADIOWYCH LUB TELEWIZYJNYCH, FILMÓ WTELEWIZYJNYCH, ARTYKUŁÓW PRASOWYCH, REPORTAŻY, WYWIADÓW W PRASIE, RADIO I TELEWIZJI, ZA POMOCĄ WYDAWNICTW W ZAKRESIE OBJĘTYM CELAMI FUNDACJI; WSPIERANIE FINANSOWE, ORGANIZACYJNE I INTELEKTUALNE PRZEDSIĘWZIĘĆ PROMUJĄCYCH DOROBEK Z ZAKRESU SZEROKO POJĘTEGO ROZWOJU; PROWADZENIE DZIAŁALNOŚCI DORADCZEJ, SZKOLENIOWEJ, COACHINGÓW, MARKETINGOWEJ I PUBLIC RELATIONS DLA OSÓB INDYWIDUALNYCH, PRZEDSIĘBIORSTW, ORGANIZACJI POZARZĄDOWYCH I PODMIOTÓW ADMINISTRACJI PUBLICZNEJ;  ORGANIZOWANIE SPOTKAŃ, SZKOLEŃ, WYKŁADÓW SŁUŻĄCYCH WYMIANIE DOŚWIADCZEŃ OSÓB I JEDNOSTEK PROWADZĄCYCH DZIAŁALNOŚĆ W ZAKRESIE ZBIEŻNYM Z CELAMI FUNDACJI, A TAKŻE UPOWSZECHNIANIE TYCH DOŚWIADCZEŃ ORAZ UDZIELANIE PORAD I POMOCY OSOBOM ZAMIERZAJĄCYM TWORZYĆ ORGANIZACJE O PODOBNYM DO FUNDACJI PROFILU DZIAŁAŃ; ORGANIZACJA ZBIÓREK PUBLICZNYCH ORAZ PRZYGOTOWANIE I WYSYŁANIE POMOCY HUMANITARNEJ DLA OSÓB NA TERENIE RP I POZA JEJ GRANICAMI; WSPIERANIE W ZNALEZIENIU PRZEZ OSOBY OBJĘTE POMOCĄZAATRUDNIENIA NA TERENIE RP I POZA JEJ GRANICAMI; TWORZENIE I OBSŁUGA PORTALI INTERNETOWYCH; DZIAŁALNOŚĆ WYDAWNICZA, PRODUKCJA FILMOWA, TELEWIZYJNA, RADIOWA ORAZ MULTIMEDIALNA; UDZIAŁ W PRZEDSIĘWZIĘCIACH ZGODNYCH Z CELAMI STATUTOWYMI NA TERENIE RP ORAZ POZA JEJ GRANICAMI; ORGANIZOWANIE WSZELKIEGO RODZAJU EVENTÓW, IMPREZ MASOWYCH, KONCERTÓW, WYDARZEŃ KULTURALNYCH I ARTYSTYCZNYCH ZWIĄZANYCH Z CELAMI STATUTU; ORGANIZACJA I PRZYGOTOWANIE NA TERENIE RP ORAZ POZA JEJ GRANICAMI BAZ NOCLEGOWYCH DLA OSÓB OBJĘTYCH CELAMI FUNDACJI;"
+        },
+        "informacjaODniuKonczacymRokObrotowy": {
+          "dzienKonczacyPierwszyRokObrotowy": "31.12.2022"
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}

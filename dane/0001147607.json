@@ -1,0 +1,115 @@
+{
+  "odpis": {
+    "rodzaj": "Aktualny",
+    "naglowekA": {
+      "rejestr": "RejS",
+      "numerKRS": "0001147607",
+      "dataCzasOdpisu": "12.08.2025 08:55:52",
+      "stanZDnia": "30.01.2025",
+      "dataRejestracjiWKRS": "08.01.2025",
+      "numerOstatniegoWpisu": 3,
+      "dataOstatniegoWpisu": "08.01.2025",
+      "sygnaturaAktSprawyDotyczacejOstatniegoWpisu": "RZ.XII NS-REJ.KRS/27778/24/687/REGON",
+      "stanPozycji": 4
+    },
+    "dane": {
+      "dzial1": {
+        "danePodmiotu": {
+          "formaPrawna": "FUNDACJA",
+          "identyfikatory": {
+            "regon": "54058943400000",
+            "nip": "8151822477"
+          },
+          "nazwa": "\"INFANO\"",
+          "daneOWczesniejszejRejestracji": {},
+          "czyPosiadaStatusOPP": false
+        },
+        "siedzibaIAdres": {
+          "siedziba": {
+            "kraj": "POLSKA",
+            "wojewodztwo": "PODKARPACKIE",
+            "powiat": "ŁAŃCUCKI",
+            "gmina": "ŁAŃCUT",
+            "miejscowosc": "ŁAŃCUT"
+          },
+          "adres": {
+            "ulica": "UL. TKACKA",
+            "nrDomu": "6",
+            "miejscowosc": "ŁAŃCUT",
+            "kodPocztowy": "37-100",
+            "poczta": "ŁAŃCUT",
+            "kraj": "POLSKA"
+          }
+        },
+        "umowaStatut": {
+          "informacjaOZawarciuZmianieUmowyStatutu": [
+            {
+              "zawarcieZmianaUmowyStatutu": "18.12.2024 R."
+            }
+          ]
+        },
+        "pozostaleInformacje": {
+          "czasNaJakiUtworzonyZostalPodmiot": "NIEOZNACZONY"
+        },
+        "organSprawujacyNadzor": {
+          "nazwa": "MINISTER ZDROWIA"
+        }
+      },
+      "dzial2": {
+        "reprezentacja": {
+          "nazwaOrganu": "ZARZĄD",
+          "sposobReprezentacji": "DO SKŁADANIA OŚWIADCZEŃ WOLI W IMIENIU FUNDACJI, Z ZASTRZEŻENIEM UST. 3, W TYM W SPRAWACH MAJĄTKOWYCH, UPRAWNIONY JEST DWÓCH CZŁONKÓW ZARZĄDU DZIAŁAJĄCYCH ŁĄCZNIE. W PRZYPADKU ZARZĄDU JEDNOOSOBOWEGO, DO SKŁADANIA OŚWIADCZEŃ WOLI W IMIENIU FUNDACJI UPRAWNIONY JEST PREZES ZARZĄDU.",
+          "sklad": [
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S******"
+              },
+              "imiona": {
+                "imie": "I******"
+              },
+              "identyfikator": {
+                "pesel": "9**********"
+              },
+              "funkcjaWOrganie": "PREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S******"
+              },
+              "imiona": {
+                "imie": "G*******"
+              },
+              "identyfikator": {
+                "pesel": "8**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES ZARZĄDU"
+            },
+            {
+              "nazwisko": {
+                "nazwiskoICzlon": "S*****"
+              },
+              "imiona": {
+                "imie": "M******"
+              },
+              "identyfikator": {
+                "pesel": "6**********"
+              },
+              "funkcjaWOrganie": "WICEPREZES ZARZĄDU"
+            }
+          ]
+        }
+      },
+      "dzial3": {
+        "celDzialaniaOrganizacji": {
+          "celDzialania": "1) OCHRONA I PROMOCJA ZDROWIA\n2) POMOC  REHABILITACYJNA I PIELĘGNIARSKA OSOBOM POTRZEBUJĄCYM\n2) PROWADZENIE SZKOLEŃ, TURNUSÓW, SPOTKAŃ I KONFERENCJI DLA OSÓB NIEPEŁNOSPRAWNYCH, CHORYCH, ICH BLISKICH ORAZ INNYCH\n3) PROWADZENIE DZIAŁAŃ PROMUJĄCYCH SPORT, KULTURĘ, NAUKĘ WŚRÓD OSÓB NIEPEŁNOSPRAWNYCH, CHORYCH ORAZ ICH BLISKICH\n4) INTEGRACJA I REINTEGRACJA ZAWODOWA I SPOŁECZNA OSÓB NIEPEŁNOSPRAWNYCH, CHORYCH ORAZ ICH BLISKICH\n5) WDRAŻANIE WSPÓŁCZESNYCH METOD REHABILITACJI DZIECI, MŁODZIEŻY I DOROSŁYCH\n6) WSPIERANIE I UPOWSZECHNIANIE KULTURY FIZYCZNEJ, TURYSTYKI I KRAJOZNAWSTWA WŚRÓD OSÓB NIEPEŁNOSPRAWNYCH, CHORYCH ORAZ ICH BLISKICH\n7) WSPÓŁPRACA Z ORGANIZACJAMI I STOWARZYSZENIAMI W KRAJU I ZA GRANICĄ, KTÓRYCH CELEM JEST DZIAŁANIE NA RZECZ OSÓB NIEPEŁNOSPRAWNYCH, CHORYCH ORAZ ICH BLISKICH\n8) PROMOCJA I ORGANIZACJA WOLONTARIATU, W SZCZEGÓLNOŚCI NA POTRZEBY DZIAŁALNOŚCI FUNDACJI"
+        },
+        "informacjaODniuKonczacymRokObrotowy": {
+          "dzienKonczacyPierwszyRokObrotowy": "31.12.2025"
+        }
+      },
+      "dzial4": {},
+      "dzial5": {},
+      "dzial6": {}
+    }
+  }
+}
