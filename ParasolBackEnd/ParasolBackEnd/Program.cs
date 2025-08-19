@@ -16,11 +16,11 @@ builder.Services.AddSingleton<IGeolocationService>(new GeolocationService("pk.8d
 
 // Dodaj OrganizacjaService z konfiguracją
 var dataFolder = builder.Configuration.GetValue<string>("DataFolder") ?? "dane";
-builder.Services.AddSingleton<OrganizacjaService>(provider => 
+builder.Services.AddSingleton<OrganizacjaService>(provider =>
     new OrganizacjaService(dataFolder, "pk.8db67e501d12eeee6462b7332848ecd4"));
 
 // Dodaj KrsService z konfiguracją
-builder.Services.AddSingleton<KrsService>(provider => 
+builder.Services.AddSingleton<KrsService>(provider =>
     new KrsService(dataFolder));
 
 // Swagger z XML dokumentacją

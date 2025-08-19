@@ -1,62 +1,66 @@
-﻿namespace ParasolBackEnd.Controllers
+﻿using Microsoft.AspNetCore.Mvc;
+using ParasolBackEnd.Services;
+
+namespace ParasolBackEnd.Controllers;
+
+[ApiController]
+[Route("api/[controller]")]
+public class OrganizacjeGeolokalizacjaController : ControllerBase
 {
-    using Microsoft.AspNetCore.Mvc;
-    using ParasolBackEnd.Services;
-    using System.Linq;
-    using System.Threading.Tasks;
+    private readonly OrganizacjaService _organizacjaService;
+    private readonly KrsService _krsService;
 
-    [ApiController]
-    [Route("[controller]")]
-    public class OrganizacjeController : ControllerBase
+    public OrganizacjeGeolokalizacjaController(OrganizacjaService organizacjaService, KrsService krsService)
     {
-        private readonly OrganizacjaService _organizacjaService;
-        private readonly KrsService _krsService;
+        _organizacjaService = organizacjaService;
+        _krsService = krsService;
+    }
 
-        public OrganizacjeController(OrganizacjaService organizacjaService, KrsService krsService)
+    /// <summary>
+    /// Zwraca listę organizacji z geolokalizacją, opcjonalnie filtrowanych po kategorii i/lub lokalizacji.
+    /// </summary>
+    [HttpGet]
+    public async Task<IActionResult> GetOrganizacje(
+        [FromQuery] string[]? categories,
+        [FromQuery] string? wojewodztwo,
+        [FromQuery] string? powiat,
+        [FromQuery] string? gmina,
+        [FromQuery] string? miejscowosc)
+    {
+        // Pobierz organizacje z KRS według kategorii i lokalizacji
+        var krsEntities = _krsService.GetEntitiesByLocation(
+            wojewodztwo, powiat, gmina, miejscowosc);
+
+        if (categories != null && categories.Length > 0)
         {
-            _organizacjaService = organizacjaService;
-            _krsService = krsService;
+            krsEntities = krsEntities.Where(e =>
+                e.ActivityDescriptions.Any(desc =>
+                    categories.Any(cat => desc.Contains(cat, StringComparison.OrdinalIgnoreCase))));
         }
 
-        // GET /Organizacje/{krs}
-        [HttpGet("{krs}")]
-        public async Task<IActionResult> GetOrganizacja(string krs)
+        // Pobierz pełne dane z OrganizacjaService, żeby mieć geolokalizację
+        var tasks = krsEntities.Select(async e =>
         {
-            var org = await _organizacjaService.WczytajOrganizacjeAsync(krs);
-            if (org == null) return NotFound();
-            return Ok(org);
-        }
+            var org = await _organizacjaService.WczytajOrganizacjeAsync(e.KrsNumber);
+            if (org == null) return null;
 
-        // GET /Organizacje/kategoria/{category}
-        // Zwraca listę organizacji (KRS, nazwa, adresy, geolokalizacja) powiązanych z kategorią
-        [HttpGet("kategoria/{category}")]
-        public async Task<IActionResult> GetByCategory(string category)
-        {
-            var entities = _krsService.GetEntities(null, new[] { category });
+            // Jeśli nazwa w OrganizacjaService jest pusta, użyj nazwy z KRS
+            if (string.IsNullOrWhiteSpace(org.Nazwa))
+                org.Nazwa = e.Name;
 
-            var tasks = entities.Select(async e =>
+            return new
             {
-                var org = await _organizacjaService.WczytajOrganizacjeAsync(e.KrsNumber);
-                if (org == null) return null;
+                Krs = e.KrsNumber,
+                Nazwa = org.Nazwa,
+                Adresy = org.Adresy,
+                Geolokalizacja = org.Geolokalizacja
+            };
+        });
 
-                // Upewniamy się, że nazwa jest ustawiona
-                if (string.IsNullOrWhiteSpace(org.Nazwa))
-                    org.Nazwa = e.Name;
+        var result = (await Task.WhenAll(tasks))
+            .Where(x => x != null)
+            .ToList();
 
-                return new
-                {
-                    Krs = e.KrsNumber,
-                    Nazwa = org.Nazwa,
-                    Adresy = org.Adresy,
-                    Geolokalizacja = org.Geolokalizacja
-                };
-            });
-
-            var result = (await Task.WhenAll(tasks))
-                        .Where(x => x != null)
-                        .ToList();
-
-            return Ok(result);
-        }
+        return Ok(result);
     }
 }

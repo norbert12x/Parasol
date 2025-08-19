@@ -8,6 +8,20 @@ namespace ParasolBackEnd.Services
         public string KrsNumber { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public string[] ActivityDescriptions { get; set; } = Array.Empty<string>();
+        public AddressDto? Address { get; set; }
+    }
+
+    public class AddressDto
+    {
+        public string Wojewodztwo { get; set; } = string.Empty;
+        public string Powiat { get; set; } = string.Empty;
+        public string Gmina { get; set; } = string.Empty;
+        public string Miejscowosc { get; set; } = string.Empty;
+        public string Ulica { get; set; } = string.Empty;
+        public string NrDomu { get; set; } = string.Empty;
+        public string? NrLokalu { get; set; }
+        public string KodPocztowy { get; set; } = string.Empty;
+        public string? Poczta { get; set; }
     }
 
     public class KrsService
@@ -49,14 +63,14 @@ namespace ParasolBackEnd.Services
             foreach (var filePath in jsonFiles)
             {
                 var fileName = Path.GetFileNameWithoutExtension(filePath);
-                
+
                 // Skip empty files
                 var fileInfo = new FileInfo(filePath);
                 if (fileInfo.Length == 0)
                 {
                     continue;
                 }
-                
+
                 if (krsNumbers != null && krsNumbers.Length > 0 && !krsNumbers.Contains(fileName))
                 {
                     continue;
@@ -75,6 +89,9 @@ namespace ParasolBackEnd.Services
 
                     var krsNumber = fileName;
                     var name = doc?["odpis"]?["dane"]?["dzial1"]?["danePodmiotu"]?["nazwa"]?.GetValue<string>() ?? "Brak nazwy";
+
+                    // Extract address information
+                    var address = ExtractAddress(doc);
 
                     // Try to find activity descriptions in various possible locations
                     var allDescriptions = new List<string>();
@@ -148,10 +165,88 @@ namespace ParasolBackEnd.Services
                     {
                         KrsNumber = krsNumber,
                         Name = name,
-                        ActivityDescriptions = allDescriptions.ToArray()
+                        ActivityDescriptions = allDescriptions.ToArray(),
+                        Address = address
                     };
 
                     Console.WriteLine($"Found entity: {krsNumber} - {name} with {allDescriptions.Count} descriptions");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error processing file {filePath}: {ex.Message}");
+                    continue;
+                }
+
+                if (entity != null)
+                {
+                    yield return entity;
+                }
+            }
+        }
+
+        public IEnumerable<KrsEntityDto> GetEntitiesByLocation(string? wojewodztwo = null, string? powiat = null, string? gmina = null, string? miejscowosc = null)
+        {
+            if (!Directory.Exists(_dataDirectory))
+            {
+                Console.WriteLine($"Data directory not found: {_dataDirectory}");
+                yield break;
+            }
+
+            var jsonFiles = Directory.GetFiles(_dataDirectory, "*.json");
+            Console.WriteLine($"Found {jsonFiles.Length} JSON files to process for location search");
+
+            foreach (var filePath in jsonFiles)
+            {
+                var fileName = Path.GetFileNameWithoutExtension(filePath);
+
+                // Skip empty files
+                var fileInfo = new FileInfo(filePath);
+                if (fileInfo.Length == 0)
+                {
+                    continue;
+                }
+
+                KrsEntityDto? entity = null;
+                try
+                {
+                    var jsonContent = File.ReadAllText(filePath);
+                    if (string.IsNullOrWhiteSpace(jsonContent))
+                    {
+                        continue;
+                    }
+
+                    var doc = JsonNode.Parse(jsonContent);
+
+                    var krsNumber = fileName;
+                    var name = doc?["odpis"]?["dane"]?["dzial1"]?["danePodmiotu"]?["nazwa"]?.GetValue<string>() ?? "Brak nazwy";
+
+                    // Extract address information
+                    var address = ExtractAddress(doc);
+
+                    // Check location filters
+                    if (!MatchesLocationFilter(address, wojewodztwo, powiat, gmina, miejscowosc))
+                    {
+                        continue;
+                    }
+
+                    // Extract activity descriptions (same logic as GetEntities)
+                    var allDescriptions = ExtractActivityDescriptions(doc);
+
+                    // If no descriptions found, still include the entity for location search
+                    if (!allDescriptions.Any())
+                    {
+                        allDescriptions.Add("Brak opisu działalności");
+                    }
+
+                    entity = new KrsEntityDto
+                    {
+                        KrsNumber = krsNumber,
+                        Name = name,
+                        ActivityDescriptions = allDescriptions.ToArray(),
+                        Address = address
+                    };
+
+                    Console.WriteLine($"Found entity by location: {krsNumber} - {name}");
                 }
                 catch (Exception ex)
                 {
@@ -183,5 +278,151 @@ namespace ParasolBackEnd.Services
                 .Where(n => !string.IsNullOrWhiteSpace(n))
                 .Distinct();
         }
+
+        public IEnumerable<string> GetNamesByLocation(string? wojewodztwo = null, string? powiat = null, string? gmina = null, string? miejscowosc = null)
+        {
+            return GetEntitiesByLocation(wojewodztwo, powiat, gmina, miejscowosc)
+                .Select(e => e.Name)
+                .Where(n => !string.IsNullOrWhiteSpace(n))
+                .Distinct();
+        }
+
+        public IEnumerable<string> GetWojewodztwa()
+        {
+            return GetEntities()
+                .Where(e => e.Address != null && !string.IsNullOrWhiteSpace(e.Address.Wojewodztwo))
+                .Select(e => e.Address!.Wojewodztwo)
+                .Distinct()
+                .OrderBy(w => w);
+        }
+
+        public IEnumerable<string> GetPowiaty(string? wojewodztwo = null)
+        {
+            var entities = wojewodztwo != null
+                ? GetEntitiesByLocation(wojewodztwo: wojewodztwo)
+                : GetEntities();
+
+            return entities
+                .Where(e => e.Address != null && !string.IsNullOrWhiteSpace(e.Address.Powiat))
+                .Select(e => e.Address!.Powiat)
+                .Distinct()
+                .OrderBy(p => p);
+        }
+
+        public IEnumerable<string> GetGminy(string? wojewodztwo = null, string? powiat = null)
+        {
+            var entities = GetEntitiesByLocation(wojewodztwo: wojewodztwo, powiat: powiat);
+
+            return entities
+                .Where(e => e.Address != null && !string.IsNullOrWhiteSpace(e.Address.Gmina))
+                .Select(e => e.Address!.Gmina)
+                .Distinct()
+                .OrderBy(g => g);
+        }
+
+        public IEnumerable<string> GetMiejscowosci(string? wojewodztwo = null, string? powiat = null, string? gmina = null)
+        {
+            var entities = GetEntitiesByLocation(wojewodztwo: wojewodztwo, powiat: powiat, gmina: gmina);
+
+            return entities
+                .Where(e => e.Address != null && !string.IsNullOrWhiteSpace(e.Address.Miejscowosc))
+                .Select(e => e.Address!.Miejscowosc)
+                .Distinct()
+                .OrderBy(m => m);
+        }
+
+        private AddressDto? ExtractAddress(JsonNode? doc)
+        {
+            try
+            {
+                var siedzibaIAdres = doc?["odpis"]?["dane"]?["dzial1"]?["siedzibaIAdres"];
+                if (siedzibaIAdres == null) return null;
+
+                var siedziba = siedzibaIAdres["siedziba"];
+                var adres = siedzibaIAdres["adres"];
+
+                if (siedziba == null || adres == null) return null;
+
+                return new AddressDto
+                {
+                    Wojewodztwo = siedziba["wojewodztwo"]?.GetValue<string>() ?? "",
+                    Powiat = siedziba["powiat"]?.GetValue<string>() ?? "",
+                    Gmina = siedziba["gmina"]?.GetValue<string>() ?? "",
+                    Miejscowosc = adres["miejscowosc"]?.GetValue<string>() ?? "",
+                    Ulica = adres["ulica"]?.GetValue<string>() ?? "",
+                    NrDomu = adres["nrDomu"]?.GetValue<string>() ?? "",
+                    NrLokalu = adres["nrLokalu"]?.GetValue<string>(),
+                    KodPocztowy = adres["kodPocztowy"]?.GetValue<string>() ?? "",
+                    Poczta = adres["poczta"]?.GetValue<string>()
+                };
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error extracting address: {ex.Message}");
+                return null;
+            }
+        }
+
+        private List<string> ExtractActivityDescriptions(JsonNode? doc)
+        {
+            var allDescriptions = new List<string>();
+
+            // Method 1: Look for celDzialaniaOrganizacji
+            var celDzialania = doc?["odpis"]?["dane"]?["dzial3"]?["celDzialaniaOrganizacji"]?["celDzialania"]?.GetValue<string>();
+            if (!string.IsNullOrWhiteSpace(celDzialania))
+            {
+                allDescriptions.Add(celDzialania);
+            }
+
+            // Method 2: Look for przedmiotDzialalnosciOPP.nieodplatnyPkd[].opis
+            var pkdNode = doc?["odpis"]?["dane"]?["dzial3"]?["przedmiotDzialalnosciOPP"]?["nieodplatnyPkd"];
+            if (pkdNode != null && pkdNode is JsonArray pkdArray)
+            {
+                foreach (var pkdItem in pkdArray)
+                {
+                    var opis = pkdItem?["opis"]?.GetValue<string>();
+                    if (!string.IsNullOrWhiteSpace(opis))
+                    {
+                        allDescriptions.Add(opis);
+                    }
+                }
+            }
+
+            // Method 3: Look for other possible activity description fields
+            var otherActivityFields = new[] { "przedmiotDzialalnosci", "działalność", "cel", "opis" };
+            foreach (var field in otherActivityFields)
+            {
+                var value = doc?["odpis"]?["dane"]?["dzial3"]?[field]?.GetValue<string>();
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    allDescriptions.Add(value);
+                }
+            }
+
+            return allDescriptions;
+        }
+
+        private bool MatchesLocationFilter(AddressDto? address, string? wojewodztwo, string? powiat, string? gmina, string? miejscowosc)
+        {
+            if (address == null) return false;
+
+            if (!string.IsNullOrWhiteSpace(wojewodztwo) &&
+                !address.Wojewodztwo.Contains(wojewodztwo, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            if (!string.IsNullOrWhiteSpace(powiat) &&
+                !address.Powiat.Contains(powiat, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            if (!string.IsNullOrWhiteSpace(gmina) &&
+                !address.Gmina.Contains(gmina, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            if (!string.IsNullOrWhiteSpace(miejscowosc) &&
+                !address.Miejscowosc.Contains(miejscowosc, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            return true;
+        }
     }
-} 
+}
