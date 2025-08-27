@@ -1,32 +1,48 @@
-﻿namespace ParasolBackEnd.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace ParasolBackEnd.Models
 {
     public class Adres
     {
-        public string Ulica { get; set; }
-        public string NrDomu { get; set; }
-        public string NrLokalu { get; set; }
-        public string Miejscowosc { get; set; }
-        public string KodPocztowy { get; set; }
-        public string Poczta { get; set; }
-        public string Gmina { get; set; }
-        public string Powiat { get; set; }
-        public string Wojewodztwo { get; set; }
-        public string Kraj { get; set; }
+        [Key]
+        [Column("id")]
+        public int Id { get; set; }
+        
+        [Column("numerkrs")]
+        public string NumerKrs { get; set; } = string.Empty;
+        
+        [Column("ulica")]
+        public string? Ulica { get; set; }
+        
+        [Column("nrdomu")]
+        public string? NrDomu { get; set; }
+        
+        [Column("nrlokalu")]
+        public string? NrLokalu { get; set; }
+        
+        [Column("miejscowosc")]
+        public string? Miejscowosc { get; set; }
+        
+        [Column("kodpocztowy")]
+        public string? KodPocztowy { get; set; }
+        
+        [Column("poczta")]
+        public string? Poczta { get; set; }
+        
+        [Column("gmina")]
+        public string? Gmina { get; set; }
+        
+        [Column("powiat")]
+        public string? Powiat { get; set; }
+        
+        [Column("wojewodztwo")]
+        public string? Wojewodztwo { get; set; }
+        
+        [Column("kraj")]
+        public string Kraj { get; set; } = string.Empty;
 
-        public string PelnyAdres()
-        {
-            var parts = new List<string>();
-            if (!string.IsNullOrEmpty(Ulica)) parts.Add(Ulica);
-            if (!string.IsNullOrEmpty(NrDomu)) parts.Add(NrDomu);
-            if (!string.IsNullOrEmpty(NrLokalu)) parts.Add("lok." + NrLokalu);
-            if (!string.IsNullOrEmpty(Miejscowosc)) parts.Add(Miejscowosc);
-            if (!string.IsNullOrEmpty(KodPocztowy)) parts.Add(KodPocztowy);
-            if (!string.IsNullOrEmpty(Poczta)) parts.Add(Poczta);
-            if (!string.IsNullOrEmpty(Gmina)) parts.Add(Gmina);
-            if (!string.IsNullOrEmpty(Powiat)) parts.Add(Powiat);
-            if (!string.IsNullOrEmpty(Wojewodztwo)) parts.Add(Wojewodztwo);
-            if (!string.IsNullOrEmpty(Kraj)) parts.Add(Kraj);
-            return string.Join(", ", parts);
-        }
+        // Właściwość nawigacyjna (bez relacji w DbContext)
+        public virtual Organizacja Organizacja { get; set; } = null!;
     }
 }

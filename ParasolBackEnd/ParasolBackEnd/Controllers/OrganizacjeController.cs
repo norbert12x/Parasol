@@ -53,7 +53,8 @@ public class OrganizacjeGeolokalizacjaController : ControllerBase
                 Krs = e.KrsNumber,
                 Nazwa = org.Nazwa,
                 Adresy = org.Adresy,
-                Geolokalizacja = org.Geolokalizacja
+                Koordynaty = org.Koordynaty,
+                CeleStatusowe = e.ActivityDescriptions
             };
         });
 

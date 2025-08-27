@@ -5,13 +5,15 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 using ParasolBackEnd.Services;
+using ParasolBackEnd.Data;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Rejestracja serwisw
+// Rejestracja serwisów
 builder.Services.AddControllers();
 
-// Dodaj usug geolokalizacji z kluczem API
+// Dodaj usługę geolokalizacji z kluczem API
 builder.Services.AddSingleton<IGeolocationService>(new GeolocationService("pk.8db67e501d12eeee6462b7332848ecd4"));
 
 // Dodaj OrganizacjaService z konfiguracją
@@ -22,6 +24,20 @@ builder.Services.AddSingleton<OrganizacjaService>(provider =>
 // Dodaj KrsService z konfiguracją
 builder.Services.AddSingleton<KrsService>(provider =>
     new KrsService(dataFolder));
+
+// Dodaj DbContext
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") + ";Multiplexing=false;Pooling=false;MinPoolSize=1;MaxPoolSize=1", 
+        npgsqlOptions => npgsqlOptions
+            .CommandTimeout(120) // 2 minuty timeout
+            .EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorCodesToAdd: null)
+    ));
+
+// Dodaj DatabaseService
+builder.Services.AddScoped<IDatabaseService, DatabaseService>();
 
 // Swagger z XML dokumentacją
 builder.Services.AddEndpointsApiExplorer();

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -61,7 +61,6 @@ namespace ParasolBackEnd.Services
 
                     adresy.Add(new Adres
                     {
-                        NumerKrs = krs,
                         Ulica = adres.TryGetProperty("ulica", out var ul) ? ul.GetString() ?? "" : "",
                         NrDomu = adres.TryGetProperty("nrDomu", out var nd) ? nd.GetString() ?? "" : "",
                         NrLokalu = adres.TryGetProperty("nrLokalu", out var nl) ? nl.GetString() : null,
@@ -100,7 +99,6 @@ namespace ParasolBackEnd.Services
                             var first = results[0];
                             geolokalizacja.Add(new Koordynaty
                             {
-                                NumerKrs = krs,
                                 Latitude = double.Parse(first.GetProperty("lat").GetString() ?? "0", CultureInfo.InvariantCulture),
                                 Longitude = double.Parse(first.GetProperty("lon").GetString() ?? "0", CultureInfo.InvariantCulture)
                             });
@@ -114,7 +112,6 @@ namespace ParasolBackEnd.Services
 
                 return new Organizacja
                 {
-                    NumerKrs = krs,
                     Nazwa = nazwa ?? "Brak nazwy",
                     Adresy = adresy,
                     Koordynaty = geolokalizacja
