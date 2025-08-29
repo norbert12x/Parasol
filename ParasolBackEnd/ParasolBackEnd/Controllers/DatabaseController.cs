@@ -18,6 +18,9 @@ namespace ParasolBackEnd.Controllers
         }
 
         [HttpGet("test")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> TestConnection()
         {
             try
@@ -41,7 +44,9 @@ namespace ParasolBackEnd.Controllers
         }
 
         [HttpGet("organizacje")]
-        public async Task<IActionResult> GetOrganizacje()
+        [ProducesResponseType(typeof(IEnumerable<Organizacja>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<IEnumerable<Organizacja>>> GetOrganizacje()
         {
             try
             {
@@ -56,7 +61,10 @@ namespace ParasolBackEnd.Controllers
         }
 
         [HttpGet("organizacje/{numerKrs}")]
-        public async Task<IActionResult> GetOrganizacjaByKrs(string numerKrs)
+        [ProducesResponseType(typeof(Organizacja), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Organizacja>> GetOrganizacjaByKrs(string numerKrs)
         {
             try
             {
@@ -76,33 +84,11 @@ namespace ParasolBackEnd.Controllers
             }
         }
 
-        [HttpGet("kategorie")]
-        public async Task<IActionResult> GetKategorie()
-        {
-            try
-            {
-                _logger.LogInformation("GetKategorie endpoint called");
-                
-                var kategorie = await _databaseService.GetKategorieAsync();
-                
-                _logger.LogInformation("Retrieved {Count} kategorie from service", kategorie.Count);
-                
-                if (kategorie.Count == 0)
-                {
-                    _logger.LogWarning("No kategorie found in database");
-                }
-                
-                return Ok(kategorie);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting kategorie");
-                return StatusCode(500, new { message = "Error retrieving kategorie", error = ex.Message });
-            }
-        }
-
         [HttpPost("organizacje")]
-        public async Task<IActionResult> CreateOrganizacja([FromBody] Organizacja organizacja)
+        [ProducesResponseType(typeof(Organizacja), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<Organizacja>> CreateOrganizacja([FromBody] Organizacja organizacja)
         {
             try
             {
@@ -131,6 +117,10 @@ namespace ParasolBackEnd.Controllers
         }
 
         [HttpPut("organizacje/{numerKrs}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> UpdateOrganizacja(string numerKrs, [FromBody] Organizacja organizacja)
         {
             try
@@ -164,6 +154,9 @@ namespace ParasolBackEnd.Controllers
         }
 
         [HttpDelete("organizacje/{numerKrs}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> DeleteOrganizacja(string numerKrs)
         {
             try
@@ -187,6 +180,8 @@ namespace ParasolBackEnd.Controllers
         }
 
         [HttpPost("import-z-geolokalizacji")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> ImportFromGeolokalizacja([FromQuery] string? wojewodztwo)
         {
             try

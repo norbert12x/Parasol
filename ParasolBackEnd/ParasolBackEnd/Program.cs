@@ -13,17 +13,20 @@ var builder = WebApplication.CreateBuilder(args);
 // Rejestracja serwisów
 builder.Services.AddControllers();
 
+// Pobierz folder z danymi
+var dataFolder = builder.Configuration.GetValue<string>("DataFolder") ?? "dane";
+
 // Dodaj usługę geolokalizacji z kluczem API
-builder.Services.AddSingleton<IGeolocationService>(new GeolocationService("pk.8db67e501d12eeee6462b7332848ecd4"));
+builder.Services.AddSingleton<IGeolocationService>(new GeolocationService("pk.8db67e501d12eeee6462b7332848ecd4", dataFolder));
 
 // Dodaj OrganizacjaService z konfiguracją
-var dataFolder = builder.Configuration.GetValue<string>("DataFolder") ?? "dane";
 builder.Services.AddSingleton<OrganizacjaService>(provider =>
-    new OrganizacjaService(dataFolder, "pk.8db67e501d12eeee6462b7332848ecd4"));
+    new OrganizacjaService(dataFolder, "pk.8db67e501d12eeee6462b7332848ecd4", 
+        provider.GetService<ILogger<OrganizacjaService>>()!));
 
-// Dodaj KrsService z konfiguracją
-builder.Services.AddSingleton<KrsService>(provider =>
-    new KrsService(dataFolder));
+// KrsService TYMCZASOWO ZAKOMENTOWANY
+// builder.Services.AddScoped<KrsService>(provider =>
+//     new KrsService(provider.GetService<IDatabaseService>()!));
 
 // Dodaj DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
@@ -37,7 +40,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     ));
 
 // Dodaj DatabaseService
-builder.Services.AddScoped<IDatabaseService, DatabaseService>();
+builder.Services.AddScoped<IDatabaseService, DatabaseService>(provider =>
+    new DatabaseService(
+        provider.GetService<AppDbContext>()!,
+        provider.GetService<ILogger<DatabaseService>>()!,
+        builder.Configuration));
 
 // Swagger z XML dokumentacją
 builder.Services.AddEndpointsApiExplorer();

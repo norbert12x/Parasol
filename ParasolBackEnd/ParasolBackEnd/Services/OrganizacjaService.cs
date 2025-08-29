@@ -5,28 +5,47 @@ using System.IO;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using ParasolBackEnd.Models;
 using RestSharp;
 
 namespace ParasolBackEnd.Services
 {
+    /// <summary>
+    /// Serwis do wczytywania organizacji z plików JSON i pobierania ich geolokalizacji.
+    /// </summary>
     public class OrganizacjaService
     {
         private readonly string _dataFolder;
         private readonly string _apiKey;
+        private readonly ILogger<OrganizacjaService> _logger;
 
-        // SemaphoreSlim - pozwala na 2 jednoczesne zapytania
+        // Throttling dla LocationIQ API - max 2 zapytania na sekundę
         private static readonly SemaphoreSlim _throttle = new SemaphoreSlim(2, 2);
         private static readonly TimeSpan _throttleDelay = TimeSpan.FromSeconds(1);
 
-        public OrganizacjaService(string dataFolder, string apiKey)
+        public OrganizacjaService(string dataFolder, string apiKey, ILogger<OrganizacjaService> logger)
         {
-            _dataFolder = dataFolder;
-            _apiKey = apiKey;
+            _dataFolder = dataFolder ?? throw new ArgumentNullException(nameof(dataFolder));
+            _apiKey = apiKey ?? throw new ArgumentNullException(nameof(apiKey));
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        public async Task<Organizacja?> WczytajOrganizacjeAsync(string krs)
+        /// <summary>
+        /// Wczytuje organizację z pliku JSON i pobiera jej geolokalizację.
+        /// </summary>
+        /// <param name="krs">Numer KRS organizacji</param>
+        /// <returns>Organizacja z adresami i koordynatami lub null jeśli nie znaleziono</returns>
+        public async Task<Organizacja?> LoadOrganizationAsync(string krs)
         {
+            if (string.IsNullOrWhiteSpace(krs))
+            {
+                _logger.LogWarning("Próba wczytania organizacji z pustym numerem KRS");
+                return null;
+            }
+
+            _logger.LogDebug("Wczytywanie organizacji KRS: {Krs}", krs);
+            
             // Czekamy na dostęp do "slotu" zapytania
             await _throttle.WaitAsync();
             try
@@ -35,10 +54,18 @@ namespace ParasolBackEnd.Services
                 await Task.Delay(_throttleDelay);
 
                 var path = Path.Combine(_dataFolder, $"{krs}.json");
-                if (!File.Exists(path)) return null;
+                if (!File.Exists(path))
+                {
+                    _logger.LogDebug("Plik JSON nie istnieje dla KRS: {Krs}", krs);
+                    return null;
+                }
 
                 var json = await File.ReadAllTextAsync(path);
-                if (string.IsNullOrWhiteSpace(json)) return null;
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    _logger.LogWarning("Pusty plik JSON dla KRS: {Krs}", krs);
+                    return null;
+                }
 
                 using var doc = JsonDocument.Parse(json);
                 var root = doc.RootElement;
@@ -78,13 +105,13 @@ namespace ParasolBackEnd.Services
                 string pelnyAdres = string.Join(", ", adresy.ConvertAll(a =>
                     $"{a.Ulica} {a.NrDomu}{(a.NrLokalu != null ? "/" + a.NrLokalu : "")}, {a.Miejscowosc}, {a.KodPocztowy}, {a.Wojewodztwo}, {a.Kraj}"));
 
-                Console.WriteLine("Pełny adres do geolokalizacji:");
-                Console.WriteLine(pelnyAdres);
+                _logger.LogDebug("Adres do geolokalizacji KRS {Krs}: {Adres}", krs, pelnyAdres);
 
                 var client = new RestClient($"https://eu1.locationiq.com/v1/search?key={_apiKey}");
                 var request = new RestRequest($"?q={Uri.EscapeDataString(pelnyAdres)}&format=json");
                 request.AddHeader("accept", "application/json");
 
+                _logger.LogDebug("Wysyłanie zapytania do LocationIQ dla KRS: {Krs}", krs);
                 var response = await client.GetAsync(request);
 
                 List<Koordynaty> geolokalizacja = new();
@@ -98,27 +125,46 @@ namespace ParasolBackEnd.Services
                         if (results != null && results.Length > 0)
                         {
                             var first = results[0];
+                            var latitude = double.Parse(first.GetProperty("lat").GetString() ?? "0", CultureInfo.InvariantCulture);
+                            var longitude = double.Parse(first.GetProperty("lon").GetString() ?? "0", CultureInfo.InvariantCulture);
+                            
                             geolokalizacja.Add(new Koordynaty
                             {
                                 NumerKrs = krs,
-                                Latitude = double.Parse(first.GetProperty("lat").GetString() ?? "0", CultureInfo.InvariantCulture),
-                                Longitude = double.Parse(first.GetProperty("lon").GetString() ?? "0", CultureInfo.InvariantCulture)
+                                Latitude = latitude,
+                                Longitude = longitude
                             });
+
+                            _logger.LogDebug("Pobrano koordynaty dla KRS {Krs}: lat={Latitude}, lon={Longitude}", 
+                                krs, latitude, longitude);
+                        }
+                        else
+                        {
+                            _logger.LogWarning("Brak wyników geolokalizacji dla KRS: {Krs}", krs);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine($"Błąd parsowania LocationIQ: {ex.Message}");
+                        _logger.LogError(ex, "Błąd parsowania odpowiedzi LocationIQ dla KRS: {Krs}", krs);
                     }
                 }
+                else
+                {
+                    _logger.LogWarning("Pusta odpowiedź z LocationIQ dla KRS: {Krs}", krs);
+                }
 
-                return new Organizacja
+                var organizacja = new Organizacja
                 {
                     NumerKrs = krs,
                     Nazwa = nazwa ?? "Brak nazwy",
                     Adresy = adresy,
                     Koordynaty = geolokalizacja
                 };
+
+                _logger.LogInformation("Pomyślnie wczytano organizację KRS: {Krs}, nazwa: {Nazwa}, adresy: {AdresyCount}, koordynaty: {KoordynatyCount}", 
+                    krs, organizacja.Nazwa, adresy.Count, geolokalizacja.Count);
+
+                return organizacja;
             }
             finally
             {

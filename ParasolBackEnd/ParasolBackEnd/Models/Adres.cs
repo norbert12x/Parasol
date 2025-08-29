@@ -43,6 +43,6 @@ namespace ParasolBackEnd.Models
         public string Kraj { get; set; } = string.Empty;
 
         // Właściwość nawigacyjna (bez relacji w DbContext)
-        public virtual Organizacja Organizacja { get; set; } = null!;
+        public Organizacja Organizacja { get; set; } = null!;
     }
 }

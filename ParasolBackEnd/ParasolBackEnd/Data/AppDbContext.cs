@@ -46,7 +46,6 @@ namespace ParasolBackEnd.Data
                 entity.Property(e => e.Wojewodztwo).HasColumnName("wojewodztwo");
                 entity.Property(e => e.Kraj).HasColumnName("kraj");
 
-                // BRAK RELACJI - używamy tylko numerkrs jako zwykłą kolumnę
             });
 
             // Konfiguracja tabeli Koordynaty
@@ -59,7 +58,6 @@ namespace ParasolBackEnd.Data
                 entity.Property(e => e.Latitude).HasColumnName("latitude");
                 entity.Property(e => e.Longitude).HasColumnName("longitude");
 
-                // BRAK RELACJI - używamy tylko numerkrs jako zwykłą kolumnę
             });
 
             // Konfiguracja tabeli Kategoria
@@ -71,24 +69,13 @@ namespace ParasolBackEnd.Data
                 entity.Property(e => e.Nazwa).HasColumnName("nazwa");
             });
 
-            // Konfiguracja tabeli łączącej OrganizacjaKategoria
+            // Konfiguracja tabeli łączącej OrganizacjaKategoria (bez relacji)
             modelBuilder.Entity<OrganizacjaKategoria>(entity =>
             {
                 entity.ToTable("organizacjakategoria");
                 entity.HasKey(e => new { e.NumerKrs, e.KategoriaId });
                 entity.Property(e => e.NumerKrs).HasColumnName("numerkrs");
                 entity.Property(e => e.KategoriaId).HasColumnName("kategoriaid");
-
-                // Relacje
-                entity.HasOne<Organizacja>()
-                    .WithMany(o => o.OrganizacjaKategorie)
-                    .HasForeignKey(ok => ok.NumerKrs)
-                    .HasPrincipalKey(o => o.NumerKrs);
-
-                entity.HasOne<Kategoria>()
-                    .WithMany()
-                    .HasForeignKey(ok => ok.KategoriaId)
-                    .HasPrincipalKey(k => k.Id);
             });
         }
     }

@@ -12,7 +12,7 @@ namespace ParasolBackEnd.Models
         public int KategoriaId { get; set; }
 
         // Relacje nawigacyjne
-        public virtual Organizacja Organizacja { get; set; } = null!;
-        public virtual Kategoria Kategoria { get; set; } = null!;
+        public Organizacja Organizacja { get; set; } = null!;
+        public Kategoria Kategoria { get; set; } = null!;
     }
 }

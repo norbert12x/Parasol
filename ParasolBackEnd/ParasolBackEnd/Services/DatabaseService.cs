@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using ParasolBackEnd.Data;
 using ParasolBackEnd.Models;
 using Npgsql;
@@ -16,17 +17,20 @@ namespace ParasolBackEnd.Services
         Task<bool> UpdateOrganizacjaAsync(Organizacja organizacja);
         Task<bool> DeleteOrganizacjaAsync(string numerKrs);
         Task<ImportResult> ImportFromGeolokalizacjaAsync(string? wojewodztwo = null);
+        Task<List<Organizacja>> GetOrganizationsForMapAsync(string? kategoria = null, string? wojewodztwo = null, string? powiat = null, string? gmina = null, string? miejscowosc = null, string? krsNumber = null);
     }
 
     public class DatabaseService : IDatabaseService
     {
         private readonly AppDbContext _context;
         private readonly ILogger<DatabaseService> _logger;
+        private readonly string _connectionString;
 
-        public DatabaseService(AppDbContext context, ILogger<DatabaseService> logger)
+        public DatabaseService(AppDbContext context, ILogger<DatabaseService> logger, IConfiguration configuration)
         {
             _context = context;
             _logger = logger;
+            _connectionString = configuration.GetConnectionString("DefaultConnection") + ";Multiplexing=false;Pooling=false";
         }
 
         public async Task<bool> TestConnectionAsync()
@@ -82,16 +86,12 @@ namespace ParasolBackEnd.Services
 
         public async Task<List<Kategoria>> GetKategorieAsync()
         {
-            _logger.LogInformation("Attempting to get kategorie using direct Npgsql connection");
-            
             try
             {
-                var connectionString = "User Id=postgres.roaifaijrauldhgxpdrl;Password=symi4MuiLt*Gybky!kJ!;Server=aws-1-eu-central-1.pooler.supabase.com;Port=6543;Database=postgres;Multiplexing=false;Pooling=false";
-                
-                await using var connection = new NpgsqlConnection(connectionString);
+                await using var connection = new NpgsqlConnection(_connectionString);
                 await connection.OpenAsync();
                 
-                string query = "SELECT id, nazwa FROM kategoria ORDER BY id";
+                const string query = "SELECT id, nazwa FROM kategoria ORDER BY id";
                 await using var command = new NpgsqlCommand(query, connection);
                 await using var reader = await command.ExecuteReaderAsync();
                 
@@ -106,19 +106,12 @@ namespace ParasolBackEnd.Services
                     kategorie.Add(kategoria);
                 }
                 
-                _logger.LogInformation("Direct Npgsql query returned {Count} kategorie from database", kategorie.Count);
-                
-                // Log each kategoria for debugging
-                foreach (var kategoria in kategorie)
-                {
-                    _logger.LogInformation("Kategoria: ID={Id}, Nazwa={Nazwa}", kategoria.Id, kategoria.Nazwa);
-                }
-                
+                _logger.LogDebug("Retrieved {Count} kategorie from database", kategorie.Count);
                 return kategorie;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error getting kategorie using direct Npgsql: {ErrorDetails}", ex.ToString());
+                _logger.LogError(ex, "Error getting kategorie using direct Npgsql");
                 return new List<Kategoria>();
             }
         }
@@ -154,6 +147,9 @@ namespace ParasolBackEnd.Services
             try
             {
                 var existing = await _context.Organizacje
+                    .Include(o => o.Adresy)
+                    .Include(o => o.Koordynaty)
+                    .Include(o => o.OrganizacjaKategorie)
                     .FirstOrDefaultAsync(o => o.NumerKrs == organizacja.NumerKrs);
 
                 if (existing == null)
@@ -162,12 +158,40 @@ namespace ParasolBackEnd.Services
                     return false;
                 }
 
+                // Aktualizuj podstawowe dane organizacji
                 existing.Nazwa = organizacja.Nazwa;
-                // Można dodać więcej pól do aktualizacji
+
+                // Usuń stare adresy i dodaj nowe
+                _context.Adresy.RemoveRange(existing.Adresy);
+                existing.Adresy.Clear();
+                foreach (var adres in organizacja.Adresy)
+                {
+                    adres.NumerKrs = organizacja.NumerKrs;
+                    existing.Adresy.Add(adres);
+                }
+
+                // Usuń stare koordynaty i dodaj nowe
+                _context.Koordynaty.RemoveRange(existing.Koordynaty);
+                existing.Koordynaty.Clear();
+                foreach (var koordynaty in organizacja.Koordynaty)
+                {
+                    koordynaty.NumerKrs = organizacja.NumerKrs;
+                    existing.Koordynaty.Add(koordynaty);
+                }
+
+                // Usuń stare kategorie i dodaj nowe
+                _context.OrganizacjaKategorie.RemoveRange(existing.OrganizacjaKategorie);
+                existing.OrganizacjaKategorie.Clear();
+                foreach (var kategoria in organizacja.OrganizacjaKategorie)
+                {
+                    kategoria.NumerKrs = organizacja.NumerKrs;
+                    existing.OrganizacjaKategorie.Add(kategoria);
+                }
 
                 await _context.SaveChangesAsync();
                 
-                _logger.LogInformation("Organizacja updated successfully: {NumerKrs}", organizacja.NumerKrs);
+                _logger.LogInformation("Organizacja updated successfully: {NumerKrs} with {AdresCount} adresy, {KoordynatyCount} koordynaty, {KategorieCount} kategorie", 
+                    organizacja.NumerKrs, organizacja.Adresy.Count, organizacja.Koordynaty.Count, organizacja.OrganizacjaKategorie.Count);
                 return true;
             }
             catch (Exception ex)
@@ -219,26 +243,20 @@ namespace ParasolBackEnd.Services
                 {
                     try
                     {
-                        _logger.LogInformation("Processing organizacja {Krs}: \"{Nazwa}\"", organizacja.NumerKrs, organizacja.Nazwa);
-
                         // Sprawdź czy organizacja już istnieje
                         if (await OrganizacjaExistsAsync(organizacja.NumerKrs))
                         {
-                            _logger.LogInformation("Organizacja {Krs} already exists, UPDATING instead of skipping", organizacja.NumerKrs);
-                            // UPDATE istniejącej organizacji zamiast pomijania
+                            _logger.LogDebug("Organizacja {Krs} already exists, will UPDATE", organizacja.NumerKrs);
                         }
                         else
                         {
-                            _logger.LogInformation("Organizacja {Krs} is new, will INSERT", organizacja.NumerKrs);
+                            _logger.LogDebug("Organizacja {Krs} is new, will INSERT", organizacja.NumerKrs);
                         }
-
-                        _logger.LogInformation("Saving organizacja {Krs} to database", organizacja.NumerKrs);
 
                         // Użyj bezpośrednio Npgsql zamiast Entity Framework
                         await SaveOrganizacjaWithNpgsqlAsync(organizacja);
                         
                         importedCount++;
-                        _logger.LogInformation("Successfully imported/updated organizacja {Krs}", organizacja.NumerKrs);
                     }
                     catch (Exception ex)
                     {
@@ -258,17 +276,189 @@ namespace ParasolBackEnd.Services
             }
         }
 
+        public async Task<List<Organizacja>> GetOrganizationsForMapAsync(string? kategoria = null, string? wojewodztwo = null, string? powiat = null, string? gmina = null, string? miejscowosc = null, string? krsNumber = null)
+        {
+            _logger.LogDebug("Getting organizations with filters: kategoria={Kategoria}, wojewodztwo={Wojewodztwo}, powiat={Powiat}, gmina={Gmina}, miejscowosc={Miejscowosc}, krsNumber={KrsNumber}", 
+                kategoria ?? "ALL", wojewodztwo ?? "ALL", powiat ?? "ALL", gmina ?? "ALL", miejscowosc ?? "ALL", krsNumber ?? "ALL");
+            
+            try
+            {
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+                
+                // Buduj dynamiczne zapytanie SQL z opcjonalnymi filtrami
+                var whereConditions = new List<string>();
+                var parameters = new List<NpgsqlParameter>();
+                
+                // Filtrowanie po kategorii
+                if (!string.IsNullOrWhiteSpace(kategoria))
+                {
+                    whereConditions.Add("cat.nazwa ILIKE @kategoria");
+                    parameters.Add(new NpgsqlParameter("@kategoria", $"%{kategoria}%"));
+                }
+                
+                // Filtrowanie po województwie
+                if (!string.IsNullOrWhiteSpace(wojewodztwo))
+                {
+                    whereConditions.Add("a.wojewodztwo ILIKE @wojewodztwo");
+                    parameters.Add(new NpgsqlParameter("@wojewodztwo", $"%{wojewodztwo}%"));
+                }
+                
+                // Filtrowanie po powiecie
+                if (!string.IsNullOrWhiteSpace(powiat))
+                {
+                    whereConditions.Add("a.powiat ILIKE @powiat");
+                    parameters.Add(new NpgsqlParameter("@powiat", $"%{powiat}%"));
+                }
+                
+                // Filtrowanie po gminie
+                if (!string.IsNullOrWhiteSpace(gmina))
+                {
+                    whereConditions.Add("a.gmina ILIKE @gmina");
+                    parameters.Add(new NpgsqlParameter("@gmina", $"%{gmina}%"));
+                }
+                
+                // Filtrowanie po miejscowości
+                if (!string.IsNullOrWhiteSpace(miejscowosc))
+                {
+                    whereConditions.Add("a.miejscowosc ILIKE @miejscowosc");
+                    parameters.Add(new NpgsqlParameter("@miejscowosc", $"%{miejscowosc}%"));
+                }
+                
+                // Filtrowanie po numerze KRS
+                if (!string.IsNullOrWhiteSpace(krsNumber))
+                {
+                    whereConditions.Add("o.numerkrs ILIKE @krsNumber");
+                    parameters.Add(new NpgsqlParameter("@krsNumber", $"%{krsNumber}%"));
+                }
+                
+                // ZOPTYMALIZOWANE ZAPYTANIE: Jeden SQL zamiast 3 osobnych!
+                string optimizedQuery;
+                if (whereConditions.Count > 0)
+                {
+                    // Z filtrami - wszystkie dane w jednym zapytaniu
+                    optimizedQuery = @"
+                        SELECT DISTINCT 
+                            o.numerkrs, o.nazwa,
+                            a.ulica, a.nrdomu, a.nrlokalu, a.miejscowosc, a.kodpocztowy, a.poczta, a.gmina, a.powiat, a.wojewodztwo, a.kraj,
+                            k.latitude, k.longitude
+                        FROM organizacja o
+                        INNER JOIN organizacjakategoria ok ON o.numerkrs = ok.numerkrs
+                        INNER JOIN kategoria cat ON ok.kategoriaid = cat.id
+                        INNER JOIN adres a ON o.numerkrs = a.numerkrs
+                        INNER JOIN koordynaty k ON o.numerkrs = k.numerkrs
+                        WHERE " + string.Join(" AND ", whereConditions);
+                }
+                else
+                {
+                    // Bez filtrów - wszystkie dane w jednym zapytaniu
+                    optimizedQuery = @"
+                        SELECT DISTINCT 
+                            o.numerkrs, o.nazwa,
+                            a.ulica, a.nrdomu, a.nrlokalu, a.miejscowosc, a.kodpocztowy, a.poczta, a.gmina, a.powiat, a.wojewodztwo, a.kraj,
+                            k.latitude, k.longitude
+                        FROM organizacja o
+                        INNER JOIN organizacjakategoria ok ON o.numerkrs = ok.numerkrs
+                        INNER JOIN kategoria cat ON ok.kategoriaid = cat.id
+                        INNER JOIN adres a ON o.numerkrs = a.numerkrs
+                        INNER JOIN koordynaty k ON o.numerkrs = k.numerkrs";
+                }
+                
+                var command = new NpgsqlCommand(optimizedQuery, connection);
+                foreach (var param in parameters)
+                {
+                    command.Parameters.Add(param);
+                }
+                
+                _logger.LogDebug("Executing OPTIMIZED query with {FilterCount} filters", whereConditions.Count);
+                
+                await using var reader = await command.ExecuteReaderAsync();
+                
+                var organizacje = new List<Organizacja>();
+                var organizacjeDict = new Dictionary<string, Organizacja>();
+                
+                while (await reader.ReadAsync())
+                {
+                    var numerKrs = reader.GetString(0);
+                    
+                    // Sprawdź czy organizacja już istnieje w słowniku
+                    if (!organizacjeDict.TryGetValue(numerKrs, out var organizacja))
+                    {
+                        // Nowa organizacja
+                        organizacja = new Organizacja
+                        {
+                            NumerKrs = numerKrs,
+                            Nazwa = reader.GetString(1),
+                            Adresy = new List<Adres>(),
+                            Koordynaty = new List<Koordynaty>()
+                        };
+                        organizacje.Add(organizacja);
+                        organizacjeDict[numerKrs] = organizacja;
+                    }
+                    
+                    // Dodaj adres (jeśli nie jest duplikatem)
+                    var adres = new Adres
+                    {
+                        Ulica = reader.IsDBNull(2) ? null : reader.GetString(2),
+                        NrDomu = reader.IsDBNull(3) ? null : reader.GetString(3),
+                        NrLokalu = reader.IsDBNull(4) ? null : reader.GetString(4),
+                        Miejscowosc = reader.IsDBNull(5) ? null : reader.GetString(5),
+                        KodPocztowy = reader.IsDBNull(6) ? null : reader.GetString(6),
+                        Poczta = reader.IsDBNull(7) ? null : reader.GetString(7),
+                        Gmina = reader.IsDBNull(8) ? null : reader.GetString(8),
+                        Powiat = reader.IsDBNull(9) ? null : reader.GetString(9),
+                        Wojewodztwo = reader.IsDBNull(10) ? null : reader.GetString(10),
+                        Kraj = reader.IsDBNull(11) ? null : reader.GetString(11),
+                        NumerKrs = numerKrs
+                    };
+                    
+                    // Sprawdź czy adres już istnieje (unikaj duplikatów)
+                    if (!organizacja.Adresy.Any(a => 
+                        a.Ulica == adres.Ulica && 
+                        a.Miejscowosc == adres.Miejscowosc && 
+                        a.Gmina == adres.Gmina))
+                    {
+                        organizacja.Adresy.Add(adres);
+                    }
+                    
+                    // Dodaj koordynaty (jeśli nie są duplikatem)
+                    var koordynaty = new Koordynaty
+                    {
+                        Latitude = reader.GetDouble(12),
+                        Longitude = reader.GetDouble(13),
+                        NumerKrs = numerKrs
+                    };
+                    
+                    // Sprawdź czy koordynaty już istnieją (unikaj duplikatów)
+                    if (!organizacja.Koordynaty.Any(k => 
+                        Math.Abs(k.Latitude - koordynaty.Latitude) < 0.000001 && 
+                        Math.Abs(k.Longitude - koordynaty.Longitude) < 0.000001))
+                    {
+                        organizacja.Koordynaty.Add(koordynaty);
+                    }
+                }
+                
+                _logger.LogInformation("Successfully loaded {Count} organizations with OPTIMIZED query using {FilterCount} filters", organizacje.Count, whereConditions.Count);
+                return organizacje;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting organizations with optimized query: {ErrorDetails}", ex.ToString());
+                return new List<Organizacja>();
+            }
+        }
+
         private async Task<List<Organizacja>> GetOrganizacjeFromGeolokalizacjaAsync(string? wojewodztwo = null)
         {
             try
             {
-                var url = "https://localhost:7170/api/OrganizacjeGeolokalizacja";
+                var url = "https://localhost:7170/api/Organizacje";
                 if (!string.IsNullOrEmpty(wojewodztwo))
                 {
                     url += $"?wojewodztwo={Uri.EscapeDataString(wojewodztwo)}";
                 }
 
-                _logger.LogInformation("Fetching data from: {Url}", url);
+                _logger.LogDebug("Fetching data from: {Url}", url);
 
                 using var client = new HttpClient();
                 var response = await client.GetStringAsync(url);
@@ -290,7 +480,7 @@ namespace ParasolBackEnd.Services
                     return new List<Organizacja>();
                 }
 
-                _logger.LogInformation("Deserialized {Count} organizacje from geolokalizacja endpoint", organizacjeDto.Count);
+                _logger.LogDebug("Deserialized {Count} organizacje from geolokalizacja endpoint", organizacjeDto.Count);
 
                 var organizacje = new List<Organizacja>();
                 foreach (var dto in organizacjeDto)
@@ -323,11 +513,9 @@ namespace ParasolBackEnd.Services
                     };
 
                     organizacje.Add(organizacja);
-                    
-                    _logger.LogInformation("Mapped organizacja {Krs}: {Nazwa} with {AdresCount} adresy and {KoordynatyCount} koordynaty", 
-                        organizacja.NumerKrs, organizacja.Nazwa, organizacja.Adresy.Count, organizacja.Koordynaty.Count);
                 }
 
+                _logger.LogDebug("Mapped {Count} organizacje with addresses and coordinates", organizacje.Count);
                 return organizacje;
             }
             catch (Exception ex)
@@ -341,7 +529,7 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                _logger.LogInformation("Starting category assignment for organizacja with CeleStatusowe: {CeleStatusowe}", string.Join(", ", celeStatusowe));
+                _logger.LogDebug("Starting category assignment for organizacja with {Count} CeleStatusowe", celeStatusowe.Count);
                 
                 // Pobierz wszystkie kategorie z bazy
                 var kategorie = await GetKategorieAsync();
@@ -410,8 +598,7 @@ namespace ParasolBackEnd.Services
                     }
                 }
                 
-                _logger.LogInformation("Assigned {Count} categories to organizacja with CeleStatusowe: {CeleStatusowe}", 
-                    assignedCategories.Count, string.Join(", ", celeStatusowe));
+                _logger.LogDebug("Assigned {Count} categories to organizacja", assignedCategories.Count);
                 
                 return assignedCategories;
             }
@@ -425,9 +612,7 @@ namespace ParasolBackEnd.Services
 
         private async Task<bool> OrganizacjaExistsAsync(string numerKrs)
         {
-            var connectionString = "User Id=postgres.roaifaijrauldhgxpdrl;Password=symi4MuiLt*Gybky!kJ!;Server=aws-1-eu-central-1.pooler.supabase.com;Port=6543;Database=postgres;Multiplexing=false;Pooling=false";
-            
-            await using var connection = new NpgsqlConnection(connectionString);
+            await using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
             
             string query = "SELECT COUNT(*) FROM organizacja WHERE numerkrs = @numerKrs";
@@ -440,16 +625,12 @@ namespace ParasolBackEnd.Services
 
         private async Task SaveOrganizacjaWithNpgsqlAsync(Organizacja organizacja)
         {
-            _logger.LogInformation("Starting SaveOrganizacjaWithNpgsqlAsync for organizacja {NumerKrs}", organizacja.NumerKrs);
+            _logger.LogDebug("Starting SaveOrganizacjaWithNpgsqlAsync for organizacja {NumerKrs}", organizacja.NumerKrs);
             
-            var connectionString = "User Id=postgres.roaifaijrauldhgxpdrl;Password=symi4MuiLt*Gybky!kJ!;Server=aws-1-eu-central-1.pooler.supabase.com;Port=6543;Database=postgres;Multiplexing=false;Pooling=false";
-            
-            await using var connection = new NpgsqlConnection(connectionString);
+            await using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
-            _logger.LogInformation("Database connection opened successfully");
             
             await using var transaction = await connection.BeginTransactionAsync();
-            _logger.LogInformation("Transaction started");
             
             try
             {
@@ -459,16 +640,15 @@ namespace ParasolBackEnd.Services
                 if (organizacjaExists)
                 {
                     // 1. UPDATE istniejącej organizacji
-                    _logger.LogInformation("Step 1: UPDATING existing organizacja {NumerKrs} in organizacja table", organizacja.NumerKrs);
+                    _logger.LogDebug("Step 1: UPDATING existing organizacja {NumerKrs}", organizacja.NumerKrs);
                     string updateOrgQuery = "UPDATE organizacja SET nazwa = @nazwa WHERE numerkrs = @numerKrs";
                     await using var orgCommand = new NpgsqlCommand(updateOrgQuery, connection, transaction);
                     orgCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
                     orgCommand.Parameters.AddWithValue("@nazwa", organizacja.Nazwa);
                     await orgCommand.ExecuteNonQueryAsync();
-                    _logger.LogInformation("Step 1 COMPLETED: Organizacja {NumerKrs} UPDATED successfully", organizacja.NumerKrs);
                     
                     // Usuń stare adresy i koordynaty przed wstawieniem nowych
-                    _logger.LogInformation("Deleting old adresy and koordynaty for organizacja {NumerKrs}", organizacja.NumerKrs);
+                    _logger.LogDebug("Deleting old data for organizacja {NumerKrs}", organizacja.NumerKrs);
                     string deleteAdresQuery = "DELETE FROM adres WHERE numerkrs = @numerKrs";
                     await using var deleteAdresCommand = new NpgsqlCommand(deleteAdresQuery, connection, transaction);
                     deleteAdresCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
@@ -483,30 +663,24 @@ namespace ParasolBackEnd.Services
                     await using var deleteKategorieCommand = new NpgsqlCommand(deleteKategorieQuery, connection, transaction);
                     deleteKategorieCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
                     await deleteKategorieCommand.ExecuteNonQueryAsync();
-                    
-                    _logger.LogInformation("Old data deleted for organizacja {NumerKrs}", organizacja.NumerKrs);
                 }
                 else
                 {
                     // 1. INSERT nowej organizacji
-                    _logger.LogInformation("Step 1: INSERTING new organizacja {NumerKrs} into organizacja table", organizacja.NumerKrs);
+                    _logger.LogDebug("Step 1: INSERTING new organizacja {NumerKrs}", organizacja.NumerKrs);
                     string insertOrgQuery = "INSERT INTO organizacja (numerkrs, nazwa) VALUES (@numerKrs, @nazwa)";
                     await using var orgCommand = new NpgsqlCommand(insertOrgQuery, connection, transaction);
                     orgCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
                     orgCommand.Parameters.AddWithValue("@nazwa", organizacja.Nazwa);
                     await orgCommand.ExecuteNonQueryAsync();
-                    _logger.LogInformation("Step 1 COMPLETED: Organizacja {NumerKrs} INSERTED successfully", organizacja.NumerKrs);
                 }
 
-                // 2. POTEM zapisz adresy (po wstawieniu/update organizacji)
-                _logger.LogInformation("Step 2: Inserting {Count} adresy for organizacja {NumerKrs}", organizacja.Adresy.Count, organizacja.NumerKrs);
+                // 2. Zapisz adresy organizacji (po wstawieniu/aktualizacji głównej tabeli)
+                _logger.LogDebug("Step 2: Inserting {Count} adresy for organizacja {NumerKrs}", organizacja.Adresy.Count, organizacja.NumerKrs);
                 foreach (var adres in organizacja.Adresy)
                 {
                     // Upewnij się, że adres ma poprawny numerkrs
                     adres.NumerKrs = organizacja.NumerKrs;
-                    
-                    _logger.LogInformation("Inserting adres: Ulica={Ulica}, Miejscowosc={Miejscowosc}, NumerKrs={NumerKrs}", 
-                        adres.Ulica, adres.Miejscowosc, adres.NumerKrs);
                     
                     string insertAdresQuery = @"INSERT INTO adres (numerkrs, ulica, nrdomu, nrlokalu, miejscowosc, kodpocztowy, poczta, gmina, powiat, wojewodztwo, kraj) 
                                                VALUES (@numerKrs, @ulica, @nrdomu, @nrlokalu, @miejscowosc, @kodpocztowy, @poczta, @gmina, @powiat, @wojewodztwo, @kraj)";
@@ -525,19 +699,14 @@ namespace ParasolBackEnd.Services
                     adresCommand.Parameters.AddWithValue("@kraj", adres.Kraj ?? "");
                     
                     await adresCommand.ExecuteNonQueryAsync();
-                    _logger.LogInformation("Adres inserted successfully for organizacja {NumerKrs}", organizacja.NumerKrs);
                 }
-                _logger.LogInformation("Step 2 COMPLETED: All adresy inserted successfully");
 
-                // 3. POTEM zapisz koordynaty (po wstawieniu/update organizacji)
-                _logger.LogInformation("Step 3: Inserting {Count} koordynaty for organizacja {NumerKrs}", organizacja.Koordynaty.Count, organizacja.NumerKrs);
+                // 3. Zapisz koordynaty geograficzne organizacji (po wstawieniu/aktualizacji głównej tabeli)
+                _logger.LogDebug("Step 3: Inserting {Count} koordynaty for organizacja {NumerKrs}", organizacja.Koordynaty.Count, organizacja.NumerKrs);
                 foreach (var koordynaty in organizacja.Koordynaty)
                 {
                     // Upewnij się, że koordynaty mają poprawny numerkrs
                     koordynaty.NumerKrs = organizacja.NumerKrs;
-                    
-                    _logger.LogInformation("Inserting koordynaty: Lat={Latitude}, Lon={Longitude}, NumerKrs={NumerKrs}", 
-                        koordynaty.Latitude, koordynaty.Longitude, koordynaty.NumerKrs);
                     
                     string insertKoordynatyQuery = "INSERT INTO koordynaty (numerkrs, latitude, longitude) VALUES (@numerKrs, @latitude, @longitude)";
                     
@@ -547,24 +716,18 @@ namespace ParasolBackEnd.Services
                     koordynatyCommand.Parameters.AddWithValue("@longitude", koordynaty.Longitude);
                     
                     await koordynatyCommand.ExecuteNonQueryAsync();
-                    _logger.LogInformation("Koordynaty inserted successfully for organizacja {NumerKrs}", organizacja.NumerKrs);
                 }
-                _logger.LogInformation("Step 3 COMPLETED: All koordynaty inserted successfully");
 
-                // 4. NA KONIEC przypisz kategorie (po wstawieniu/update organizacji)
+                // 4. Przypisz kategorie na podstawie celów statutowych (po wstawieniu/aktualizacji głównej tabeli)
                 if (organizacja.CeleStatusowe?.Any() == true)
                 {
-                    _logger.LogInformation("Step 4: Assigning categories for organizacja {NumerKrs} with {Count} CeleStatusowe", 
+                    _logger.LogDebug("Step 4: Assigning categories for organizacja {NumerKrs} with {Count} CeleStatusowe", 
                         organizacja.NumerKrs, organizacja.CeleStatusowe.Count);
                     
                     var kategorie = await AssignCategoriesAsync(organizacja.CeleStatusowe);
-                    _logger.LogInformation("Found {Count} matching categories for organizacja {NumerKrs}", kategorie.Count, organizacja.NumerKrs);
                     
                     foreach (var kategoria in kategorie)
                     {
-                        _logger.LogInformation("Inserting category {KategoriaId} ({KategoriaNazwa}) for organizacja {NumerKrs}", 
-                            kategoria.Id, kategoria.Nazwa, organizacja.NumerKrs);
-                        
                         string insertKategoriaQuery = "INSERT INTO organizacjakategoria (numerkrs, kategoriaid) VALUES (@numerKrs, @kategoriaId)";
                         
                         await using var kategoriaCommand = new NpgsqlCommand(insertKategoriaQuery, connection, transaction);
@@ -572,26 +735,20 @@ namespace ParasolBackEnd.Services
                         kategoriaCommand.Parameters.AddWithValue("@kategoriaId", kategoria.Id);
                         
                         await kategoriaCommand.ExecuteNonQueryAsync();
-                        _logger.LogInformation("Category {KategoriaId} assigned successfully to organizacja {NumerKrs}", kategoria.Id, organizacja.NumerKrs);
                     }
-                    _logger.LogInformation("Step 4 COMPLETED: All categories assigned successfully");
-                }
-                else
-                {
-                    _logger.LogInformation("Step 4 SKIPPED: No CeleStatusowe for organizacja {NumerKrs}", organizacja.NumerKrs);
                 }
 
-                _logger.LogInformation("All steps completed successfully, committing transaction for organizacja {NumerKrs}", organizacja.NumerKrs);
+                _logger.LogInformation("Successfully saved organizacja {NumerKrs} with {AdresCount} adresy, {KoordynatyCount} koordynaty, {KategorieCount} kategorie", 
+                    organizacja.NumerKrs, organizacja.Adresy.Count, organizacja.Koordynaty.Count, organizacja.OrganizacjaKategorie?.Count ?? 0);
                 await transaction.CommitAsync();
-                _logger.LogInformation("Transaction committed successfully for organizacja {NumerKrs}", organizacja.NumerKrs);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in SaveOrganizacjaWithNpgsqlAsync for organizacja {NumerKrs}, rolling back transaction", organizacja.NumerKrs);
                 await transaction.RollbackAsync();
-                _logger.LogInformation("Transaction rolled back for organizacja {NumerKrs}", organizacja.NumerKrs);
                 throw;
             }
         }
+
     }
 }

@@ -17,8 +17,8 @@ namespace ParasolBackEnd.Models
         public List<string> CeleStatusowe { get; set; } = new List<string>();
 
         // Właściwości nawigacyjne (bez relacji w DbContext)
-        public virtual ICollection<Adres> Adresy { get; set; } = new List<Adres>();
-        public virtual ICollection<Koordynaty> Koordynaty { get; set; } = new List<Koordynaty>();
-        public virtual ICollection<OrganizacjaKategoria> OrganizacjaKategorie { get; set; } = new List<OrganizacjaKategoria>();
+        public ICollection<Adres> Adresy { get; set; } = new List<Adres>();
+        public ICollection<Koordynaty> Koordynaty { get; set; } = new List<Koordynaty>();
+        public ICollection<OrganizacjaKategoria> OrganizacjaKategorie { get; set; } = new List<OrganizacjaKategoria>();
     }
 }
