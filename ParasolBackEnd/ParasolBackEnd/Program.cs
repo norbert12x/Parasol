@@ -39,6 +39,17 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                 errorCodesToAdd: null)
     ));
 
+// Dodaj SecondDbContext dla MatchMaker
+builder.Services.AddDbContext<SecondDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("SecondDb") + ";Multiplexing=false;Pooling=false;MinPoolSize=1;MaxPoolSize=1", 
+        npgsqlOptions => npgsqlOptions
+            .CommandTimeout(120) // 2 minuty timeout
+            .EnableRetryOnFailure(
+                maxRetryCount: 3,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorCodesToAdd: null)
+    ));
+
 // Dodaj DatabaseService
 builder.Services.AddScoped<IDatabaseService, DatabaseService>(provider =>
     new DatabaseService(
