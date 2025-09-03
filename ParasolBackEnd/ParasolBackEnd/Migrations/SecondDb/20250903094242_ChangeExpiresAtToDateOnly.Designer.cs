@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ParasolBackEnd.Data;
@@ -11,9 +12,11 @@ using ParasolBackEnd.Data;
 namespace ParasolBackEnd.Migrations.SecondDb
 {
     [DbContext(typeof(SecondDbContext))]
-    partial class SecondDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250903094242_ChangeExpiresAtToDateOnly")]
+    partial class ChangeExpiresAtToDateOnly
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -33,13 +36,11 @@ namespace ParasolBackEnd.Migrations.SecondDb
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("Name")
-                        .HasDatabaseName("ix_categories_name");
 
                     b.ToTable("categories", (string)null);
                 });
@@ -55,24 +56,30 @@ namespace ParasolBackEnd.Migrations.SecondDb
 
                     b.Property<string>("Email")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
+                        .HasColumnName("email");
 
                     b.Property<string>("KrsNumber")
-                        .HasColumnType("text");
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
+                        .HasColumnName("krs_number");
 
                     b.Property<string>("OrganizationName")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("organization_name");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("password_hash");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrganizationName")
-                        .HasDatabaseName("ix_organizations_name");
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("organizations", (string)null);
                 });
@@ -88,11 +95,13 @@ namespace ParasolBackEnd.Migrations.SecondDb
 
                     b.Property<string>("ContactEmail")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("contact_email");
 
                     b.Property<string>("ContactPhone")
-                        .HasColumnType("text")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("contact_phone");
 
                     b.Property<DateTime>("CreatedAt")
@@ -114,12 +123,14 @@ namespace ParasolBackEnd.Migrations.SecondDb
 
                     b.Property<string>("Status")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(20)
+                        .HasColumnType("character varying(20)")
                         .HasColumnName("status");
 
                     b.Property<string>("Title")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)")
                         .HasColumnName("title");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -128,17 +139,7 @@ namespace ParasolBackEnd.Migrations.SecondDb
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CreatedAt")
-                        .HasDatabaseName("ix_posts_created_at");
-
-                    b.HasIndex("OrganizationId")
-                        .HasDatabaseName("ix_posts_organization_id");
-
-                    b.HasIndex("Status")
-                        .HasDatabaseName("ix_posts_status");
-
-                    b.HasIndex("Title")
-                        .HasDatabaseName("ix_posts_title");
+                    b.HasIndex("OrganizationId");
 
                     b.ToTable("posts", (string)null);
                 });
@@ -155,11 +156,7 @@ namespace ParasolBackEnd.Migrations.SecondDb
 
                     b.HasKey("PostId", "CategoryId");
 
-                    b.HasIndex("CategoryId")
-                        .HasDatabaseName("ix_post_categories_category_id");
-
-                    b.HasIndex("PostId")
-                        .HasDatabaseName("ix_post_categories_post_id");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("post_categories", (string)null);
                 });
@@ -176,11 +173,7 @@ namespace ParasolBackEnd.Migrations.SecondDb
 
                     b.HasKey("PostId", "TagId");
 
-                    b.HasIndex("PostId")
-                        .HasDatabaseName("ix_post_tags_post_id");
-
-                    b.HasIndex("TagId")
-                        .HasDatabaseName("ix_post_tags_tag_id");
+                    b.HasIndex("TagId");
 
                     b.ToTable("post_tags", (string)null);
                 });
@@ -200,16 +193,13 @@ namespace ParasolBackEnd.Migrations.SecondDb
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
                         .HasColumnName("name");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CategoryId")
-                        .HasDatabaseName("ix_tags_category_id");
-
-                    b.HasIndex("Name")
-                        .HasDatabaseName("ix_tags_name");
+                    b.HasIndex("CategoryId");
 
                     b.ToTable("tags", (string)null);
                 });

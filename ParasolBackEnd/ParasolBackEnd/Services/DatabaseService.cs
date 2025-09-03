@@ -2,6 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using ParasolBackEnd.Data;
 using ParasolBackEnd.Models;
+using ParasolBackEnd.Models.MapOrganizations;
+using ParasolBackEnd.DTOs;
 using Npgsql;
 using System.Text.Json;
 

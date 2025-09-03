@@ -6,7 +6,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using ParasolBackEnd.Models;
+using ParasolBackEnd.Models.MapOrganizations;
 using RestSharp;
 
 namespace ParasolBackEnd.Services

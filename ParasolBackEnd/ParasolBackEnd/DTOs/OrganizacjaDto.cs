@@ -1,4 +1,4 @@
-namespace ParasolBackEnd.Models
+namespace ParasolBackEnd.DTOs
 {
     public class OrganizacjaImportDto
     {

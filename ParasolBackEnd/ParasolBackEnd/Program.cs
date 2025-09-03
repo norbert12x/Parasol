@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Rejestracja serwisów
 builder.Services.AddControllers();
+builder.Services.AddMemoryCache();
 
 // Pobierz folder z danymi
 var dataFolder = builder.Configuration.GetValue<string>("DataFolder") ?? "dane";
@@ -56,6 +57,9 @@ builder.Services.AddScoped<IDatabaseService, DatabaseService>(provider =>
         provider.GetService<AppDbContext>()!,
         provider.GetService<ILogger<DatabaseService>>()!,
         builder.Configuration));
+
+// Dodaj MatchMakerService
+builder.Services.AddScoped<IMatchMakerService, MatchMakerService>();
 
 // Swagger z XML dokumentacją
 builder.Services.AddEndpointsApiExplorer();

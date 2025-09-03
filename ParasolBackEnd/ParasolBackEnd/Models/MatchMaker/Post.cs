@@ -13,10 +13,9 @@ namespace ParasolBackEnd.Models.MatchMaker
         public string Description { get; set; } = string.Empty;
         
         [Required]
-        public string OfferDescription { get; set; } = string.Empty;
-        
-        [Required]
-        public string ContactInfo { get; set; } = string.Empty;
+        public string ContactEmail { get; set; } = string.Empty;
+
+        public string? ContactPhone { get; set; }
         
         [Required]
         public string Status { get; set; } = "active"; // active, inactive, closed
@@ -25,7 +24,7 @@ namespace ParasolBackEnd.Models.MatchMaker
         
         public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
         
-        public DateTime? ExpiresAt { get; set; }
+        public DateOnly? ExpiresAt { get; set; }
         
         public int OrganizationId { get; set; }
         

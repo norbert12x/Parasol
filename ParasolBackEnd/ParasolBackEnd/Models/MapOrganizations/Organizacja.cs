@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace ParasolBackEnd.Models
+namespace ParasolBackEnd.Models.MapOrganizations
 {
     public class Organizacja
     {

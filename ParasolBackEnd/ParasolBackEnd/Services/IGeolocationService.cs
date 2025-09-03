@@ -1,6 +1,8 @@
 ﻿using System.Threading.Tasks;
-using ParasolBackEnd.Models;
+using ParasolBackEnd.Models.MapOrganizations;
 using ParasolBackEnd.Services;
+
+using ParasolBackEnd.DTOs;
 
 namespace ParasolBackEnd.Services
 {

@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using ParasolBackEnd.Models;
+using ParasolBackEnd.Models.MapOrganizations;
 
 namespace ParasolBackEnd.Data
 {
