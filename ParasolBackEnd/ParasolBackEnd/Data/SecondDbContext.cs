@@ -75,9 +75,13 @@ namespace ParasolBackEnd.Data
                 entity.ToTable("organizations");
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Email).HasColumnName("email");
+                entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
                 entity.Property(e => e.OrganizationName).HasColumnName("organization_name");
+                entity.Property(e => e.KrsNumber).HasColumnName("krs_number");
 
-                // Indeks na nazwie organizacji
+                // Indeksy
+                entity.HasIndex(e => e.Email).HasDatabaseName("ix_organizations_email");
                 entity.HasIndex(e => e.OrganizationName).HasDatabaseName("ix_organizations_name");
             });
 

@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using ParasolBackEnd.DTOs;
 using ParasolBackEnd.Services;
 
@@ -9,11 +10,13 @@ namespace ParasolBackEnd.Controllers
     public class MatchMakerController : ControllerBase
     {
         private readonly IMatchMakerService _matchMakerService;
+        private readonly IAuthService _authService;
         private readonly ILogger<MatchMakerController> _logger;
 
-        public MatchMakerController(IMatchMakerService matchMakerService, ILogger<MatchMakerController> logger)
+        public MatchMakerController(IMatchMakerService matchMakerService, IAuthService authService, ILogger<MatchMakerController> logger)
         {
             _matchMakerService = matchMakerService;
+            _authService = authService;
             _logger = logger;
         }
 
@@ -190,15 +193,34 @@ namespace ParasolBackEnd.Controllers
         }
 
         /// <summary>
-        /// Tworzy nowy post
+        /// Tworzy nowy post (wymaga autoryzacji)
         /// </summary>
         /// <param name="createPostDto">Dane do utworzenia posta</param>
         /// <returns>Utworzony post</returns>
         [HttpPost("posts")]
+        [Authorize]
         public async Task<ActionResult<PostDto>> CreatePost(CreatePostDto createPostDto)
         {
             try
             {
+                // Pobierz ID organizacji z tokenu
+                var authHeader = Request.Headers["Authorization"].FirstOrDefault();
+                if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby utworzyć ogłoszenie", requiresAuth = true });
+                }
+
+                var token = authHeader.Substring("Bearer ".Length);
+                var organizationId = _authService.GetOrganizationIdFromToken(token);
+                
+                if (!organizationId.HasValue)
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby utworzyć ogłoszenie", requiresAuth = true });
+                }
+
+                // Ustaw ID organizacji z tokenu
+                createPostDto.OrganizationId = organizationId.Value;
+
                 // Walidacja wymaganych pól
                 if (string.IsNullOrWhiteSpace(createPostDto.Title))
                 {
@@ -213,11 +235,6 @@ namespace ParasolBackEnd.Controllers
                 if (string.IsNullOrWhiteSpace(createPostDto.ContactEmail))
                 {
                     return BadRequest("Email kontaktowy jest wymagany");
-                }
-
-                if (createPostDto.OrganizationId <= 0)
-                {
-                    return BadRequest("ID organizacji jest wymagane");
                 }
 
                 // Walidacja formatu email
@@ -262,16 +279,44 @@ namespace ParasolBackEnd.Controllers
         }
 
         /// <summary>
-        /// Aktualizuje post
+        /// Aktualizuje post (wymaga autoryzacji)
         /// </summary>
         /// <param name="id">ID posta</param>
         /// <param name="updatePostDto">Dane do aktualizacji</param>
         /// <returns>Zaktualizowany post</returns>
         [HttpPut("posts/{id}")]
+        [Authorize]
         public async Task<ActionResult<PostDto>> UpdatePost(int id, UpdatePostDto updatePostDto)
         {
             try
             {
+                // Pobierz ID organizacji z tokenu
+                var authHeader = Request.Headers["Authorization"].FirstOrDefault();
+                if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby edytować ogłoszenie", requiresAuth = true });
+                }
+
+                var token = authHeader.Substring("Bearer ".Length);
+                var organizationId = _authService.GetOrganizationIdFromToken(token);
+                
+                if (!organizationId.HasValue)
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby edytować ogłoszenie", requiresAuth = true });
+                }
+
+                // Sprawdź czy post należy do zalogowanej organizacji
+                var existingPost = await _matchMakerService.GetPostByIdAsync(id);
+                if (existingPost == null)
+                {
+                    return NotFound($"Post o ID {id} nie został znaleziony");
+                }
+
+                if (existingPost.OrganizationId != organizationId.Value)
+                {
+                    return Forbid("Nie masz uprawnień do edycji tego ogłoszenia");
+                }
+
                 // Walidacja wymaganych pól
                 if (string.IsNullOrWhiteSpace(updatePostDto.Title))
                 {
@@ -325,15 +370,43 @@ namespace ParasolBackEnd.Controllers
         }
 
         /// <summary>
-        /// Usuwa post
+        /// Usuwa post (wymaga autoryzacji)
         /// </summary>
         /// <param name="id">ID posta</param>
         /// <returns>Status operacji</returns>
         [HttpDelete("posts/{id}")]
+        [Authorize]
         public async Task<ActionResult> DeletePost(int id)
         {
             try
             {
+                // Pobierz ID organizacji z tokenu
+                var authHeader = Request.Headers["Authorization"].FirstOrDefault();
+                if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby usunąć ogłoszenie", requiresAuth = true });
+                }
+
+                var token = authHeader.Substring("Bearer ".Length);
+                var organizationId = _authService.GetOrganizationIdFromToken(token);
+                
+                if (!organizationId.HasValue)
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby usunąć ogłoszenie", requiresAuth = true });
+                }
+
+                // Sprawdź czy post należy do zalogowanej organizacji
+                var existingPost = await _matchMakerService.GetPostByIdAsync(id);
+                if (existingPost == null)
+                {
+                    return NotFound($"Post o ID {id} nie został znaleziony");
+                }
+
+                if (existingPost.OrganizationId != organizationId.Value)
+                {
+                    return Forbid("Nie masz uprawnień do usunięcia tego ogłoszenia");
+                }
+
                 var result = await _matchMakerService.DeletePostAsync(id);
                 if (!result)
                 {
