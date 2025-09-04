@@ -7,27 +7,6 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace ParasolBackEnd.Services
 {
-    public interface IMatchMakerService
-    {
-        Task<List<CategorySimpleDto>> GetCategoriesAsync();
-        Task<CategoryDto?> GetCategoryByIdAsync(int id);
-        Task<List<TagDto>> GetTagsAsync();
-        Task<List<TagDto>> GetTagsByCategoryAsync(int categoryId);
-        Task<TagDto?> GetTagByIdAsync(int id);
-        
-        // Post methods
-        Task<List<PostDto>> GetPostsAsync(int? categoryId = null, int? tagId = null, string? searchTerm = null, 
-            bool includeOrganization = true, bool includeCategories = true, bool includeTags = true, 
-            int page = 1, int pageSize = 20);
-        Task<List<PostDto>> GetPostsSummaryAsync(int? categoryId = null, int? tagId = null, string? searchTerm = null, 
-            int page = 1, int pageSize = 20);
-        Task<PostDto?> GetPostByIdAsync(int id, bool includeOrganization = true, bool includeCategories = true, bool includeTags = true);
-        Task<PostDto> CreatePostAsync(CreatePostDto createPostDto);
-        Task<PostDto?> UpdatePostAsync(int id, UpdatePostDto updatePostDto);
-        Task<bool> DeletePostAsync(int id);
-        Task ClearCacheAsync();
-    }
-
     public class MatchMakerService : IMatchMakerService
     {
         private readonly SecondDbContext _context;
@@ -583,6 +562,21 @@ namespace ParasolBackEnd.Services
             {
                 _logger.LogError(ex, "Error clearing cache");
             }
+        }
+
+        public async Task<IEnumerable<PostDto>> GetPostsByOrganizationAsync(int organizationId, bool includeCategories = false, bool includeTags = false)
+        {
+            var query = _context.Posts.Where(p => p.OrganizationId == organizationId);
+
+            if (includeCategories)
+                query = query.Include(p => p.PostCategories).ThenInclude(pc => pc.Category);
+
+            if (includeTags)
+                query = query.Include(p => p.PostTags).ThenInclude(pt => pt.Tag);
+
+            var posts = await query.OrderByDescending(p => p.CreatedAt).ToListAsync();
+
+            return posts.Select(post => MapToPostDto(post, false, includeCategories, includeTags));
         }
 
         private static PostDto MapToPostDto(Post post)

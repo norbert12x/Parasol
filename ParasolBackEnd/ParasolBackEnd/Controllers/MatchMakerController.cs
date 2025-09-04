@@ -193,6 +193,42 @@ namespace ParasolBackEnd.Controllers
         }
 
         /// <summary>
+        /// Pobiera wszystkie posty zalogowanej organizacji (wymaga autoryzacji)
+        /// </summary>
+        /// <param name="includeDetails">Czy ładować szczegóły (kategorie, tagi)</param>
+        /// <returns>Lista postów zalogowanej organizacji</returns>
+        [HttpGet("posts/my")]
+        [Authorize]
+        public async Task<ActionResult<List<PostDto>>> GetMyPosts(bool includeDetails = false)
+        {
+            try
+            {
+                // Pobierz ID organizacji z tokenu
+                var authHeader = Request.Headers["Authorization"].FirstOrDefault();
+                if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby zobaczyć swoje ogłoszenia", requiresAuth = true });
+                }
+
+                var token = authHeader.Substring("Bearer ".Length);
+                var organizationId = _authService.GetOrganizationIdFromToken(token);
+                
+                if (!organizationId.HasValue)
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby zobaczyć swoje ogłoszenia", requiresAuth = true });
+                }
+
+                var posts = await _matchMakerService.GetPostsByOrganizationAsync(organizationId.Value, includeDetails, includeDetails);
+                return Ok(posts.ToList());
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in GetMyPosts");
+                return StatusCode(500, "Wystąpił błąd podczas pobierania postów");
+            }
+        }
+
+        /// <summary>
         /// Tworzy nowy post (wymaga autoryzacji)
         /// </summary>
         /// <param name="createPostDto">Dane do utworzenia posta</param>
