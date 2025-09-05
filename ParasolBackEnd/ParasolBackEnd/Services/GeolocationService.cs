@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿#pragma warning disable CS8619, CS8602
+using System.Text.Json;
 using System.Text.Json.Nodes;
 using RestSharp;
 using ParasolBackEnd.Models.MapOrganizations;

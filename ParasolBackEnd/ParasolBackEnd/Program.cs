@@ -22,33 +22,34 @@ builder.Services.AddHttpClient();
 var dataFolder = builder.Configuration.GetValue<string>("DataFolder") ?? "dane";
 
 // Dodaj usługę geolokalizacji z kluczem API
-builder.Services.AddSingleton<IGeolocationService>(new GeolocationService("pk.8db67e501d12eeee6462b7332848ecd4", dataFolder));
+var apiKey = builder.Configuration["AppSettings:ApiKey"] ?? throw new InvalidOperationException("API key not configured");
+builder.Services.AddSingleton<IGeolocationService>(new GeolocationService(apiKey, dataFolder));
 
 // Dodaj OrganizacjaService z konfiguracją
 builder.Services.AddSingleton<OrganizacjaService>(provider =>
-    new OrganizacjaService(dataFolder, "pk.8db67e501d12eeee6462b7332848ecd4", 
+    new OrganizacjaService(dataFolder, apiKey, 
         provider.GetService<ILogger<OrganizacjaService>>()!));
 
 // KrsService TYMCZASOWO ZAKOMENTOWANY
 // builder.Services.AddScoped<KrsService>(provider =>
 //     new KrsService(provider.GetService<IDatabaseService>()!));
 
-// Dodaj DbContext
+// Dodaj DbContext z optymalizacją
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection") + ";Multiplexing=false;Pooling=false;MinPoolSize=1;MaxPoolSize=1", 
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"), 
         npgsqlOptions => npgsqlOptions
-            .CommandTimeout(120) // 2 minuty timeout
+            .CommandTimeout(120)
             .EnableRetryOnFailure(
                 maxRetryCount: 3,
                 maxRetryDelay: TimeSpan.FromSeconds(30),
                 errorCodesToAdd: null)
     ));
 
-// Dodaj SecondDbContext dla MatchMaker
+// Dodaj SecondDbContext dla MatchMaker z optymalizacją
 builder.Services.AddDbContext<SecondDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("SecondDb") + ";Multiplexing=false;Pooling=false;MinPoolSize=1;MaxPoolSize=1", 
+    options.UseNpgsql(builder.Configuration.GetConnectionString("SecondDb"), 
         npgsqlOptions => npgsqlOptions
-            .CommandTimeout(120) // 2 minuty timeout
+            .CommandTimeout(120)
             .EnableRetryOnFailure(
                 maxRetryCount: 3,
                 maxRetryDelay: TimeSpan.FromSeconds(30),
@@ -111,6 +112,18 @@ builder.Services.AddAuthorization();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
+    // Określ wersję OpenAPI
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "ParasolBackEnd API",
+        Version = "v1",
+        Description = "API dla systemu Parasol - zarządzanie organizacjami i MatchMaker",
+        Contact = new OpenApiContact
+        {
+            Name = "Parasol Team"
+        }
+    });
+    
     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
     if (File.Exists(xmlPath))
@@ -148,8 +161,15 @@ var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwagger(c =>
+    {
+        c.RouteTemplate = "swagger/{documentName}/swagger.json";
+    });
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ParasolBackEnd API v1");
+        c.RoutePrefix = "swagger";
+    });
 }
 
 app.UseHttpsRedirection();

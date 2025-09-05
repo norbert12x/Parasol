@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿#pragma warning disable CS8619, CS8602
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using ParasolBackEnd.Services;
 
@@ -101,11 +102,42 @@ public class OrganizacjeController : ControllerBase
     /// </summary>
     [HttpPost("krs")]
     [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<object>> GetKrsData([FromBody] List<string> krsNumbers, [FromQuery] string rejestr = "S")
     {
         try
         {
+            // Walidacja danych wejściowych
+            if (krsNumbers == null || !krsNumbers.Any())
+            {
+                return BadRequest(new { message = "Lista numerów KRS nie może być pusta" });
+            }
+
+            if (krsNumbers.Count > 10000)
+            {
+                return BadRequest(new { message = "Maksymalnie 10000 numerów KRS na raz" });
+            }
+
+            if (rejestr != "S" && rejestr != "P")
+            {
+                return BadRequest(new { message = "Parametr rejestr musi być 'S' (stowarzyszenia) lub 'P' (przedsiębiorcy)" });
+            }
+
+            // Walidacja formatu numerów KRS
+            var invalidKrsNumbers = krsNumbers.Where(krs => 
+                string.IsNullOrWhiteSpace(krs) || 
+                !krs.All(char.IsDigit) || 
+                krs.Length != 10).ToList();
+
+            if (invalidKrsNumbers.Any())
+            {
+                return BadRequest(new { 
+                    message = "Nieprawidłowy format numerów KRS", 
+                    invalidNumbers = invalidKrsNumbers 
+                });
+            }
+
             _logger.LogInformation("Pobieranie danych KRS dla {Count} organizacji, rejestr: {Rejestr}", krsNumbers.Count, rejestr);
 
             var dataFolder = Path.Combine("..", "dane");

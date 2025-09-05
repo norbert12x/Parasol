@@ -441,7 +441,7 @@ namespace ParasolBackEnd.Services
                         Gmina = reader.IsDBNull(8) ? null : reader.GetString(8),
                         Powiat = reader.IsDBNull(9) ? null : reader.GetString(9),
                         Wojewodztwo = reader.IsDBNull(10) ? null : reader.GetString(10),
-                        Kraj = reader.IsDBNull(11) ? null : reader.GetString(11),
+                        Kraj = reader.IsDBNull(11) ? string.Empty : reader.GetString(11),
                         NumerKrs = numerKrs
                     };
                     
@@ -535,7 +535,7 @@ namespace ParasolBackEnd.Services
                             Gmina = a.Gmina,
                             Powiat = a.Powiat,
                             Wojewodztwo = a.Wojewodztwo,
-                            Kraj = a.Kraj
+                            Kraj = a.Kraj ?? string.Empty
                         }).ToList(),
                         Koordynaty = dto.Koordynaty.Select(k => new Koordynaty
                         {
@@ -637,8 +637,8 @@ namespace ParasolBackEnd.Services
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error assigning categories to organizacja with CeleStatusowe: {ErrorDetails}", 
-                    string.Join(", ", celeStatusowe), ex.ToString());
+                _logger.LogError(ex, "Error assigning categories to organizacja with CeleStatusowe: {CeleStatusowe}", 
+                    string.Join(", ", celeStatusowe));
                 throw; // Przekaż błąd dalej
             }
         }
