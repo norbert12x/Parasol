@@ -232,6 +232,83 @@ namespace ParasolBackEnd.Controllers
                 return StatusCode(500, "Wystąpił błąd podczas zmiany hasła");
             }
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<ActionResult> ForgotPassword([FromBody] ForgotPasswordDto forgotPasswordDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (string.IsNullOrWhiteSpace(forgotPasswordDto.Email) || string.IsNullOrWhiteSpace(forgotPasswordDto.KrsNumber))
+                {
+                    return BadRequest("Email i numer KRS są wymagane");
+                }
+
+                var resetToken = await _authService.GeneratePasswordResetTokenAsync(forgotPasswordDto.Email, forgotPasswordDto.KrsNumber);
+                
+                if (resetToken == null)
+                {
+                    return BadRequest("Nieprawidłowy email lub numer KRS");
+                }
+
+                // Zwracamy krótki kod do frontendu (hybrydowe rozwiązanie)
+                return Ok(new { 
+                    message = "Jeśli podane dane są poprawne, wysłaliśmy email z instrukcjami resetowania hasła",
+                    resetCode = resetToken,
+                    success = true 
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during forgot password");
+                return StatusCode(500, "Wystąpił błąd podczas resetowania hasła");
+            }
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<ActionResult> ResetPassword([FromBody] ResetPasswordDto resetPasswordDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                if (string.IsNullOrWhiteSpace(resetPasswordDto.Token) || string.IsNullOrWhiteSpace(resetPasswordDto.NewPassword))
+                {
+                    return BadRequest("Kod i nowe hasło są wymagane");
+                }
+
+                if (resetPasswordDto.NewPassword.Length < 6)
+                {
+                    return BadRequest("Nowe hasło musi mieć co najmniej 6 znaków");
+                }
+
+                if (resetPasswordDto.NewPassword != resetPasswordDto.ConfirmPassword)
+                {
+                    return BadRequest("Hasła nie są identyczne");
+                }
+
+                var success = await _authService.ResetPasswordAsync(resetPasswordDto.Token, resetPasswordDto.NewPassword);
+                
+                if (!success)
+                {
+                    return BadRequest("Nieprawidłowy lub wygasły kod");
+                }
+
+                return Ok(new { message = "Hasło zostało zresetowane pomyślnie" });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error during password reset");
+                return StatusCode(500, "Wystąpił błąd podczas resetowania hasła");
+            }
+        }
     }
 
     public class ChangePasswordDto

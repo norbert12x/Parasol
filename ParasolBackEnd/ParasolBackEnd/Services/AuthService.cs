@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Caching.Memory;
 using ParasolBackEnd.Data;
 using ParasolBackEnd.DTOs;
 using ParasolBackEnd.Models.MatchMaker;
@@ -10,6 +11,13 @@ using System.Text;
 
 namespace ParasolBackEnd.Services
 {
+    public class PasswordResetData
+    {
+        public string Email { get; set; } = string.Empty;
+        public string KrsNumber { get; set; } = string.Empty;
+        public int OrganizationId { get; set; }
+        public DateTime ExpiresAt { get; set; }
+    }
     public interface IAuthService
     {
         Task<AuthResponseDto?> RegisterAsync(RegisterDto registerDto);
@@ -17,6 +25,8 @@ namespace ParasolBackEnd.Services
         Task<OrganizationProfileDto?> GetOrganizationProfileAsync(int organizationId);
         Task<bool> UpdateOrganizationProfileAsync(int organizationId, RegisterDto updateDto);
         Task<bool> ChangePasswordAsync(int organizationId, string currentPassword, string newPassword);
+        Task<string?> GeneratePasswordResetTokenAsync(string email, string krsNumber);
+        Task<bool> ResetPasswordAsync(string token, string newPassword);
         bool ValidateToken(string token);
         int? GetOrganizationIdFromToken(string token);
     }
@@ -26,12 +36,14 @@ namespace ParasolBackEnd.Services
         private readonly SecondDbContext _context;
         private readonly ILogger<AuthService> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IMemoryCache _cache;
 
-        public AuthService(SecondDbContext context, ILogger<AuthService> logger, IConfiguration configuration)
+        public AuthService(SecondDbContext context, ILogger<AuthService> logger, IConfiguration configuration, IMemoryCache cache)
         {
             _context = context;
             _logger = logger;
             _configuration = configuration;
+            _cache = cache;
         }
 
         public async Task<AuthResponseDto?> RegisterAsync(RegisterDto registerDto)
@@ -191,6 +203,91 @@ namespace ParasolBackEnd.Services
             }
         }
 
+        public async Task<string?> GeneratePasswordResetTokenAsync(string email, string krsNumber)
+        {
+            try
+            {
+                // Sprawdź czy email i KRS pasują do jednej organizacji
+                var organization = await _context.Organizations
+                    .FirstOrDefaultAsync(o => o.Email.ToLower() == email.ToLower() && o.KrsNumber == krsNumber);
+
+                if (organization == null)
+                {
+                    _logger.LogWarning("Password reset failed: Invalid email or KRS number for email: {Email}", email);
+                    return null;
+                }
+
+                // Generuj krótki kod (6 znaków)
+                var resetCode = GenerateShortCode();
+
+                // Zapisz dane w cache na 24h
+                var resetData = new PasswordResetData
+                {
+                    Email = organization.Email,
+                    KrsNumber = organization.KrsNumber ?? string.Empty,
+                    OrganizationId = organization.Id,
+                    ExpiresAt = DateTime.UtcNow.AddHours(24)
+                };
+
+                _cache.Set($"password_reset_{resetCode}", resetData, TimeSpan.FromHours(24));
+
+                _logger.LogInformation("Password reset code generated for email: {Email}", email);
+                return resetCode;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error generating password reset code for email: {Email}", email);
+                return null;
+            }
+        }
+
+        public async Task<bool> ResetPasswordAsync(string code, string newPassword)
+        {
+            try
+            {
+                // Pobierz dane z cache
+                var resetData = _cache.Get<PasswordResetData>($"password_reset_{code}");
+                if (resetData == null)
+                {
+                    _logger.LogWarning("Password reset failed: Invalid or expired code");
+                    return false; // Kod nie istnieje lub wygasł
+                }
+
+                // Sprawdź czy nie wygasł
+                if (resetData.ExpiresAt < DateTime.UtcNow)
+                {
+                    _cache.Remove($"password_reset_{code}");
+                    _logger.LogWarning("Password reset failed: Code expired");
+                    return false;
+                }
+
+                // Znajdź organizację
+                var organization = await _context.Organizations
+                    .FirstOrDefaultAsync(o => o.Id == resetData.OrganizationId);
+
+                if (organization == null)
+                {
+                    _logger.LogWarning("Organization not found for password reset with ID: {OrganizationId}", resetData.OrganizationId);
+                    return false;
+                }
+
+                // Zaktualizuj hasło
+                organization.PasswordHash = HashPassword(newPassword);
+                await _context.SaveChangesAsync();
+
+                // Usuń kod z cache (jednorazowe użycie)
+                _cache.Remove($"password_reset_{code}");
+
+                _logger.LogInformation("Password reset successfully for email: {Email}", resetData.Email);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error resetting password with code");
+                return false;
+            }
+        }
+
         public bool ValidateToken(string token)
         {
             try
@@ -291,6 +388,14 @@ namespace ParasolBackEnd.Services
         {
             var hashedPassword = HashPassword(password);
             return hashedPassword == hash;
+        }
+
+        private string GenerateShortCode()
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            var random = new Random();
+            return new string(Enumerable.Repeat(chars, 6)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }
