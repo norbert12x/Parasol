@@ -16,6 +16,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Rejestracja serwisów
 builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient();
 
 // Pobierz folder z danymi
 var dataFolder = builder.Configuration.GetValue<string>("DataFolder") ?? "dane";

@@ -194,6 +194,8 @@ namespace ParasolBackEnd.Controllers
                 return Ok(new { 
                     message = "Import completed successfully", 
                     importedCount = result.ImportedCount,
+                    deletedFilesCount = result.DeletedFiles.Count,
+                    deletedFiles = result.DeletedFiles,
                     errors = result.Errors
                 });
             }

@@ -238,8 +238,16 @@ namespace ParasolBackEnd.Services
                 var organizacje = await GetOrganizacjeFromGeolokalizacjaAsync(wojewodztwo);
                 _logger.LogInformation("Found {Count} organizations to import", organizacje.Count);
 
+                // Ograniczenie do maksymalnie 4000 organizacji
+                if (organizacje.Count > 4000)
+                {
+                    _logger.LogWarning("Too many organizations ({Count}), limiting to 4000", organizacje.Count);
+                    organizacje = organizacje.Take(4000).ToList();
+                }
+
                 var importedCount = 0;
                 var errors = new List<string>();
+                var deletedFiles = new List<string>();
 
                 foreach (var organizacja in organizacje)
                 {
@@ -258,6 +266,22 @@ namespace ParasolBackEnd.Services
                         // Użyj bezpośrednio Npgsql zamiast Entity Framework
                         await SaveOrganizacjaWithNpgsqlAsync(organizacja);
                         
+                        // Usuń plik JSON po zaimportowaniu
+                        var jsonFilePath = Path.Combine("..", "dane", $"{organizacja.NumerKrs}.json");
+                        if (System.IO.File.Exists(jsonFilePath))
+                        {
+                            try
+                            {
+                                System.IO.File.Delete(jsonFilePath);
+                                deletedFiles.Add(organizacja.NumerKrs);
+                                _logger.LogDebug("Deleted JSON file: {FilePath}", jsonFilePath);
+                            }
+                            catch (Exception deleteEx)
+                            {
+                                _logger.LogWarning(deleteEx, "Failed to delete JSON file: {FilePath}", jsonFilePath);
+                            }
+                        }
+                        
                         importedCount++;
                     }
                     catch (Exception ex)
@@ -268,8 +292,15 @@ namespace ParasolBackEnd.Services
                     }
                 }
 
-                _logger.LogInformation("Import completed. Imported: {ImportedCount}, Errors: {ErrorCount}", importedCount, errors.Count);
-                return new ImportResult { ImportedCount = importedCount, Errors = errors };
+                _logger.LogInformation("Import completed. Imported: {ImportedCount}, Errors: {ErrorCount}, Deleted files: {DeletedCount}", 
+                    importedCount, errors.Count, deletedFiles.Count);
+                
+                return new ImportResult 
+                { 
+                    ImportedCount = importedCount, 
+                    Errors = errors,
+                    DeletedFiles = deletedFiles
+                };
             }
             catch (Exception ex)
             {
