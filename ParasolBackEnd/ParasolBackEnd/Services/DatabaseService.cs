@@ -568,36 +568,149 @@ namespace ParasolBackEnd.Services
                 var kategorie = await GetKategorieAsync();
                 var assignedCategories = new List<Kategoria>();
 
-                // Słowa kluczowe dla każdej kategorii
+                // Słowa kluczowe dla każdej kategorii - oparte na ustawowych celach pożytku publicznego
                 var categoryKeywords = new Dictionary<int, List<string>>
                 {
-                    { 1, new List<string> { "pomoc", "społeczna", "socjalna" } },
-                    { 2, new List<string> { "rodzina", "dzieci", "dziecko", "rodzin" } },
-                    { 3, new List<string> { "trudna", "sytuacja", "życiowa", "życie" } },
-                    { 4, new List<string> { "charytatywna", "charytatywne", "dobroczynność" } },
-                    { 5, new List<string> { "tradycja", "kultura", "narodowa", "naród" } },
-                    { 6, new List<string> { "mniejszość", "narodowa", "etniczna", "etnicz" } },
-                    { 7, new List<string> { "zdrowie", "medyczna", "opieka", "lekarz", "szpital" } },
-                    { 8, new List<string> { "niepełnosprawn", "niepełnosprawność", "inwalida" } },
-                    { 9, new List<string> { "zatrudnienie", "praca", "zawodowa", "aktywizacja" } },
-                    { 10, new List<string> { "kobiet", "mężczyzn", "równe", "prawa" } },
-                    { 11, new List<string> { "gospodarczy", "przedsiębiorczość", "biznes", "ekonomia" } },
-                    { 12, new List<string> { "wspólnota", "lokalna", "lokalny", "społeczność" } },
-                    { 13, new List<string> { "edukacja", "nauka", "szkoła", "uczelnia", "uniwersytet" } },
-                    { 14, new List<string> { "wypoczynek", "dzieci", "młodzież", "wakacje", "kolonie" } },
-                    { 15, new List<string> { "kultura", "sztuka", "artystyczna", "teatr", "muzeum" } },
-                    { 16, new List<string> { "sport", "fizyczna", "wychowanie", "fizyczne", "aktywność" } },
-                    { 17, new List<string> { "ekologia", "ochrona", "zwierząt", "środowisko", "przyroda" } },
-                    { 18, new List<string> { "bezpieczeństwo", "porządek", "publiczny", "policja" } },
-                    { 19, new List<string> { "obronność", "państwa", "wojsko", "armia" } },
-                    { 20, new List<string> { "wolności", "prawa", "człowieka", "obywatel" } },
-                    { 21, new List<string> { "ratownictwo", "ochrona", "ludności", "straż", "pożarna" } },
-                    { 22, new List<string> { "katastrof", "wojen", "ofiar", "pomoc", "humanitarna" } },
-                    { 23, new List<string> { "konsument", "prawa", "konsumenta", "ochrona" } },
-                    { 24, new List<string> { "europejska", "międzynarodowa", "współpraca", "integracja" } },
-                    { 25, new List<string> { "wolontariat", "wolontariusz", "dobrowolna" } },
-                    { 26, new List<string> { "organizacja", "pozarządowa", "ngo", "fundacja" } },
-                    { 27, new List<string> { "sport", "wychowanie", "fizyczne", "aktywność" } }
+                    { 1, new List<string> { 
+                        "pomocy społecznej", "pomocy rodzinom", "osobom w trudnej sytuacji", "wyrównywania szans",
+                        "pomoc społeczna", "pomoc socjalna", "wsparcie społeczne", "pomoc rodzinom i dzieciom",
+                        "osoby w trudnej sytuacji życiowej", "wsparcie rodzin", "pomoc socjalna", "opieka społeczna",
+                        "wsparcie socjalne", "pomoc materialna", "pomoc finansowa", "wsparcie finansowe"
+                    }},
+                    { 4, new List<string> { 
+                        "działalności charytatywnej", "charytatywne", "dobroczynność", "charytatywna",
+                        "działalność charytatywna", "pomoc charytatywna", "wsparcie charytatywne", "fundacja charytatywna",
+                        "organizacja charytatywna", "działalność dobroczynna", "pomoc dobroczynna"
+                    }},
+                    { 5, new List<string> { 
+                        "podtrzymywania tradycji narodowej", "pielęgnowania polskości", "świadomości narodowej",
+                        "tradycja narodowa", "kultura narodowa", "polskość", "tradycja", "naród", "narodowa",
+                        "dziedzictwo narodowe", "tradycje narodowe", "kultura polska", "patriotyzm", "tożsamość narodowa"
+                    }},
+                    { 6, new List<string> { 
+                        "działalności na rzecz mniejszości narodowych", "mniejszości etniczne", "język regionalny",
+                        "mniejszość narodowa", "mniejszość etniczna", "etniczne", "narodowe", "mniejszości",
+                        "grupy etniczne", "społeczności etniczne", "kultury mniejszościowe", "języki mniejszościowe"
+                    }},
+                    { 7, new List<string> { 
+                        "ochrony i promocji zdrowia", "działalności leczniczej", "opieka medyczna",
+                        "zdrowie", "medyczna", "opieka", "lekarz", "szpital", "przychodnia", "lecznictwo",
+                        "promocja zdrowia", "ochrona zdrowia", "opieka zdrowotna", "służba zdrowia", "medycyna",
+                        "lecznicza", "terapia", "rehabilitacja medyczna", "opieka pielęgniarska"
+                    }},
+                    { 8, new List<string> { 
+                        "działalności na rzecz osób niepełnosprawnych", "niepełnosprawni", "inwalida",
+                        "niepełnosprawność", "niepełnosprawny", "osoby niepełnosprawne", "inwalidzi",
+                        "rehabilitacja", "integracja osób niepełnosprawnych", "wsparcie niepełnosprawnych",
+                        "opieka nad niepełnosprawnymi", "aktywizacja niepełnosprawnych"
+                    }},
+                    { 9, new List<string> { 
+                        "promocji zatrudnienia", "aktywizacji zawodowej", "integracji zawodowej",
+                        "zatrudnienie", "praca", "zawodowa", "aktywizacja", "bezrobocie", "rynek pracy",
+                        "reintegracja zawodowa", "aktywizacja zawodowa", "promocja zatrudnienia", "pomoc w znalezieniu pracy",
+                        "szkolenia zawodowe", "przedsiębiorczość", "samozatrudnienie"
+                    }},
+                    { 10, new List<string> { 
+                        "równych praw kobiet i mężczyzn", "upowszechniania praw kobiet",
+                        "kobiet", "mężczyzn", "równe", "prawa", "równość płci", "gender", "feminizm",
+                        "upowszechnianie praw kobiet", "równość kobiet i mężczyzn", "prawa kobiet", "prawa mężczyzn",
+                        "dyskryminacja płciowa", "równouprawnienie"
+                    }},
+                    { 11, new List<string> { 
+                        "działalności wspomagającej rozwój gospodarczy", "przedsiębiorczości",
+                        "gospodarczy", "przedsiębiorczość", "biznes", "ekonomia", "gospodarka", "rozwój gospodarczy",
+                        "wsparcie przedsiębiorczości", "promocja biznesu", "rozwój ekonomiczny", "inwestycje",
+                        "rozwój regionalny", "gospodarka lokalna"
+                    }},
+                    { 12, new List<string> { 
+                        "działalności wspomagającej rozwój wspólnot", "społeczności lokalnych",
+                        "wspólnota", "lokalna", "lokalny", "społeczność", "rozwój lokalny", "wspólnoty lokalne",
+                        "społeczności", "rozwój społeczności", "aktywizacja lokalna", "współpraca lokalna",
+                        "samorządność", "rozwój terytorialny"
+                    }},
+                    { 13, new List<string> { 
+                        "nauki, szkolnictwa wyższego", "edukacji, oświaty i wychowania",
+                        "edukacja", "nauka", "szkoła", "uczelnia", "uniwersytet", "oświata", "wychowanie",
+                        "szkolnictwo", "kształcenie", "nauczanie", "uczenie", "edukacja dzieci", "edukacja młodzieży",
+                        "szkolnictwo wyższe", "badania naukowe", "nauka", "akademia"
+                    }},
+                    { 14, new List<string> { 
+                        "działalności na rzecz dzieci i młodzieży", "wypoczynku dzieci",
+                        "wypoczynek", "dzieci", "młodzież", "wakacje", "kolonie", "obozy", "ferie",
+                        "wypoczynek dzieci", "wypoczynek młodzieży", "aktywność dzieci", "aktywność młodzieży",
+                        "zajęcia dla dzieci", "zajęcia dla młodzieży", "czas wolny", "rekreacja dzieci"
+                    }},
+                    { 15, new List<string> { 
+                        "kultury, sztuki", "ochrony dóbr kultury", "dziedzictwa narodowego",
+                        "kultura", "sztuka", "artystyczna", "teatr", "muzeum", "galeria", "kino",
+                        "muzyka", "literatura", "poezja", "malarstwo", "rzeźba", "fotografia", "film",
+                        "dziedzictwo kulturowe", "zabytki", "pomniki", "kultura regionalna", "folklor"
+                    }},
+                    { 16, new List<string> { 
+                        "wspierania i upowszechniania kultury fizycznej", "sportu",
+                        "sport", "fizyczna", "wychowanie", "fizyczne", "aktywność", "kultura fizyczna",
+                        "wychowanie fizyczne", "sport dzieci", "sport młodzieży", "aktywność fizyczna",
+                        "rekreacja", "fitness", "gimnastyka", "lekkoatletyka", "piłka", "pływanie"
+                    }},
+                    { 17, new List<string> { 
+                        "ekologii i ochrony zwierząt", "ochrony dziedzictwa przyrodniczego",
+                        "ekologia", "ochrona", "zwierząt", "środowisko", "przyroda", "ochrona środowiska",
+                        "ochrona zwierząt", "ekosystem", "biodiversność", "ochrona przyrody", "parki narodowe",
+                        "rezerwaty", "ochrona klimatu", "zrównoważony rozwój", "energia odnawialna"
+                    }},
+                    { 18, new List<string> { 
+                        "porządku i bezpieczeństwa publicznego", "przeciwdziałania patologiom",
+                        "bezpieczeństwo", "porządek", "publiczny", "policja", "straż miejska", "patologie",
+                        "przeciwdziałanie patologiom", "bezpieczeństwo publiczne", "porządek publiczny",
+                        "ochrona porządku", "prewencja", "bezpieczeństwo obywateli"
+                    }},
+                    { 19, new List<string> { 
+                        "obronności państwa", "działalności Sił Zbrojnych",
+                        "obronność", "państwa", "wojsko", "armia", "siły zbrojne", "obrona narodowa",
+                        "wojskowość", "patriotyzm", "służba wojskowa", "weterani", "kombatanci"
+                    }},
+                    { 20, new List<string> { 
+                        "upowszechniania i ochrony wolności", "praw człowieka", "swobód obywatelskich",
+                        "wolności", "prawa", "człowieka", "obywatel", "prawa człowieka", "wolności obywatelskie",
+                        "swobody obywatelskie", "demokracja", "tolerancja", "równość", "sprawiedliwość",
+                        "prawa obywatelskie", "wolność słowa", "wolność zgromadzeń"
+                    }},
+                    { 21, new List<string> { 
+                        "ratownictwa i ochrony ludności", "straż", "pożarna",
+                        "ratownictwo", "ochrona", "ludności", "straż", "pożarna", "ratownictwo medyczne",
+                        "pogotowie", "ratownictwo górskie", "ratownictwo wodne", "ochrona ludności",
+                        "straż pożarna", "ratownictwo techniczne", "pomoc w sytuacjach kryzysowych"
+                    }},
+                    { 22, new List<string> { 
+                        "pomocy ofiarom katastrof", "klęsk żywiołowych", "konfliktów zbrojnych",
+                        "katastrof", "wojen", "ofiar", "pomoc", "humanitarna", "klęski żywiołowe",
+                        "konflikty zbrojne", "pomoc humanitarna", "ofiary katastrof", "pomoc w sytuacjach kryzysowych",
+                        "pomoc ofiarom", "wsparcie humanitarne", "pomoc międzynarodowa"
+                    }},
+                    { 23, new List<string> { 
+                        "upowszechniania i ochrony praw konsumentów", "konsument",
+                        "konsument", "prawa", "konsumenta", "ochrona", "prawa konsumentów", "ochrona konsumentów",
+                        "upowszechnianie praw konsumentów", "edukacja konsumencka", "bezpieczeństwo produktów",
+                        "gwarancje", "reklamacje", "ochrona przed nieuczciwymi praktykami"
+                    }},
+                    { 24, new List<string> { 
+                        "działalności na rzecz integracji europejskiej", "współpracy między społeczeństwami",
+                        "europejska", "międzynarodowa", "współpraca", "integracja", "integracja europejska",
+                        "współpraca międzynarodowa", "europa", "unia europejska", "współpraca zagraniczna",
+                        "wymiana międzynarodowa", "partnerstwo międzynarodowe"
+                    }},
+                    { 25, new List<string> { 
+                        "promocji i organizacji wolontariatu", "wolontariusz",
+                        "wolontariat", "wolontariusz", "dobrowolna", "promocja wolontariatu", "organizacja wolontariatu",
+                        "wolontariusze", "praca wolontariacka", "działalność wolontariacka", "wolontariat społeczny",
+                        "wolontariat międzynarodowy", "wolontariat lokalny"
+                    }},
+                    { 26, new List<string> { 
+                        "działalności wspomagającej organizacje pozarządowe", "ngo", "fundacja",
+                        "organizacja", "pozarządowa", "ngo", "fundacja", "stowarzyszenie", "wsparcie organizacji",
+                        "wspomaganie ngo", "wsparcie fundacji", "wsparcie stowarzyszeń", "rozwój trzeciego sektora",
+                        "wsparcie techniczne", "wsparcie szkoleniowe", "wsparcie informacyjne", "wsparcie finansowe"
+                    }}
                 };
 
                 // Sprawdź każde słowo kluczowe
