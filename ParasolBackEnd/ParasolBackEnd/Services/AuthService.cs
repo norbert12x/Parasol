@@ -1,4 +1,3 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Caching.Memory;
 using ParasolBackEnd.Data;
@@ -8,6 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Npgsql;
 
 namespace ParasolBackEnd.Services
 {
@@ -23,7 +23,6 @@ namespace ParasolBackEnd.Services
         Task<AuthResponseDto?> RegisterAsync(RegisterDto registerDto);
         Task<AuthResponseDto?> LoginAsync(LoginDto loginDto);
         Task<OrganizationProfileDto?> GetOrganizationProfileAsync(int organizationId);
-        Task<bool> UpdateOrganizationProfileAsync(int organizationId, RegisterDto updateDto);
         Task<bool> ChangePasswordAsync(int organizationId, string currentPassword, string newPassword);
         Task<string?> GeneratePasswordResetTokenAsync(string email, string krsNumber);
         Task<bool> ResetPasswordAsync(string token, string newPassword);
@@ -37,6 +36,7 @@ namespace ParasolBackEnd.Services
         private readonly ILogger<AuthService> _logger;
         private readonly IConfiguration _configuration;
         private readonly IMemoryCache _cache;
+        private readonly string _connectionString;
 
         public AuthService(SecondDbContext context, ILogger<AuthService> logger, IConfiguration configuration, IMemoryCache cache)
         {
@@ -44,41 +44,72 @@ namespace ParasolBackEnd.Services
             _logger = logger;
             _configuration = configuration;
             _cache = cache;
+            _connectionString = configuration.GetConnectionString("SecondDb") + ";Multiplexing=false;Pooling=false";
         }
 
         public async Task<AuthResponseDto?> RegisterAsync(RegisterDto registerDto)
         {
             try
             {
-                // Sprawdź czy email już istnieje
-                var existingOrganization = await _context.Organizations
-                    .FirstOrDefaultAsync(o => o.Email.ToLower() == registerDto.Email.ToLower());
+                _logger.LogInformation("Starting RegisterAsync for email: {Email}", registerDto.Email);
 
-                if (existingOrganization != null)
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                using var transaction = await connection.BeginTransactionAsync();
+
+                try
                 {
-                    _logger.LogWarning("Registration failed: Email {Email} already exists", registerDto.Email);
-                    return null;
+                    // Sprawdź czy email już istnieje
+                    const string checkEmailSql = "SELECT id FROM organizations WHERE LOWER(email) = LOWER(@email)";
+                    await using var checkCommand = new NpgsqlCommand(checkEmailSql, connection, transaction);
+                    checkCommand.Parameters.AddWithValue("@email", registerDto.Email);
+
+                    var existingId = await checkCommand.ExecuteScalarAsync();
+                    if (existingId != null)
+                    {
+                        _logger.LogWarning("Registration failed: Email {Email} already exists", registerDto.Email);
+                        await transaction.RollbackAsync();
+                        return null;
+                    }
+
+                    // Hashuj hasło
+                    var passwordHash = HashPassword(registerDto.Password);
+
+                    // Wstaw organizację
+                    const string insertSql = @"
+                        INSERT INTO organizations (email, password_hash, organization_name, krs_number)
+                        VALUES (@email, @passwordHash, @organizationName, @krsNumber)
+                        RETURNING id";
+
+                    await using var insertCommand = new NpgsqlCommand(insertSql, connection, transaction);
+                    insertCommand.Parameters.AddWithValue("@email", registerDto.Email.ToLower());
+                    insertCommand.Parameters.AddWithValue("@passwordHash", passwordHash);
+                    insertCommand.Parameters.AddWithValue("@organizationName", registerDto.OrganizationName);
+                    insertCommand.Parameters.AddWithValue("@krsNumber", registerDto.KrsNumber);
+
+                    var organizationId = (int)await insertCommand.ExecuteScalarAsync();
+
+                    await transaction.CommitAsync();
+
+                    _logger.LogInformation("Organization registered successfully: {Email} with ID {Id}", registerDto.Email, organizationId);
+
+                    // Pobierz organizację dla odpowiedzi
+                    var organization = new Organization
+                    {
+                        Id = organizationId,
+                        Email = registerDto.Email.ToLower(),
+                        OrganizationName = registerDto.OrganizationName,
+                        KrsNumber = registerDto.KrsNumber
+                    };
+
+                    return GenerateAuthResponse(organization);
                 }
-
-                // Hashuj hasło
-                var passwordHash = HashPassword(registerDto.Password);
-
-                // Utwórz organizację
-                var organization = new Organization
+                catch
                 {
-                    Email = registerDto.Email.ToLower(),
-                    PasswordHash = passwordHash,
-                    OrganizationName = registerDto.OrganizationName,
-                    KrsNumber = registerDto.KrsNumber
-                };
-
-                _context.Organizations.Add(organization);
-                await _context.SaveChangesAsync();
-
-                _logger.LogInformation("Organization registered successfully: {Email}", registerDto.Email);
-
-                // Wygeneruj token
-                return GenerateAuthResponse(organization);
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -91,23 +122,44 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                var organization = await _context.Organizations
-                    .FirstOrDefaultAsync(o => o.Email.ToLower() == loginDto.Email.ToLower());
+                _logger.LogInformation("Starting LoginAsync for email: {Email}", loginDto.Email);
 
-                if (organization == null)
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                const string sql = @"
+                    SELECT id, email, password_hash, organization_name, krs_number
+                    FROM organizations 
+                    WHERE LOWER(email) = LOWER(@email)";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@email", loginDto.Email);
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
                 {
-                    _logger.LogWarning("Login failed: Organization not found for email: {Email}", loginDto.Email);
-                    return null;
+                    var organization = new Organization
+                    {
+                        Id = reader.GetInt32(0),
+                        Email = reader.GetString(1),
+                        PasswordHash = reader.GetString(2),
+                        OrganizationName = reader.GetString(3),
+                        KrsNumber = reader.GetString(4)
+                    };
+
+                    if (!VerifyPassword(loginDto.Password, organization.PasswordHash))
+                    {
+                        _logger.LogWarning("Login failed: Invalid password for email: {Email}", loginDto.Email);
+                        return null;
+                    }
+
+                    _logger.LogInformation("Organization logged in successfully: {Email}", loginDto.Email);
+                    return GenerateAuthResponse(organization);
                 }
 
-                if (!VerifyPassword(loginDto.Password, organization.PasswordHash))
-                {
-                    _logger.LogWarning("Login failed: Invalid password for email: {Email}", loginDto.Email);
-                    return null;
-                }
-
-                _logger.LogInformation("Organization logged in successfully: {Email}", loginDto.Email);
-                return GenerateAuthResponse(organization);
+                _logger.LogWarning("Login failed: Organization not found for email: {Email}", loginDto.Email);
+                return null;
             }
             catch (Exception ex)
             {
@@ -120,19 +172,37 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                var organization = await _context.Organizations
-                    .FirstOrDefaultAsync(o => o.Id == organizationId);
+                _logger.LogInformation("Starting GetOrganizationProfileAsync for organization {Id}", organizationId);
 
-                if (organization == null)
-                    return null;
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
 
-                return new OrganizationProfileDto
+                const string sql = @"
+                    SELECT id, email, organization_name, krs_number
+                    FROM organizations 
+                    WHERE id = @organizationId";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@organizationId", organizationId);
+
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
                 {
-                    Id = organization.Id,
-                    Email = organization.Email,
-                    OrganizationName = organization.OrganizationName,
-                    KrsNumber = organization.KrsNumber
-                };
+                    var profile = new OrganizationProfileDto
+                    {
+                        Id = reader.GetInt32(0),
+                        Email = reader.GetString(1),
+                        OrganizationName = reader.GetString(2),
+                        KrsNumber = reader.GetString(3)
+                    };
+
+                    _logger.LogInformation("Successfully loaded organization profile for ID {Id}", organizationId);
+                    return profile;
+                }
+
+                _logger.LogWarning("Organization not found for ID {Id}", organizationId);
+                return null;
             }
             catch (Exception ex)
             {
@@ -141,60 +211,65 @@ namespace ParasolBackEnd.Services
             }
         }
 
-        public async Task<bool> UpdateOrganizationProfileAsync(int organizationId, RegisterDto updateDto)
-        {
-            try
-            {
-                var organization = await _context.Organizations
-                    .FirstOrDefaultAsync(o => o.Id == organizationId);
-
-                if (organization == null)
-                    return false;
-
-                // Sprawdź czy email nie jest zajęty przez inną organizację
-                if (updateDto.Email.ToLower() != organization.Email.ToLower())
-                {
-                    var existingOrganization = await _context.Organizations
-                        .FirstOrDefaultAsync(o => o.Email.ToLower() == updateDto.Email.ToLower() && o.Id != organizationId);
-
-                    if (existingOrganization != null)
-                        return false;
-                }
-
-                // Aktualizuj dane organizacji
-                organization.Email = updateDto.Email.ToLower();
-                organization.OrganizationName = updateDto.OrganizationName;
-                organization.KrsNumber = updateDto.KrsNumber;
-
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Organization profile updated successfully: {OrganizationId}", organizationId);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error updating organization profile for organizationId: {OrganizationId}", organizationId);
-                return false;
-            }
-        }
 
         public async Task<bool> ChangePasswordAsync(int organizationId, string currentPassword, string newPassword)
         {
             try
             {
-                var organization = await _context.Organizations
-                    .FirstOrDefaultAsync(o => o.Id == organizationId);
+                _logger.LogInformation("Starting ChangePasswordAsync for organization {Id}", organizationId);
 
-                if (organization == null)
-                    return false;
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
 
-                if (!VerifyPassword(currentPassword, organization.PasswordHash))
-                    return false;
+                using var transaction = await connection.BeginTransactionAsync();
 
-                organization.PasswordHash = HashPassword(newPassword);
+                try
+                {
+                    // Pobierz organizację i sprawdź hasło
+                    const string checkSql = @"
+                        SELECT password_hash 
+                        FROM organizations 
+                        WHERE id = @organizationId";
 
-                await _context.SaveChangesAsync();
-                _logger.LogInformation("Password changed successfully for organizationId: {OrganizationId}", organizationId);
-                return true;
+                    await using var checkCommand = new NpgsqlCommand(checkSql, connection, transaction);
+                    checkCommand.Parameters.AddWithValue("@organizationId", organizationId);
+
+                    var passwordHash = await checkCommand.ExecuteScalarAsync() as string;
+                    if (passwordHash == null)
+                    {
+                        _logger.LogWarning("Organization not found for ID {Id}", organizationId);
+                        await transaction.RollbackAsync();
+                        return false;
+                    }
+
+                    if (!VerifyPassword(currentPassword, passwordHash))
+                    {
+                        _logger.LogWarning("Invalid current password for organization {Id}", organizationId);
+                        await transaction.RollbackAsync();
+                        return false;
+                    }
+
+                    // Zaktualizuj hasło
+                    const string updateSql = @"
+                        UPDATE organizations 
+                        SET password_hash = @newPasswordHash 
+                        WHERE id = @organizationId";
+
+                    await using var updateCommand = new NpgsqlCommand(updateSql, connection, transaction);
+                    updateCommand.Parameters.AddWithValue("@newPasswordHash", HashPassword(newPassword));
+                    updateCommand.Parameters.AddWithValue("@organizationId", organizationId);
+
+                    await updateCommand.ExecuteNonQueryAsync();
+                    await transaction.CommitAsync();
+
+                    _logger.LogInformation("Password changed successfully for organization {Id}", organizationId);
+                    return true;
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -207,11 +282,22 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                // Sprawdź czy email i KRS pasują do jednej organizacji
-                var organization = await _context.Organizations
-                    .FirstOrDefaultAsync(o => o.Email.ToLower() == email.ToLower() && o.KrsNumber == krsNumber);
+                _logger.LogInformation("Starting GeneratePasswordResetTokenAsync for email: {Email}", email);
 
-                if (organization == null)
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                const string sql = @"
+                    SELECT id 
+                    FROM organizations 
+                    WHERE LOWER(email) = LOWER(@email) AND krs_number = @krsNumber";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@email", email);
+                command.Parameters.AddWithValue("@krsNumber", krsNumber);
+
+                var organizationId = await command.ExecuteScalarAsync();
+                if (organizationId == null)
                 {
                     _logger.LogWarning("Password reset failed: Invalid email or KRS number for email: {Email}", email);
                     return null;
@@ -223,9 +309,9 @@ namespace ParasolBackEnd.Services
                 // Zapisz dane w cache na 24h
                 var resetData = new PasswordResetData
                 {
-                    Email = organization.Email,
-                    KrsNumber = organization.KrsNumber ?? string.Empty,
-                    OrganizationId = organization.Id,
+                    Email = email,
+                    KrsNumber = krsNumber,
+                    OrganizationId = (int)organizationId,
                     ExpiresAt = DateTime.UtcNow.AddHours(24)
                 };
 
@@ -245,6 +331,8 @@ namespace ParasolBackEnd.Services
         {
             try
             {
+                _logger.LogInformation("Starting ResetPasswordAsync with code");
+
                 // Pobierz dane z cache
                 var resetData = _cache.Get<PasswordResetData>($"password_reset_{code}");
                 if (resetData == null)
@@ -261,25 +349,50 @@ namespace ParasolBackEnd.Services
                     return false;
                 }
 
-                // Znajdź organizację
-                var organization = await _context.Organizations
-                    .FirstOrDefaultAsync(o => o.Id == resetData.OrganizationId);
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
 
-                if (organization == null)
+                using var transaction = await connection.BeginTransactionAsync();
+
+                try
                 {
-                    _logger.LogWarning("Organization not found for password reset with ID: {OrganizationId}", resetData.OrganizationId);
-                    return false;
+                    // Sprawdź czy organizacja istnieje
+                    const string checkSql = "SELECT id FROM organizations WHERE id = @organizationId";
+                    await using var checkCommand = new NpgsqlCommand(checkSql, connection, transaction);
+                    checkCommand.Parameters.AddWithValue("@organizationId", resetData.OrganizationId);
+
+                    var exists = await checkCommand.ExecuteScalarAsync();
+                    if (exists == null)
+                    {
+                        _logger.LogWarning("Organization not found for password reset with ID: {OrganizationId}", resetData.OrganizationId);
+                        await transaction.RollbackAsync();
+                        return false;
+                    }
+
+                    // Zaktualizuj hasło
+                    const string updateSql = @"
+                        UPDATE organizations 
+                        SET password_hash = @newPasswordHash 
+                        WHERE id = @organizationId";
+
+                    await using var updateCommand = new NpgsqlCommand(updateSql, connection, transaction);
+                    updateCommand.Parameters.AddWithValue("@newPasswordHash", HashPassword(newPassword));
+                    updateCommand.Parameters.AddWithValue("@organizationId", resetData.OrganizationId);
+
+                    await updateCommand.ExecuteNonQueryAsync();
+                    await transaction.CommitAsync();
+
+                    // Usuń kod z cache (jednorazowe użycie)
+                    _cache.Remove($"password_reset_{code}");
+
+                    _logger.LogInformation("Password reset successfully for email: {Email}", resetData.Email);
+                    return true;
                 }
-
-                // Zaktualizuj hasło
-                organization.PasswordHash = HashPassword(newPassword);
-                await _context.SaveChangesAsync();
-
-                // Usuń kod z cache (jednorazowe użycie)
-                _cache.Remove($"password_reset_{code}");
-
-                _logger.LogInformation("Password reset successfully for email: {Email}", resetData.Email);
-                return true;
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {

@@ -1,46 +1,46 @@
-using Microsoft.EntityFrameworkCore;
-using ParasolBackEnd.Data;
 using ParasolBackEnd.DTOs;
-using ParasolBackEnd.Models.MatchMaker;
-using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
 
 namespace ParasolBackEnd.Services
 {
     public class MatchMakerService : IMatchMakerService
     {
-        private readonly SecondDbContext _context;
         private readonly ILogger<MatchMakerService> _logger;
-        private readonly IMemoryCache _cache;
+        private readonly string _connectionString;
 
-        public MatchMakerService(SecondDbContext context, ILogger<MatchMakerService> logger, IMemoryCache cache)
+        public MatchMakerService(ILogger<MatchMakerService> logger, IConfiguration configuration)
         {
-            _context = context;
             _logger = logger;
-            _cache = cache;
+            _connectionString = configuration.GetConnectionString("SecondDb") + ";Multiplexing=false;Pooling=false";
         }
 
         public async Task<List<CategorySimpleDto>> GetCategoriesAsync()
         {
             try
             {
-                const string cacheKey = "categories_simple";
-                
-                if (_cache.TryGetValue(cacheKey, out List<CategorySimpleDto>? cachedCategories))
+                _logger.LogInformation("Starting GetCategoriesAsync");
+
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                const string sql = "SELECT id, name FROM categories ORDER BY name";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                await using var reader = await command.ExecuteReaderAsync();
+
+                var categories = new List<CategorySimpleDto>();
+                while (await reader.ReadAsync())
                 {
-                    return cachedCategories ?? new List<CategorySimpleDto>();
+                    categories.Add(new CategorySimpleDto
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1)
+                    });
                 }
 
-                var categories = await _context.Categories
-                    .OrderBy(c => c.Name)
-                    .ToListAsync();
-
-                var result = categories.Select(MapToCategorySimpleDto).ToList();
-                
-                // Cache na 30 minut
-                _cache.Set(cacheKey, result, TimeSpan.FromMinutes(30));
-                
-                return result;
+                _logger.LogInformation("Successfully loaded {Count} categories", categories.Count);
+                return categories;
             }
             catch (Exception ex)
             {
@@ -53,11 +53,46 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                var category = await _context.Categories
-                    .Include(c => c.Tags)
-                    .FirstOrDefaultAsync(c => c.Id == id);
+                _logger.LogInformation("Starting GetCategoryByIdAsync for category {Id}", id);
 
-                return category != null ? MapToCategoryDto(category) : null;
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+                
+                // Pobierz podstawowe info o kategorii
+                const string categorySql = "SELECT id, name FROM categories WHERE id = @id";
+                await using var categoryCommand = new NpgsqlCommand(categorySql, connection);
+                categoryCommand.Parameters.AddWithValue("@id", id);
+                
+                await using var categoryReader = await categoryCommand.ExecuteReaderAsync();
+                if (!await categoryReader.ReadAsync())
+                {
+                    _logger.LogWarning("Category {Id} not found in database", id);
+                    return null;
+                }
+                
+                var categoryId = categoryReader.GetInt32(0);
+                var categoryName = categoryReader.GetString(1);
+                await categoryReader.CloseAsync();
+
+                // Pobierz tagi używając nowej metody
+                var tagNames = await GetTagNamesByCategoryAsync(id);
+
+                var result = new CategoryDto
+                {
+                    Id = categoryId,
+                    Name = categoryName,
+                    Tags = tagNames.Select(name => new TagDto
+                    {
+                        Id = 0, // Nie potrzebujemy ID
+                        Name = name,
+                        CategoryId = id,
+                        CategoryName = categoryName
+                    }).ToList()
+                };
+
+                _logger.LogInformation("Successfully loaded category {Id} with {TagCount} tags", id, result.Tags.Count);
+
+                return result;
             }
             catch (Exception ex)
             {
@@ -65,29 +100,71 @@ namespace ParasolBackEnd.Services
                 return null;
             }
         }
+        
+        private async Task<List<string>> GetTagNamesByCategoryAsync(int categoryId)
+        {
+            try
+            {
+                _logger.LogInformation("Starting GetTagNamesByCategoryAsync for category {CategoryId}", categoryId);
+
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+                
+                const string sql = "SELECT name FROM tags WHERE category_id = @categoryId";
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@categoryId", categoryId);
+                
+                var tagNames = new List<string>();
+                await using var reader = await command.ExecuteReaderAsync();
+                
+                while (await reader.ReadAsync())
+                {
+                    tagNames.Add(reader.GetString(0));
+                }
+
+                _logger.LogInformation("Successfully loaded {Count} tag names for category {CategoryId}", tagNames.Count, categoryId);
+
+                return tagNames;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting tag names for category {CategoryId}", categoryId);
+                return new List<string>();
+            }
+        }
 
         public async Task<List<TagDto>> GetTagsAsync()
         {
             try
             {
-                const string cacheKey = "tags_all";
-                
-                if (_cache.TryGetValue(cacheKey, out List<TagDto>? cachedTags))
+                _logger.LogInformation("Starting GetTagsAsync");
+
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                const string sql = @"
+                    SELECT t.id, t.name, t.category_id, c.name as category_name
+                    FROM tags t 
+                    JOIN categories c ON t.category_id = c.id
+                    ORDER BY t.name";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                await using var reader = await command.ExecuteReaderAsync();
+
+                var tags = new List<TagDto>();
+                while (await reader.ReadAsync())
                 {
-                    return cachedTags ?? new List<TagDto>();
+                    tags.Add(new TagDto
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        CategoryId = reader.GetInt32(2),
+                        CategoryName = reader.GetString(3)
+                    });
                 }
 
-                var tags = await _context.Tags
-                    .Include(t => t.Category)
-                    .OrderBy(t => t.Name)
-                    .ToListAsync();
-
-                var result = tags.Select(MapToTagDto).ToList();
-                
-                // Cache na 30 minut
-                _cache.Set(cacheKey, result, TimeSpan.FromMinutes(30));
-                
-                return result;
+                _logger.LogInformation("Successfully loaded {Count} tags", tags.Count);
+                return tags;
             }
             catch (Exception ex)
             {
@@ -100,13 +177,36 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                var tags = await _context.Tags
-                    .Include(t => t.Category)
-                    .Where(t => t.CategoryId == categoryId)
-                    .OrderBy(t => t.Name)
-                    .ToListAsync();
+                _logger.LogInformation("Starting GetTagsByCategoryAsync for category {CategoryId}", categoryId);
 
-                return tags.Select(MapToTagDto).ToList();
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                const string sql = @"
+                    SELECT t.id, t.name, t.category_id, c.name as category_name
+                    FROM tags t 
+                    JOIN categories c ON t.category_id = c.id
+                    WHERE t.category_id = @categoryId
+                    ORDER BY t.name";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@categoryId", categoryId);
+                await using var reader = await command.ExecuteReaderAsync();
+
+                var tags = new List<TagDto>();
+                while (await reader.ReadAsync())
+                {
+                    tags.Add(new TagDto
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        CategoryId = reader.GetInt32(2),
+                        CategoryName = reader.GetString(3)
+                    });
+                }
+
+                _logger.LogInformation("Successfully loaded {Count} tags for category {CategoryId}", tags.Count, categoryId);
+                return tags;
             }
             catch (Exception ex)
             {
@@ -119,11 +219,37 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                var tag = await _context.Tags
-                    .Include(t => t.Category)
-                    .FirstOrDefaultAsync(t => t.Id == id);
+                _logger.LogInformation("Starting GetTagByIdAsync for tag {Id}", id);
 
-                return tag != null ? MapToTagDto(tag) : null;
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                const string sql = @"
+                    SELECT t.id, t.name, t.category_id, c.name as category_name
+                    FROM tags t 
+                    JOIN categories c ON t.category_id = c.id
+                    WHERE t.id = @id";
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                command.Parameters.AddWithValue("@id", id);
+                await using var reader = await command.ExecuteReaderAsync();
+
+                if (await reader.ReadAsync())
+                {
+                    var tag = new TagDto
+                    {
+                        Id = reader.GetInt32(0),
+                        Name = reader.GetString(1),
+                        CategoryId = reader.GetInt32(2),
+                        CategoryName = reader.GetString(3)
+                    };
+
+                    _logger.LogInformation("Successfully loaded tag {Id}: {Name}", id, tag.Name);
+                    return tag;
+                }
+
+                _logger.LogWarning("Tag {Id} not found", id);
+                return null;
             }
             catch (Exception ex)
             {
@@ -132,157 +258,177 @@ namespace ParasolBackEnd.Services
             }
         }
 
-        private static CategoryDto MapToCategoryDto(Category category)
+
+
+
+        // Metody pomocnicze dla wspólnej logiki SQL
+        private async Task<List<CategorySimpleDto>> LoadPostCategoriesAsync(NpgsqlConnection connection, int postId)
         {
-            return new CategoryDto
+            const string categoriesSql = @"
+                SELECT c.id, c.name 
+                FROM post_categories pc 
+                JOIN categories c ON pc.category_id = c.id 
+                WHERE pc.post_id = @postId";
+
+            await using var categoriesCommand = new NpgsqlCommand(categoriesSql, connection);
+            categoriesCommand.Parameters.AddWithValue("@postId", postId);
+
+            var categories = new List<CategorySimpleDto>();
+            await using var categoriesReader = await categoriesCommand.ExecuteReaderAsync();
+            while (await categoriesReader.ReadAsync())
             {
-                Id = category.Id,
-                Name = category.Name,
-                Tags = category.Tags.Select(MapToTagDto).ToList()
-            };
-        }
-
-        private static CategorySimpleDto MapToCategorySimpleDto(Category category)
-        {
-            return new CategorySimpleDto
-            {
-                Id = category.Id,
-                Name = category.Name
-            };
-        }
-
-        private static TagDto MapToTagDto(Tag tag)
-        {
-            return new TagDto
-            {
-                Id = tag.Id,
-                Name = tag.Name,
-                CategoryId = tag.CategoryId,
-                CategoryName = tag.Category?.Name ?? string.Empty
-            };
-        }
-
-        // Post methods implementation
-        public async Task<List<PostDto>> GetPostsAsync(int? categoryId = null, int? tagId = null, string? searchTerm = null, 
-            bool includeOrganization = true, bool includeCategories = true, bool includeTags = true, 
-            int page = 1, int pageSize = 20)
-        {
-            try
-            {
-                var query = _context.Posts.AsQueryable();
-
-                // Selektywne ładowanie relacji tylko gdy potrzebne
-                if (includeOrganization)
+                categories.Add(new CategorySimpleDto
                 {
-                    query = query.Include(p => p.Organization);
-                }
-
-                if (includeCategories)
-                {
-                    query = query.Include(p => p.PostCategories)
-                        .ThenInclude(pc => pc.Category);
-                }
-
-                if (includeTags)
-                {
-                    query = query.Include(p => p.PostTags)
-                        .ThenInclude(pt => pt.Tag)
-                            .ThenInclude(t => t.Category);
-                }
-
-                // Apply filters
-                if (categoryId.HasValue)
-                {
-                    query = query.Where(p => p.PostCategories.Any(pc => pc.CategoryId == categoryId.Value));
-                }
-
-                if (tagId.HasValue)
-                {
-                    query = query.Where(p => p.PostTags.Any(pt => pt.TagId == tagId.Value));
-                }
-
-                if (!string.IsNullOrWhiteSpace(searchTerm))
-                {
-                    query = query.Where(p => p.Title.Contains(searchTerm) || 
-                                           p.Description.Contains(searchTerm));
-                }
-
-                // Paginacja
-                var posts = await query
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
-
-                return posts.Select(post => MapToPostDto(post, includeOrganization, includeCategories, includeTags)).ToList();
+                    Id = categoriesReader.GetInt32(0),
+                    Name = categoriesReader.GetString(1)
+                });
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting posts");
-                return new List<PostDto>();
-            }
+            await categoriesReader.CloseAsync();
+            return categories;
         }
+
+        private async Task<List<TagDto>> LoadPostTagsAsync(NpgsqlConnection connection, int postId)
+        {
+            const string tagsSql = @"
+                SELECT t.id, t.name, t.category_id, c.name as category_name
+                FROM post_tags pt 
+                JOIN tags t ON pt.tag_id = t.id 
+                JOIN categories c ON t.category_id = c.id
+                WHERE pt.post_id = @postId";
+
+            await using var tagsCommand = new NpgsqlCommand(tagsSql, connection);
+            tagsCommand.Parameters.AddWithValue("@postId", postId);
+
+            var tags = new List<TagDto>();
+            await using var tagsReader = await tagsCommand.ExecuteReaderAsync();
+            while (await tagsReader.ReadAsync())
+            {
+                tags.Add(new TagDto
+                {
+                    Id = tagsReader.GetInt32(0),
+                    Name = tagsReader.GetString(1),
+                    CategoryId = tagsReader.GetInt32(2),
+                    CategoryName = tagsReader.GetString(3)
+                });
+            }
+            await tagsReader.CloseAsync();
+            return tags;
+        }
+
+        private async Task<bool> ValidateCategoriesAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, List<int> categoryIds)
+        {
+            if (!categoryIds.Any()) return true;
+
+            const string categoryCheckSql = "SELECT COUNT(*) FROM categories WHERE id = ANY(@categoryIds)";
+            await using var categoryCheckCommand = new NpgsqlCommand(categoryCheckSql, connection, transaction);
+            categoryCheckCommand.Parameters.AddWithValue("@categoryIds", categoryIds.ToArray());
+
+            var categoryCount = (long)await categoryCheckCommand.ExecuteScalarAsync();
+            return categoryCount == categoryIds.Count;
+        }
+
+        private async Task<bool> ValidateTagsAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, List<int> tagIds)
+        {
+            if (!tagIds.Any()) return true;
+
+            const string tagCheckSql = "SELECT COUNT(*) FROM tags WHERE id = ANY(@tagIds)";
+            await using var tagCheckCommand = new NpgsqlCommand(tagCheckSql, connection, transaction);
+            tagCheckCommand.Parameters.AddWithValue("@tagIds", tagIds.ToArray());
+
+            var tagCount = (long)await tagCheckCommand.ExecuteScalarAsync();
+            return tagCount == tagIds.Count;
+        }
+
 
         public async Task<List<PostDto>> GetPostsSummaryAsync(int? categoryId = null, int? tagId = null, string? searchTerm = null, 
             int page = 1, int pageSize = 20)
         {
             try
             {
-                // Cache tylko dla podstawowych zapytań bez filtrów
-                if (!categoryId.HasValue && !tagId.HasValue && string.IsNullOrWhiteSpace(searchTerm))
-                {
-                    var cacheKey = $"posts_summary_page_{page}_size_{pageSize}";
-                    
-                    if (_cache.TryGetValue(cacheKey, out List<PostDto>? cachedPosts))
-                    {
-                        return cachedPosts ?? new List<PostDto>();
-                    }
-                }
+                _logger.LogInformation("Starting GetPostsSummaryAsync with filters - CategoryId: {CategoryId}, TagId: {TagId}, SearchTerm: {SearchTerm}, Page: {Page}, PageSize: {PageSize}", 
+                    categoryId, tagId, searchTerm, page, pageSize);
 
-                var query = _context.Posts.AsQueryable();
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
 
-                // Selektywne ładowanie relacji tylko gdy potrzebne
-                query = query.Include(p => p.Organization);
-                query = query.Include(p => p.PostCategories)
-                    .ThenInclude(pc => pc.Category);
-                query = query.Include(p => p.PostTags)
-                    .ThenInclude(pt => pt.Tag)
-                        .ThenInclude(t => t.Category);
+                // Buduj zapytanie SQL z filtrami
+                var whereConditions = new List<string>();
+                var parameters = new List<NpgsqlParameter>();
 
-                // Apply filters
                 if (categoryId.HasValue)
                 {
-                    query = query.Where(p => p.PostCategories.Any(pc => pc.CategoryId == categoryId.Value));
+                    whereConditions.Add("EXISTS (SELECT 1 FROM post_categories pc WHERE pc.post_id = p.id AND pc.category_id = @categoryId)");
+                    parameters.Add(new NpgsqlParameter("@categoryId", categoryId.Value));
                 }
 
                 if (tagId.HasValue)
                 {
-                    query = query.Where(p => p.PostTags.Any(pt => pt.TagId == tagId.Value));
+                    whereConditions.Add("EXISTS (SELECT 1 FROM post_tags pt WHERE pt.post_id = p.id AND pt.tag_id = @tagId)");
+                    parameters.Add(new NpgsqlParameter("@tagId", tagId.Value));
                 }
 
                 if (!string.IsNullOrWhiteSpace(searchTerm))
                 {
-                    query = query.Where(p => p.Title.Contains(searchTerm) || 
-                                           p.Description.Contains(searchTerm));
+                    whereConditions.Add("(p.title ILIKE @searchTerm OR p.description ILIKE @searchTerm)");
+                    parameters.Add(new NpgsqlParameter("@searchTerm", $"%{searchTerm}%"));
                 }
 
-                // Paginacja
-                var posts = await query
-                    .OrderByDescending(p => p.CreatedAt)
-                    .Skip((page - 1) * pageSize)
-                    .Take(pageSize)
-                    .ToListAsync();
+                var whereClause = whereConditions.Any() ? "WHERE " + string.Join(" AND ", whereConditions) : "";
 
-                var result = posts.Select(post => MapToPostDto(post, true, true, true)).ToList();
-                
-                // Cache tylko dla podstawowych zapytań
-                if (!categoryId.HasValue && !tagId.HasValue && string.IsNullOrWhiteSpace(searchTerm))
+                var sql = $@"
+                    SELECT p.id, p.title, p.description, p.contact_email, p.contact_phone, 
+                           p.status, p.created_at, p.updated_at, p.expires_at, p.organization_id,
+                           o.organization_name
+                    FROM posts p 
+                    JOIN organizations o ON p.organization_id = o.id
+                    {whereClause}
+                    ORDER BY p.created_at DESC
+                    LIMIT @pageSize OFFSET @offset";
+
+                parameters.Add(new NpgsqlParameter("@pageSize", pageSize));
+                parameters.Add(new NpgsqlParameter("@offset", (page - 1) * pageSize));
+
+                await using var command = new NpgsqlCommand(sql, connection);
+                foreach (var param in parameters)
                 {
-                    var cacheKey = $"posts_summary_page_{page}_size_{pageSize}";
-                    _cache.Set(cacheKey, result, TimeSpan.FromMinutes(5)); // Krótszy cache dla postów
+                    command.Parameters.Add(param);
                 }
+
+                var posts = new List<PostDto>();
+                await using var reader = await command.ExecuteReaderAsync();
                 
-                return result;
+                while (await reader.ReadAsync())
+                {
+                    var postDto = new PostDto
+                    {
+                        Id = reader.GetInt32(0),
+                        Title = reader.GetString(1),
+                        Description = reader.GetString(2),
+                        ContactEmail = reader.GetString(3),
+                        ContactPhone = reader.IsDBNull(4) ? null : reader.GetString(4),
+                        Status = reader.GetString(5),
+                        CreatedAt = DateOnly.FromDateTime(reader.GetDateTime(6)),
+                        UpdatedAt = DateOnly.FromDateTime(reader.GetDateTime(7)),
+                        ExpiresAt = reader.IsDBNull(8) ? null : DateOnly.FromDateTime(reader.GetDateTime(8)),
+                        OrganizationId = reader.GetInt32(9),
+                        OrganizationName = reader.GetString(10),
+                        Categories = new List<CategorySimpleDto>(),
+                        Tags = new List<TagDto>()
+                    };
+                    posts.Add(postDto);
+                }
+                await reader.CloseAsync();
+
+                // Dla każdego posta pobierz kategorie i tagi
+                foreach (var post in posts)
+                {
+                    post.Categories = await LoadPostCategoriesAsync(connection, post.Id);
+                    post.Tags = await LoadPostTagsAsync(connection, post.Id);
+                }
+
+                _logger.LogInformation("Successfully loaded {Count} posts", posts.Count);
+                
+                return posts;
             }
             catch (Exception ex)
             {
@@ -295,30 +441,73 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                var query = _context.Posts.AsQueryable();
+                _logger.LogInformation("Starting GetPostByIdAsync for post {Id}", id);
 
-                // Selektywne ładowanie relacji
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                // Pobierz podstawowe info o poście
+                const string postSql = @"
+                    SELECT p.id, p.title, p.description, p.contact_email, p.contact_phone, 
+                           p.status, p.created_at, p.updated_at, p.expires_at, p.organization_id
+                    FROM posts p 
+                    WHERE p.id = @id";
+                
+                await using var postCommand = new NpgsqlCommand(postSql, connection);
+                postCommand.Parameters.AddWithValue("@id", id);
+                
+                await using var postReader = await postCommand.ExecuteReaderAsync();
+                if (!await postReader.ReadAsync())
+                {
+                    _logger.LogWarning("Post {Id} not found in database", id);
+                    return null;
+                }
+                
+                var postDto = new PostDto
+                {
+                    Id = postReader.GetInt32(0),
+                    Title = postReader.GetString(1),
+                    Description = postReader.GetString(2),
+                    ContactEmail = postReader.GetString(3),
+                    ContactPhone = postReader.IsDBNull(4) ? null : postReader.GetString(4),
+                    Status = postReader.GetString(5),
+                    CreatedAt = DateOnly.FromDateTime(postReader.GetDateTime(6)),
+                    UpdatedAt = DateOnly.FromDateTime(postReader.GetDateTime(7)),
+                    ExpiresAt = postReader.IsDBNull(8) ? null : DateOnly.FromDateTime(postReader.GetDateTime(8)),
+                    OrganizationId = postReader.GetInt32(9),
+                    Categories = new List<CategorySimpleDto>(),
+                    Tags = new List<TagDto>()
+                };
+                
+                await postReader.CloseAsync();
+
+                // Pobierz organizację jeśli potrzebna
                 if (includeOrganization)
                 {
-                    query = query.Include(p => p.Organization);
+                    const string orgSql = "SELECT organization_name FROM organizations WHERE id = @orgId";
+                    await using var orgCommand = new NpgsqlCommand(orgSql, connection);
+                    orgCommand.Parameters.AddWithValue("@orgId", postDto.OrganizationId);
+                    
+                    var orgName = await orgCommand.ExecuteScalarAsync();
+                    postDto.OrganizationName = orgName?.ToString() ?? string.Empty;
                 }
 
+                // Pobierz kategorie jeśli potrzebne
                 if (includeCategories)
                 {
-                    query = query.Include(p => p.PostCategories)
-                        .ThenInclude(pc => pc.Category);
+                    postDto.Categories = await LoadPostCategoriesAsync(connection, id);
                 }
 
+                // Pobierz tagi jeśli potrzebne
                 if (includeTags)
                 {
-                    query = query.Include(p => p.PostTags)
-                        .ThenInclude(pt => pt.Tag)
-                            .ThenInclude(t => t.Category);
+                    postDto.Tags = await LoadPostTagsAsync(connection, id);
                 }
 
-                var post = await query.FirstOrDefaultAsync(p => p.Id == id);
+                _logger.LogInformation("Successfully loaded post {Id} with {CategoryCount} categories and {TagCount} tags", 
+                    id, postDto.Categories.Count, postDto.Tags.Count);
 
-                return post != null ? MapToPostDto(post, includeOrganization, includeCategories, includeTags) : null;
+                return postDto;
             }
             catch (Exception ex)
             {
@@ -334,92 +523,90 @@ namespace ParasolBackEnd.Services
                 // Parse ExpiresAt
                 DateOnly? expiresAt = createPostDto.ExpiresAt;
 
-                // Walidacja organizacji
-                var organization = await _context.Organizations.FindAsync(createPostDto.OrganizationId);
-                if (organization == null)
-                {
-                    throw new ArgumentException($"Organization with ID {createPostDto.OrganizationId} not found");
-                }
-
-                // Walidacja kategorii
-                var categoryIds = createPostDto.CategoryIds ?? new List<int>();
-                if (categoryIds.Any())
-                {
-                    await ValidateIdsAsync(categoryIds, _context.Categories, "Categories");
-                }
-
-                // Walidacja tagów
-                var tagIds = createPostDto.TagIds ?? new List<int>();
-                if (tagIds.Any())
-                {
-                    await ValidateIdsAsync(tagIds, _context.Tags, "Tags");
-                }
-
-                var post = new Post
-                {
-                    Title = createPostDto.Title,
-                    Description = createPostDto.Description,
-                    ContactEmail = createPostDto.ContactEmail,
-                    ContactPhone = createPostDto.ContactPhone,
-                    Status = "active",
-                    CreatedAt = DateTime.UtcNow,
-                    UpdatedAt = DateTime.UtcNow,
-                    ExpiresAt = expiresAt,
-                    OrganizationId = createPostDto.OrganizationId
-                };
-
-                // Użyj transakcji dla wszystkich operacji
-                var strategy = _context.Database.CreateExecutionStrategy();
-                await strategy.ExecuteAsync(async () =>
-                {
-                    using var transaction = await _context.Database.BeginTransactionAsync();
-                    try
-                    {
-                        _context.Posts.Add(post);
-                        await _context.SaveChangesAsync();
-
-                        // Add categories
-                        foreach (var categoryId in categoryIds)
-                        {
-                            var postCategory = new PostCategory
-                            {
-                                PostId = post.Id,
-                                CategoryId = categoryId
-                            };
-                            _context.PostCategories.Add(postCategory);
-                        }
-
-                        // Add tags
-                        foreach (var tagId in tagIds)
-                        {
-                            var postTag = new PostTag
-                            {
-                                PostId = post.Id,
-                                TagId = tagId
-                            };
-                            _context.PostTags.Add(postTag);
-                        }
-
-                        await _context.SaveChangesAsync();
-                        await transaction.CommitAsync();
-
-                        _logger.LogInformation("Successfully created post with ID {PostId}, Title: {Title}, Categories: {CategoryCount}, Tags: {TagCount}", 
-                            post.Id, post.Title, categoryIds.Count, tagIds.Count);
-                    }
-                    catch
-                    {
-                        await transaction.RollbackAsync();
-                        throw;
-                    }
-                });
-
-                // Return the created post
-                var result = await GetPostByIdAsync(post.Id) ?? new PostDto();
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
                 
-                // Wyczyść cache po dodaniu nowego posta
-                _cache.Remove("posts_summary");
+                using var transaction = await connection.BeginTransactionAsync();
                 
-                return result;
+                try
+                {
+                    // Walidacja organizacji
+                    const string orgCheckSql = "SELECT id FROM organizations WHERE id = @organizationId";
+                    await using var orgCheckCommand = new NpgsqlCommand(orgCheckSql, connection, transaction);
+                    orgCheckCommand.Parameters.AddWithValue("@organizationId", createPostDto.OrganizationId);
+                    
+                    var orgExists = await orgCheckCommand.ExecuteScalarAsync();
+                    if (orgExists == null)
+                    {
+                        throw new ArgumentException($"Organization with ID {createPostDto.OrganizationId} not found");
+                    }
+
+                    // Walidacja kategorii
+                    var categoryIds = createPostDto.CategoryIds ?? new List<int>();
+                    if (!await ValidateCategoriesAsync(connection, transaction, categoryIds))
+                    {
+                        throw new ArgumentException("Some categories not found");
+                    }
+
+                    // Walidacja tagów
+                    var tagIds = createPostDto.TagIds ?? new List<int>();
+                    if (!await ValidateTagsAsync(connection, transaction, tagIds))
+                    {
+                        throw new ArgumentException("Some tags not found");
+                    }
+
+                    // Wstaw post
+                    const string insertPostSql = @"
+                        INSERT INTO posts (title, description, contact_email, contact_phone, status, created_at, updated_at, expires_at, organization_id)
+                        VALUES (@title, @description, @contactEmail, @contactPhone, @status, @createdAt, @updatedAt, @expiresAt, @organizationId)
+                        RETURNING id";
+                    
+                    await using var insertPostCommand = new NpgsqlCommand(insertPostSql, connection, transaction);
+                    insertPostCommand.Parameters.AddWithValue("@title", createPostDto.Title);
+                    insertPostCommand.Parameters.AddWithValue("@description", createPostDto.Description);
+                    insertPostCommand.Parameters.AddWithValue("@contactEmail", createPostDto.ContactEmail);
+                    insertPostCommand.Parameters.AddWithValue("@contactPhone", (object?)createPostDto.ContactPhone ?? DBNull.Value);
+                    insertPostCommand.Parameters.AddWithValue("@status", "active");
+                    insertPostCommand.Parameters.AddWithValue("@createdAt", DateOnly.FromDateTime(DateTime.UtcNow));
+                    insertPostCommand.Parameters.AddWithValue("@updatedAt", DateOnly.FromDateTime(DateTime.UtcNow));
+                    insertPostCommand.Parameters.AddWithValue("@expiresAt", (object?)expiresAt ?? DBNull.Value);
+                    insertPostCommand.Parameters.AddWithValue("@organizationId", createPostDto.OrganizationId);
+                    
+                    var postId = (int)await insertPostCommand.ExecuteScalarAsync();
+
+                    // Wstaw kategorie
+                    foreach (var categoryId in categoryIds)
+                    {
+                        const string insertCategorySql = "INSERT INTO post_categories (post_id, category_id) VALUES (@postId, @categoryId)";
+                        await using var insertCategoryCommand = new NpgsqlCommand(insertCategorySql, connection, transaction);
+                        insertCategoryCommand.Parameters.AddWithValue("@postId", postId);
+                        insertCategoryCommand.Parameters.AddWithValue("@categoryId", categoryId);
+                        await insertCategoryCommand.ExecuteNonQueryAsync();
+                    }
+
+                    // Wstaw tagi
+                    foreach (var tagId in tagIds)
+                    {
+                        const string insertTagSql = "INSERT INTO post_tags (post_id, tag_id) VALUES (@postId, @tagId)";
+                        await using var insertTagCommand = new NpgsqlCommand(insertTagSql, connection, transaction);
+                        insertTagCommand.Parameters.AddWithValue("@postId", postId);
+                        insertTagCommand.Parameters.AddWithValue("@tagId", tagId);
+                        await insertTagCommand.ExecuteNonQueryAsync();
+                    }
+
+                    await transaction.CommitAsync();
+
+                    _logger.LogInformation("Successfully created post with ID {PostId}, Title: {Title}, Categories: {CategoryCount}, Tags: {TagCount}", 
+                        postId, createPostDto.Title, categoryIds.Count, tagIds.Count);
+
+                    // Zwróć utworzony post
+                    return await GetPostByIdAsync(postId) ?? new PostDto();
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -432,85 +619,106 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                var post = await _context.Posts
-                    .Include(p => p.PostCategories)
-                    .Include(p => p.PostTags)
-                    .FirstOrDefaultAsync(p => p.Id == id);
+                _logger.LogInformation("Starting UpdatePostAsync for post {Id}", id);
 
-                if (post == null)
-                    return null;
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
 
-                // Walidacja kategorii
-                var categoryIds = updatePostDto.CategoryIds ?? new List<int>();
-                if (categoryIds.Any())
+                using var transaction = await connection.BeginTransactionAsync();
+
+                try
                 {
-                    await ValidateIdsAsync(categoryIds, _context.Categories, "Categories");
-                }
+                    // Sprawdź czy post istnieje
+                    const string checkSql = "SELECT id FROM posts WHERE id = @id";
+                    await using var checkCommand = new NpgsqlCommand(checkSql, connection, transaction);
+                    checkCommand.Parameters.AddWithValue("@id", id);
 
-                // Walidacja tagów
-                var tagIds = updatePostDto.TagIds ?? new List<int>();
-                if (tagIds.Any())
-                {
-                    await ValidateIdsAsync(tagIds, _context.Tags, "Tags");
-                }
-
-                // Użyj transakcji dla wszystkich operacji
-                var strategy = _context.Database.CreateExecutionStrategy();
-                await strategy.ExecuteAsync(async () =>
-                {
-                    using var transaction = await _context.Database.BeginTransactionAsync();
-                    try
+                    var postExists = await checkCommand.ExecuteScalarAsync();
+                    if (postExists == null)
                     {
-                        // Update basic properties
-                        post.Title = updatePostDto.Title;
-                        post.Description = updatePostDto.Description;
-                        post.ContactEmail = updatePostDto.ContactEmail;
-                        post.ContactPhone = updatePostDto.ContactPhone;
-                        post.Status = updatePostDto.Status;
-                        post.UpdatedAt = DateTime.UtcNow;
-                        post.ExpiresAt = updatePostDto.ExpiresAt;
-
-                        // Update categories
-                        _context.PostCategories.RemoveRange(post.PostCategories);
-                        foreach (var categoryId in categoryIds)
-                        {
-                            var postCategory = new PostCategory
-                            {
-                                PostId = post.Id,
-                                CategoryId = categoryId
-                            };
-                            _context.PostCategories.Add(postCategory);
-                        }
-
-                        // Update tags
-                        _context.PostTags.RemoveRange(post.PostTags);
-                        foreach (var tagId in tagIds)
-                        {
-                            var postTag = new PostTag
-                            {
-                                PostId = post.Id,
-                                TagId = tagId
-                            };
-                            _context.PostTags.Add(postTag);
-                        }
-
-                        await _context.SaveChangesAsync();
-                        await transaction.CommitAsync();
-
-                        _logger.LogInformation("Successfully updated post with ID {PostId}, Title: {Title}, Categories: {CategoryCount}, Tags: {TagCount}", 
-                            post.Id, post.Title, categoryIds.Count, tagIds.Count);
-                        
-                        // Wyczyść cache po aktualizacji posta
-                        _cache.Remove("posts_summary");
+                        _logger.LogWarning("Post {Id} not found for update", id);
+                        return null;
                     }
-                    catch
+
+                    // Walidacja kategorii
+                    var categoryIds = updatePostDto.CategoryIds ?? new List<int>();
+                    if (!await ValidateCategoriesAsync(connection, transaction, categoryIds))
                     {
-                        await transaction.RollbackAsync();
-                        throw;
+                        throw new ArgumentException("Some categories not found");
                     }
-                });
 
-                return await GetPostByIdAsync(id);
+                    // Walidacja tagów
+                    var tagIds = updatePostDto.TagIds ?? new List<int>();
+                    if (!await ValidateTagsAsync(connection, transaction, tagIds))
+                    {
+                        throw new ArgumentException("Some tags not found");
+                    }
+
+                    // Aktualizuj post
+                    const string updatePostSql = @"
+                        UPDATE posts 
+                        SET title = @title, description = @description, contact_email = @contactEmail, 
+                            contact_phone = @contactPhone, status = @status, updated_at = @updatedAt, 
+                            expires_at = @expiresAt
+                        WHERE id = @postId";
+
+                    await using var updatePostCommand = new NpgsqlCommand(updatePostSql, connection, transaction);
+                    updatePostCommand.Parameters.AddWithValue("@title", updatePostDto.Title);
+                    updatePostCommand.Parameters.AddWithValue("@description", updatePostDto.Description);
+                    updatePostCommand.Parameters.AddWithValue("@contactEmail", updatePostDto.ContactEmail);
+                    updatePostCommand.Parameters.AddWithValue("@contactPhone", (object?)updatePostDto.ContactPhone ?? DBNull.Value);
+                    updatePostCommand.Parameters.AddWithValue("@status", updatePostDto.Status);
+                    updatePostCommand.Parameters.AddWithValue("@updatedAt", DateOnly.FromDateTime(DateTime.UtcNow));
+                    updatePostCommand.Parameters.AddWithValue("@expiresAt", (object?)updatePostDto.ExpiresAt ?? DBNull.Value);
+                    updatePostCommand.Parameters.AddWithValue("@postId", id);
+
+                    await updatePostCommand.ExecuteNonQueryAsync();
+
+                    // Usuń stare kategorie
+                    const string deleteCategoriesSql = "DELETE FROM post_categories WHERE post_id = @postId";
+                    await using var deleteCategoriesCommand = new NpgsqlCommand(deleteCategoriesSql, connection, transaction);
+                    deleteCategoriesCommand.Parameters.AddWithValue("@postId", id);
+                    await deleteCategoriesCommand.ExecuteNonQueryAsync();
+
+                    // Dodaj nowe kategorie
+                    foreach (var categoryId in categoryIds)
+                    {
+                        const string insertCategorySql = "INSERT INTO post_categories (post_id, category_id) VALUES (@postId, @categoryId)";
+                        await using var insertCategoryCommand = new NpgsqlCommand(insertCategorySql, connection, transaction);
+                        insertCategoryCommand.Parameters.AddWithValue("@postId", id);
+                        insertCategoryCommand.Parameters.AddWithValue("@categoryId", categoryId);
+                        await insertCategoryCommand.ExecuteNonQueryAsync();
+                    }
+
+                    // Usuń stare tagi
+                    const string deleteTagsSql = "DELETE FROM post_tags WHERE post_id = @postId";
+                    await using var deleteTagsCommand = new NpgsqlCommand(deleteTagsSql, connection, transaction);
+                    deleteTagsCommand.Parameters.AddWithValue("@postId", id);
+                    await deleteTagsCommand.ExecuteNonQueryAsync();
+
+                    // Dodaj nowe tagi
+                    foreach (var tagId in tagIds)
+                    {
+                        const string insertTagSql = "INSERT INTO post_tags (post_id, tag_id) VALUES (@postId, @tagId)";
+                        await using var insertTagCommand = new NpgsqlCommand(insertTagSql, connection, transaction);
+                        insertTagCommand.Parameters.AddWithValue("@postId", id);
+                        insertTagCommand.Parameters.AddWithValue("@tagId", tagId);
+                        await insertTagCommand.ExecuteNonQueryAsync();
+                    }
+
+                    await transaction.CommitAsync();
+
+                    _logger.LogInformation("Successfully updated post with ID {PostId}, Title: {Title}, Categories: {CategoryCount}, Tags: {TagCount}",
+                        id, updatePostDto.Title, categoryIds.Count, tagIds.Count);
+
+                    // Zwróć zaktualizowany post
+                    return await GetPostByIdAsync(id);
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -523,19 +731,55 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                var post = await _context.Posts.FindAsync(id);
-                if (post == null)
-                {
-                    return false;
-                }
+                _logger.LogInformation("Starting DeletePostAsync for post {Id}", id);
 
-                _context.Posts.Remove(post);
-                await _context.SaveChangesAsync();
-                
-                // Wyczyść cache po usunięciu posta
-                _cache.Remove("posts_summary");
-                
-                return true;
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                using var transaction = await connection.BeginTransactionAsync();
+
+                try
+                {
+                    // Sprawdź czy post istnieje
+                    const string checkSql = "SELECT id FROM posts WHERE id = @id";
+                    await using var checkCommand = new NpgsqlCommand(checkSql, connection, transaction);
+                    checkCommand.Parameters.AddWithValue("@id", id);
+
+                    var postExists = await checkCommand.ExecuteScalarAsync();
+                    if (postExists == null)
+                    {
+                        _logger.LogWarning("Post {Id} not found for deletion", id);
+                        return false;
+                    }
+
+                    // Usuń powiązania z kategoriami
+                    const string deleteCategoriesSql = "DELETE FROM post_categories WHERE post_id = @postId";
+                    await using var deleteCategoriesCommand = new NpgsqlCommand(deleteCategoriesSql, connection, transaction);
+                    deleteCategoriesCommand.Parameters.AddWithValue("@postId", id);
+                    await deleteCategoriesCommand.ExecuteNonQueryAsync();
+
+                    // Usuń powiązania z tagami
+                    const string deleteTagsSql = "DELETE FROM post_tags WHERE post_id = @postId";
+                    await using var deleteTagsCommand = new NpgsqlCommand(deleteTagsSql, connection, transaction);
+                    deleteTagsCommand.Parameters.AddWithValue("@postId", id);
+                    await deleteTagsCommand.ExecuteNonQueryAsync();
+
+                    // Usuń post
+                    const string deletePostSql = "DELETE FROM posts WHERE id = @postId";
+                    await using var deletePostCommand = new NpgsqlCommand(deletePostSql, connection, transaction);
+                    deletePostCommand.Parameters.AddWithValue("@postId", id);
+                    var rowsAffected = await deletePostCommand.ExecuteNonQueryAsync();
+
+                    await transaction.CommitAsync();
+
+                    _logger.LogInformation("Successfully deleted post {Id}", id);
+                    return rowsAffected > 0;
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -544,138 +788,75 @@ namespace ParasolBackEnd.Services
             }
         }
 
-        public async Task ClearCacheAsync()
+        public async Task<IEnumerable<PostDto>> GetPostsByOrganizationAsync(int organizationId, bool includeCategories = false, bool includeTags = false)
         {
             try
             {
-                _cache.Remove("categories_simple");
-                _cache.Remove("tags_all");
-                _cache.Remove("posts_summary");
-                
-                // Usuń wszystkie klucze cache związane z postami (prostsze podejście)
-                // W praktyce można użyć bardziej zaawansowanego cache z możliwością enumeracji kluczy
-                // Na razie usuwamy tylko główne klucze
-                
-                _logger.LogInformation("Cache cleared successfully");
+                _logger.LogInformation("Starting GetPostsByOrganizationAsync for organization {OrganizationId}", organizationId);
+
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                // Pobierz podstawowe info o postach organizacji
+                const string postsSql = @"
+                    SELECT p.id, p.title, p.description, p.contact_email, p.contact_phone, 
+                           p.status, p.created_at, p.updated_at, p.expires_at, p.organization_id
+                    FROM posts p 
+                    WHERE p.organization_id = @organizationId
+                    ORDER BY p.created_at DESC";
+
+                await using var postsCommand = new NpgsqlCommand(postsSql, connection);
+                postsCommand.Parameters.AddWithValue("@organizationId", organizationId);
+
+                var posts = new List<PostDto>();
+                await using var postsReader = await postsCommand.ExecuteReaderAsync();
+
+                while (await postsReader.ReadAsync())
+                {
+                    var postDto = new PostDto
+                    {
+                        Id = postsReader.GetInt32(0),
+                        Title = postsReader.GetString(1),
+                        Description = postsReader.GetString(2),
+                        ContactEmail = postsReader.GetString(3),
+                        ContactPhone = postsReader.IsDBNull(4) ? null : postsReader.GetString(4),
+                        Status = postsReader.GetString(5),
+                        CreatedAt = DateOnly.FromDateTime(postsReader.GetDateTime(6)),
+                        UpdatedAt = DateOnly.FromDateTime(postsReader.GetDateTime(7)),
+                        ExpiresAt = postsReader.IsDBNull(8) ? null : DateOnly.FromDateTime(postsReader.GetDateTime(8)),
+                        OrganizationId = postsReader.GetInt32(9),
+                        Categories = new List<CategorySimpleDto>(),
+                        Tags = new List<TagDto>()
+                    };
+                    posts.Add(postDto);
+                }
+                await postsReader.CloseAsync();
+
+                // Dla każdego posta pobierz kategorie i tagi jeśli potrzebne
+                foreach (var post in posts)
+                {
+                    if (includeCategories)
+                    {
+                        post.Categories = await LoadPostCategoriesAsync(connection, post.Id);
+                    }
+
+                    if (includeTags)
+                    {
+                        post.Tags = await LoadPostTagsAsync(connection, post.Id);
+                    }
+                }
+
+                _logger.LogInformation("Successfully loaded {Count} posts for organization {OrganizationId}", posts.Count, organizationId);
+
+                return posts;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error clearing cache");
+                _logger.LogError(ex, "Error getting posts by organization: {OrganizationId}", organizationId);
+                return new List<PostDto>();
             }
         }
 
-        public async Task<IEnumerable<PostDto>> GetPostsByOrganizationAsync(int organizationId, bool includeCategories = false, bool includeTags = false)
-        {
-            var query = _context.Posts.Where(p => p.OrganizationId == organizationId);
 
-            if (includeCategories)
-                query = query.Include(p => p.PostCategories).ThenInclude(pc => pc.Category);
-
-            if (includeTags)
-                query = query.Include(p => p.PostTags).ThenInclude(pt => pt.Tag);
-
-            var posts = await query.OrderByDescending(p => p.CreatedAt).ToListAsync();
-
-            return posts.Select(post => MapToPostDto(post, false, includeCategories, includeTags));
-        }
-
-        private static PostDto MapToPostDto(Post post)
-        {
-            return new PostDto
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Description = post.Description,
-                ContactEmail = post.ContactEmail,
-                ContactPhone = post.ContactPhone,
-                Status = post.Status,
-                CreatedAt = post.CreatedAt,
-                UpdatedAt = post.UpdatedAt,
-                ExpiresAt = post.ExpiresAt,
-                OrganizationId = post.OrganizationId,
-                OrganizationName = post.Organization?.OrganizationName ?? string.Empty,
-                Categories = post.PostCategories.Select(pc => new CategorySimpleDto
-                {
-                    Id = pc.Category.Id,
-                    Name = pc.Category.Name
-                }).ToList(),
-                Tags = post.PostTags.Select(pt => new TagDto
-                {
-                    Id = pt.Tag.Id,
-                    Name = pt.Tag.Name,
-                    CategoryId = pt.Tag.CategoryId,
-                    CategoryName = pt.Tag.Category?.Name ?? string.Empty
-                }).ToList()
-            };
-        }
-
-        private static PostDto MapToPostDto(Post post, bool includeOrganization, bool includeCategories, bool includeTags)
-        {
-            var postDto = new PostDto
-            {
-                Id = post.Id,
-                Title = post.Title,
-                Description = post.Description,
-                ContactEmail = post.ContactEmail,
-                ContactPhone = post.ContactPhone,
-                Status = post.Status,
-                CreatedAt = post.CreatedAt,
-                UpdatedAt = post.UpdatedAt,
-                ExpiresAt = post.ExpiresAt,
-                OrganizationId = post.OrganizationId,
-                OrganizationName = post.Organization?.OrganizationName ?? string.Empty,
-                Categories = new List<CategorySimpleDto>(),
-                Tags = new List<TagDto>()
-            };
-
-            if (includeCategories)
-            {
-                postDto.Categories = post.PostCategories.Select(pc => new CategorySimpleDto
-                {
-                    Id = pc.Category.Id,
-                    Name = pc.Category.Name
-                }).ToList();
-            }
-
-            if (includeTags)
-            {
-                postDto.Tags = post.PostTags.Select(pt => new TagDto
-                {
-                    Id = pt.Tag.Id,
-                    Name = pt.Tag.Name,
-                    CategoryId = pt.Tag.CategoryId,
-                    CategoryName = pt.Tag.Category?.Name ?? string.Empty
-                }).ToList();
-            }
-
-            return postDto;
-        }
-
-        /// <summary>
-        /// Waliduje listę ID i sprawdza czy wszystkie istnieją w bazie danych
-        /// </summary>
-        /// <typeparam name="T">Typ encji do sprawdzenia</typeparam>
-        /// <param name="ids">Lista ID do walidacji</param>
-        /// <param name="query">Query do pobrania istniejących ID</param>
-        /// <param name="entityName">Nazwa encji dla komunikatu błędu</param>
-        /// <returns>Lista istniejących ID</returns>
-        /// <exception cref="ArgumentException">Gdy nie wszystkie ID istnieją</exception>
-        private async Task<List<int>> ValidateIdsAsync<T>(List<int> ids, IQueryable<T> query, string entityName) where T : class
-        {
-            if (!ids.Any()) return new List<int>();
-
-            var existingIds = await query
-                .Where(e => ids.Contains(EF.Property<int>(e, "Id")))
-                .Select(e => EF.Property<int>(e, "Id"))
-                .ToListAsync();
-
-            if (existingIds.Count != ids.Count)
-            {
-                var missingIds = ids.Except(existingIds);
-                throw new ArgumentException($"{entityName} not found: {string.Join(", ", missingIds)}");
-            }
-
-            return existingIds;
-        }
     }
 }

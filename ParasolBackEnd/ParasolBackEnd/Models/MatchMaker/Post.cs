@@ -20,9 +20,9 @@ namespace ParasolBackEnd.Models.MatchMaker
         [Required]
         public string Status { get; set; } = "active"; // active, inactive, closed
         
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateOnly CreatedAt { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
         
-        public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+        public DateOnly UpdatedAt { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);
         
         public DateOnly? ExpiresAt { get; set; }
         

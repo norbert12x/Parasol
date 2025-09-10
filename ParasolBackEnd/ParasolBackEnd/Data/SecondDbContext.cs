@@ -31,9 +31,9 @@ namespace ParasolBackEnd.Data
                 entity.Property(e => e.ContactEmail).HasColumnName("contact_email");
                 entity.Property(e => e.ContactPhone).HasColumnName("contact_phone");
                 entity.Property(e => e.Status).HasColumnName("status");
-                entity.Property(e => e.CreatedAt).HasColumnName("created_at");
-                entity.Property(e => e.UpdatedAt).HasColumnName("updated_at");
-                entity.Property(e => e.ExpiresAt).HasColumnName("expires_at");
+                entity.Property(e => e.CreatedAt).HasColumnName("created_at").HasConversion<DateOnly>();
+                entity.Property(e => e.UpdatedAt).HasColumnName("updated_at").HasConversion<DateOnly>();
+                entity.Property(e => e.ExpiresAt).HasColumnName("expires_at").HasConversion<DateOnly?>();
                 entity.Property(e => e.OrganizationId).HasColumnName("organization_id");
 
                 // Indeksy dla lepszej wydajności
@@ -63,6 +63,12 @@ namespace ParasolBackEnd.Data
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.Name).HasColumnName("name");
                 entity.Property(e => e.CategoryId).HasColumnName("category_id");
+
+                // Konfiguracja relacji z Category
+                entity.HasOne(t => t.Category)
+                    .WithMany(c => c.Tags)
+                    .HasForeignKey(t => t.CategoryId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 // Indeksy
                 entity.HasIndex(e => e.CategoryId).HasDatabaseName("ix_tags_category_id");

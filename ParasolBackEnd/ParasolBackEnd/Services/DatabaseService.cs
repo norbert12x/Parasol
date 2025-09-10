@@ -15,7 +15,6 @@ namespace ParasolBackEnd.Services
         Task<List<Organizacja>> GetOrganizacjeAsync();
         Task<Organizacja?> GetOrganizacjaByKrsAsync(string numerKrs);
         Task<List<Kategoria>> GetKategorieAsync();
-        Task<bool> SaveOrganizacjaAsync(Organizacja organizacja);
         Task<bool> UpdateOrganizacjaAsync(Organizacja organizacja);
         Task<bool> DeleteOrganizacjaAsync(string numerKrs);
         Task<ImportResult> ImportFromGeolokalizacjaAsync(string? wojewodztwo = null);
@@ -72,12 +71,132 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                return await _context.Organizacje
-                    .Include(o => o.Adresy)
-                    .Include(o => o.Koordynaty)
-                    .Include(o => o.OrganizacjaKategorie)
-                        .ThenInclude(ok => ok.Kategoria)
-                    .FirstOrDefaultAsync(o => o.NumerKrs == numerKrs);
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+                
+                const string query = @"
+                    SELECT 
+                        o.numerkrs, o.nazwa,
+                        a.id as adres_id, a.ulica, a.nrdomu, a.nrlokalu, a.miejscowosc, 
+                        a.kodpocztowy, a.poczta, a.gmina, a.powiat, a.wojewodztwo, a.kraj,
+                        k.id as koordynaty_id, k.latitude, k.longitude,
+                        cat.id as kategoria_id, cat.nazwa as kategoria_nazwa
+                    FROM organizacja o
+                    LEFT JOIN adres a ON o.numerkrs = a.numerkrs
+                    LEFT JOIN koordynaty k ON o.numerkrs = k.numerkrs
+                    LEFT JOIN organizacjakategoria ok ON o.numerkrs = ok.numerkrs
+                    LEFT JOIN kategoria cat ON ok.kategoriaid = cat.id
+                    WHERE o.numerkrs = @numerKrs
+                    ORDER BY a.id, k.id, cat.id";
+                
+                await using var command = new NpgsqlCommand(query, connection);
+                command.Parameters.AddWithValue("@numerKrs", numerKrs);
+                await using var reader = await command.ExecuteReaderAsync();
+                
+                Organizacja? organizacja = null;
+                var adresy = new List<Adres>();
+                var koordynaty = new List<Koordynaty>();
+                var kategorie = new List<Kategoria>();
+                
+                // Pobierz indeksy kolumn
+                var numerkrsOrdinal = reader.GetOrdinal("numerkrs");
+                var nazwaOrdinal = reader.GetOrdinal("nazwa");
+                var adresIdOrdinal = reader.GetOrdinal("adres_id");
+                var ulicaOrdinal = reader.GetOrdinal("ulica");
+                var nrdomuOrdinal = reader.GetOrdinal("nrdomu");
+                var nrlokaluOrdinal = reader.GetOrdinal("nrlokalu");
+                var miejscowoscOrdinal = reader.GetOrdinal("miejscowosc");
+                var kodpocztowyOrdinal = reader.GetOrdinal("kodpocztowy");
+                var pocztaOrdinal = reader.GetOrdinal("poczta");
+                var gminaOrdinal = reader.GetOrdinal("gmina");
+                var powiatOrdinal = reader.GetOrdinal("powiat");
+                var wojewodztwoOrdinal = reader.GetOrdinal("wojewodztwo");
+                var krajOrdinal = reader.GetOrdinal("kraj");
+                var koordynatyIdOrdinal = reader.GetOrdinal("koordynaty_id");
+                var latitudeOrdinal = reader.GetOrdinal("latitude");
+                var longitudeOrdinal = reader.GetOrdinal("longitude");
+                var kategoriaIdOrdinal = reader.GetOrdinal("kategoria_id");
+                var kategoriaNazwaOrdinal = reader.GetOrdinal("kategoria_nazwa");
+                
+                while (await reader.ReadAsync())
+                {
+                    if (organizacja == null)
+                    {
+                        organizacja = new Organizacja
+                        {
+                            NumerKrs = reader.GetString(numerkrsOrdinal),
+                            Nazwa = reader.GetString(nazwaOrdinal)
+                        };
+                    }
+                    
+                    // Dodaj adres jeśli istnieje
+                    if (!reader.IsDBNull(adresIdOrdinal))
+                    {
+                        var adresId = reader.GetInt32(adresIdOrdinal);
+                        if (!adresy.Any(a => a.Id == adresId))
+                        {
+                            adresy.Add(new Adres
+                            {
+                                Id = adresId,
+                                NumerKrs = organizacja.NumerKrs,
+                                Ulica = reader.IsDBNull(ulicaOrdinal) ? null : reader.GetString(ulicaOrdinal),
+                                NrDomu = reader.IsDBNull(nrdomuOrdinal) ? null : reader.GetString(nrdomuOrdinal),
+                                NrLokalu = reader.IsDBNull(nrlokaluOrdinal) ? null : reader.GetString(nrlokaluOrdinal),
+                                Miejscowosc = reader.IsDBNull(miejscowoscOrdinal) ? null : reader.GetString(miejscowoscOrdinal),
+                                KodPocztowy = reader.IsDBNull(kodpocztowyOrdinal) ? null : reader.GetString(kodpocztowyOrdinal),
+                                Poczta = reader.IsDBNull(pocztaOrdinal) ? null : reader.GetString(pocztaOrdinal),
+                                Gmina = reader.IsDBNull(gminaOrdinal) ? null : reader.GetString(gminaOrdinal),
+                                Powiat = reader.IsDBNull(powiatOrdinal) ? null : reader.GetString(powiatOrdinal),
+                                Wojewodztwo = reader.IsDBNull(wojewodztwoOrdinal) ? null : reader.GetString(wojewodztwoOrdinal),
+                                Kraj = reader.IsDBNull(krajOrdinal) ? "" : reader.GetString(krajOrdinal)
+                            });
+                        }
+                    }
+                    
+                    // Dodaj koordynaty jeśli istnieją
+                    if (!reader.IsDBNull(koordynatyIdOrdinal))
+                    {
+                        var koordynatyId = reader.GetInt32(koordynatyIdOrdinal);
+                        if (!koordynaty.Any(k => k.Id == koordynatyId))
+                        {
+                            koordynaty.Add(new Koordynaty
+                            {
+                                Id = koordynatyId,
+                                NumerKrs = organizacja.NumerKrs,
+                                Latitude = reader.GetDouble(latitudeOrdinal),
+                                Longitude = reader.GetDouble(longitudeOrdinal)
+                            });
+                        }
+                    }
+                    
+                    // Dodaj kategorię jeśli istnieje
+                    if (!reader.IsDBNull(kategoriaIdOrdinal))
+                    {
+                        var kategoriaId = reader.GetInt32(kategoriaIdOrdinal);
+                        if (!kategorie.Any(k => k.Id == kategoriaId))
+                        {
+                            kategorie.Add(new Kategoria
+                            {
+                                Id = kategoriaId,
+                                Nazwa = reader.GetString(kategoriaNazwaOrdinal)
+                            });
+                        }
+                    }
+                }
+                
+                if (organizacja != null)
+                {
+                    organizacja.Adresy = adresy;
+                    organizacja.Koordynaty = koordynaty;
+                    organizacja.OrganizacjaKategorie = kategorie.Select(k => new OrganizacjaKategoria
+                    {
+                        NumerKrs = organizacja.NumerKrs,
+                        KategoriaId = k.Id,
+                        Kategoria = k
+                    }).ToList();
+                }
+                
+                return organizacja;
             }
             catch (Exception ex)
             {
@@ -118,83 +237,111 @@ namespace ParasolBackEnd.Services
             }
         }
 
-        public async Task<bool> SaveOrganizacjaAsync(Organizacja organizacja)
-        {
-            try
-            {
-                var existing = await _context.Organizacje
-                    .FirstOrDefaultAsync(o => o.NumerKrs == organizacja.NumerKrs);
-
-                if (existing != null)
-                {
-                    _logger.LogWarning("Organizacja with KRS {NumerKrs} already exists", organizacja.NumerKrs);
-                    return false;
-                }
-
-                _context.Organizacje.Add(organizacja);
-                await _context.SaveChangesAsync();
-                
-                _logger.LogInformation("Organizacja saved successfully: {NumerKrs}", organizacja.NumerKrs);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error saving organizacja: {NumerKrs}", organizacja.NumerKrs);
-                return false;
-            }
-        }
 
         public async Task<bool> UpdateOrganizacjaAsync(Organizacja organizacja)
         {
             try
             {
-                var existing = await _context.Organizacje
-                    .Include(o => o.Adresy)
-                    .Include(o => o.Koordynaty)
-                    .Include(o => o.OrganizacjaKategorie)
-                    .FirstOrDefaultAsync(o => o.NumerKrs == organizacja.NumerKrs);
-
-                if (existing == null)
-                {
-                    _logger.LogWarning("Organizacja with KRS {NumerKrs} not found for update", organizacja.NumerKrs);
-                    return false;
-                }
-
-                // Aktualizuj podstawowe dane organizacji
-                existing.Nazwa = organizacja.Nazwa;
-
-                // Usuń stare adresy i dodaj nowe
-                _context.Adresy.RemoveRange(existing.Adresy);
-                existing.Adresy.Clear();
-                foreach (var adres in organizacja.Adresy)
-                {
-                    adres.NumerKrs = organizacja.NumerKrs;
-                    existing.Adresy.Add(adres);
-                }
-
-                // Usuń stare koordynaty i dodaj nowe
-                _context.Koordynaty.RemoveRange(existing.Koordynaty);
-                existing.Koordynaty.Clear();
-                foreach (var koordynaty in organizacja.Koordynaty)
-                {
-                    koordynaty.NumerKrs = organizacja.NumerKrs;
-                    existing.Koordynaty.Add(koordynaty);
-                }
-
-                // Usuń stare kategorie i dodaj nowe
-                _context.OrganizacjaKategorie.RemoveRange(existing.OrganizacjaKategorie);
-                existing.OrganizacjaKategorie.Clear();
-                foreach (var kategoria in organizacja.OrganizacjaKategorie)
-                {
-                    kategoria.NumerKrs = organizacja.NumerKrs;
-                    existing.OrganizacjaKategorie.Add(kategoria);
-                }
-
-                await _context.SaveChangesAsync();
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+                await using var transaction = await connection.BeginTransactionAsync();
                 
-                _logger.LogInformation("Organizacja updated successfully: {NumerKrs} with {AdresCount} adresy, {KoordynatyCount} koordynaty, {KategorieCount} kategorie", 
-                    organizacja.NumerKrs, organizacja.Adresy.Count, organizacja.Koordynaty.Count, organizacja.OrganizacjaKategorie.Count);
-                return true;
+                try
+                {
+                    // Sprawdź czy organizacja istnieje
+                    const string checkQuery = "SELECT COUNT(*) FROM organizacja WHERE numerkrs = @numerKrs";
+                    await using var checkCommand = new NpgsqlCommand(checkQuery, connection, transaction);
+                    checkCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
+                    var exists = (long)await checkCommand.ExecuteScalarAsync() > 0;
+                    
+                    if (!exists)
+                    {
+                        _logger.LogWarning("Organizacja with KRS {NumerKrs} not found for update", organizacja.NumerKrs);
+                        return false;
+                    }
+                    
+                    // Aktualizuj podstawowe dane organizacji
+                    const string updateOrgQuery = "UPDATE organizacja SET nazwa = @nazwa WHERE numerkrs = @numerKrs";
+                    await using var updateOrgCommand = new NpgsqlCommand(updateOrgQuery, connection, transaction);
+                    updateOrgCommand.Parameters.AddWithValue("@nazwa", organizacja.Nazwa);
+                    updateOrgCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
+                    await updateOrgCommand.ExecuteNonQueryAsync();
+                    
+                    // Usuń stare adresy
+                    const string deleteAdresyQuery = "DELETE FROM adres WHERE numerkrs = @numerKrs";
+                    await using var deleteAdresyCommand = new NpgsqlCommand(deleteAdresyQuery, connection, transaction);
+                    deleteAdresyCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
+                    await deleteAdresyCommand.ExecuteNonQueryAsync();
+                    
+                    // Dodaj nowe adresy
+                    foreach (var adres in organizacja.Adresy)
+                    {
+                        const string insertAdresQuery = @"
+                            INSERT INTO adres (numerkrs, ulica, nrdomu, nrlokalu, miejscowosc, kodpocztowy, poczta, gmina, powiat, wojewodztwo, kraj)
+                            VALUES (@numerKrs, @ulica, @nrdomu, @nrlokalu, @miejscowosc, @kodpocztowy, @poczta, @gmina, @powiat, @wojewodztwo, @kraj)";
+                        await using var insertAdresCommand = new NpgsqlCommand(insertAdresQuery, connection, transaction);
+                        insertAdresCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
+                        insertAdresCommand.Parameters.AddWithValue("@ulica", (object?)adres.Ulica ?? DBNull.Value);
+                        insertAdresCommand.Parameters.AddWithValue("@nrdomu", (object?)adres.NrDomu ?? DBNull.Value);
+                        insertAdresCommand.Parameters.AddWithValue("@nrlokalu", (object?)adres.NrLokalu ?? DBNull.Value);
+                        insertAdresCommand.Parameters.AddWithValue("@miejscowosc", (object?)adres.Miejscowosc ?? DBNull.Value);
+                        insertAdresCommand.Parameters.AddWithValue("@kodpocztowy", (object?)adres.KodPocztowy ?? DBNull.Value);
+                        insertAdresCommand.Parameters.AddWithValue("@poczta", (object?)adres.Poczta ?? DBNull.Value);
+                        insertAdresCommand.Parameters.AddWithValue("@gmina", (object?)adres.Gmina ?? DBNull.Value);
+                        insertAdresCommand.Parameters.AddWithValue("@powiat", (object?)adres.Powiat ?? DBNull.Value);
+                        insertAdresCommand.Parameters.AddWithValue("@wojewodztwo", (object?)adres.Wojewodztwo ?? DBNull.Value);
+                        insertAdresCommand.Parameters.AddWithValue("@kraj", adres.Kraj);
+                        await insertAdresCommand.ExecuteNonQueryAsync();
+                    }
+                    
+                    // Usuń stare koordynaty
+                    const string deleteKoordynatyQuery = "DELETE FROM koordynaty WHERE numerkrs = @numerKrs";
+                    await using var deleteKoordynatyCommand = new NpgsqlCommand(deleteKoordynatyQuery, connection, transaction);
+                    deleteKoordynatyCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
+                    await deleteKoordynatyCommand.ExecuteNonQueryAsync();
+                    
+                    // Dodaj nowe koordynaty
+                    foreach (var koordynaty in organizacja.Koordynaty)
+                    {
+                        const string insertKoordynatyQuery = @"
+                            INSERT INTO koordynaty (numerkrs, latitude, longitude)
+                            VALUES (@numerKrs, @latitude, @longitude)";
+                        await using var insertKoordynatyCommand = new NpgsqlCommand(insertKoordynatyQuery, connection, transaction);
+                        insertKoordynatyCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
+                        insertKoordynatyCommand.Parameters.AddWithValue("@latitude", koordynaty.Latitude);
+                        insertKoordynatyCommand.Parameters.AddWithValue("@longitude", koordynaty.Longitude);
+                        await insertKoordynatyCommand.ExecuteNonQueryAsync();
+                    }
+                    
+                    // Usuń stare kategorie
+                    const string deleteKategorieQuery = "DELETE FROM organizacjakategoria WHERE numerkrs = @numerKrs";
+                    await using var deleteKategorieCommand = new NpgsqlCommand(deleteKategorieQuery, connection, transaction);
+                    deleteKategorieCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
+                    await deleteKategorieCommand.ExecuteNonQueryAsync();
+                    
+                    // Dodaj nowe kategorie
+                    foreach (var kategoria in organizacja.OrganizacjaKategorie)
+                    {
+                        const string insertKategoriaQuery = @"
+                            INSERT INTO organizacjakategoria (numerkrs, kategoriaid)
+                            VALUES (@numerKrs, @kategoriaid)";
+                        await using var insertKategoriaCommand = new NpgsqlCommand(insertKategoriaQuery, connection, transaction);
+                        insertKategoriaCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
+                        insertKategoriaCommand.Parameters.AddWithValue("@kategoriaid", kategoria.KategoriaId);
+                        await insertKategoriaCommand.ExecuteNonQueryAsync();
+                    }
+                    
+                    await transaction.CommitAsync();
+                    
+                    _logger.LogInformation("Organizacja updated successfully: {NumerKrs} with {AdresCount} adresy, {KoordynatyCount} koordynaty, {KategorieCount} kategorie", 
+                        organizacja.NumerKrs, organizacja.Adresy.Count, organizacja.Koordynaty.Count, organizacja.OrganizacjaKategorie.Count);
+                    return true;
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {
@@ -207,20 +354,56 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                var organizacja = await _context.Organizacje
-                    .FirstOrDefaultAsync(o => o.NumerKrs == numerKrs);
-
-                if (organizacja == null)
-                {
-                    _logger.LogWarning("Organizacja with KRS {NumerKrs} not found for deletion", numerKrs);
-                    return false;
-                }
-
-                _context.Organizacje.Remove(organizacja);
-                await _context.SaveChangesAsync();
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+                await using var transaction = await connection.BeginTransactionAsync();
                 
-                _logger.LogInformation("Organizacja deleted successfully: {NumerKrs}", numerKrs);
-                return true;
+                try
+                {
+                    // Sprawdź czy organizacja istnieje
+                    const string checkQuery = "SELECT COUNT(*) FROM organizacja WHERE numerkrs = @numerKrs";
+                    await using var checkCommand = new NpgsqlCommand(checkQuery, connection, transaction);
+                    checkCommand.Parameters.AddWithValue("@numerKrs", numerKrs);
+                    var exists = (long)await checkCommand.ExecuteScalarAsync() > 0;
+                    
+                    if (!exists)
+                    {
+                        _logger.LogWarning("Organizacja with KRS {NumerKrs} not found for deletion", numerKrs);
+                        return false;
+                    }
+                    
+                    // Usuń powiązane rekordy w kolejności (z powodu foreign keys)
+                    const string deleteAdresyQuery = "DELETE FROM adres WHERE numerkrs = @numerKrs";
+                    await using var deleteAdresyCommand = new NpgsqlCommand(deleteAdresyQuery, connection, transaction);
+                    deleteAdresyCommand.Parameters.AddWithValue("@numerKrs", numerKrs);
+                    await deleteAdresyCommand.ExecuteNonQueryAsync();
+                    
+                    const string deleteKoordynatyQuery = "DELETE FROM koordynaty WHERE numerkrs = @numerKrs";
+                    await using var deleteKoordynatyCommand = new NpgsqlCommand(deleteKoordynatyQuery, connection, transaction);
+                    deleteKoordynatyCommand.Parameters.AddWithValue("@numerKrs", numerKrs);
+                    await deleteKoordynatyCommand.ExecuteNonQueryAsync();
+                    
+                    const string deleteKategorieQuery = "DELETE FROM organizacjakategoria WHERE numerkrs = @numerKrs";
+                    await using var deleteKategorieCommand = new NpgsqlCommand(deleteKategorieQuery, connection, transaction);
+                    deleteKategorieCommand.Parameters.AddWithValue("@numerKrs", numerKrs);
+                    await deleteKategorieCommand.ExecuteNonQueryAsync();
+                    
+                    // Usuń główny rekord organizacji
+                    const string deleteOrgQuery = "DELETE FROM organizacja WHERE numerkrs = @numerKrs";
+                    await using var deleteOrgCommand = new NpgsqlCommand(deleteOrgQuery, connection, transaction);
+                    deleteOrgCommand.Parameters.AddWithValue("@numerKrs", numerKrs);
+                    await deleteOrgCommand.ExecuteNonQueryAsync();
+                    
+                    await transaction.CommitAsync();
+                    
+                    _logger.LogInformation("Organizacja deleted successfully: {NumerKrs}", numerKrs);
+                    return true;
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
             }
             catch (Exception ex)
             {

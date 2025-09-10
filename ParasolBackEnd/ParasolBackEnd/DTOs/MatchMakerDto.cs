@@ -29,8 +29,8 @@ namespace ParasolBackEnd.DTOs
         public string ContactEmail { get; set; } = string.Empty;
         public string? ContactPhone { get; set; }
         public string Status { get; set; } = string.Empty;
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateOnly CreatedAt { get; set; }
+        public DateOnly UpdatedAt { get; set; }
         public DateOnly? ExpiresAt { get; set; }
         public int OrganizationId { get; set; }
         public string OrganizationName { get; set; } = string.Empty;

@@ -131,51 +131,6 @@ namespace ParasolBackEnd.Controllers
             }
         }
 
-        [HttpPut("profile")]
-        public async Task<ActionResult> UpdateProfile([FromBody] RegisterDto updateDto)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                // Pobierz token z nagłówka Authorization
-                var authHeader = Request.Headers["Authorization"].FirstOrDefault();
-                if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
-                {
-                    return Unauthorized(new { message = "Proszę się zalogować aby zaktualizować profil", requiresAuth = true });
-                }
-
-                var token = authHeader.Substring("Bearer ".Length);
-                
-                if (!_authService.ValidateToken(token))
-                {
-                    return Unauthorized(new { message = "Proszę się zalogować aby zaktualizować profil", requiresAuth = true });
-                }
-
-                var organizationId = _authService.GetOrganizationIdFromToken(token);
-                if (!organizationId.HasValue)
-                {
-                    return Unauthorized(new { message = "Proszę się zalogować aby zaktualizować profil", requiresAuth = true });
-                }
-
-                var success = await _authService.UpdateOrganizationProfileAsync(organizationId.Value, updateDto);
-                
-                if (!success)
-                {
-                    return BadRequest("Nie udało się zaktualizować profilu lub email jest już zajęty");
-                }
-
-                return Ok(new { message = "Profil został zaktualizowany" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error updating profile");
-                return StatusCode(500, "Wystąpił błąd podczas aktualizacji profilu");
-            }
-        }
 
         [HttpPost("change-password")]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)

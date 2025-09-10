@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ParasolBackEnd.Data;
@@ -11,9 +12,11 @@ using ParasolBackEnd.Data;
 namespace ParasolBackEnd.Migrations.SecondDb
 {
     [DbContext(typeof(SecondDbContext))]
-    partial class SecondDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250910083928_ChangePostDatesToDateOnly")]
+    partial class ChangePostDatesToDateOnly
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

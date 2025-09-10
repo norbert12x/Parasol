@@ -12,16 +12,12 @@ namespace ParasolBackEnd.Services
         Task<TagDto?> GetTagByIdAsync(int id);
         
         // Post methods
-        Task<List<PostDto>> GetPostsAsync(int? categoryId = null, int? tagId = null, string? searchTerm = null, 
-            bool includeOrganization = true, bool includeCategories = true, bool includeTags = true, 
-            int page = 1, int pageSize = 20);
         Task<List<PostDto>> GetPostsSummaryAsync(int? categoryId = null, int? tagId = null, string? searchTerm = null, 
             int page = 1, int pageSize = 20);
         Task<PostDto?> GetPostByIdAsync(int id, bool includeOrganization = true, bool includeCategories = true, bool includeTags = true);
         Task<PostDto> CreatePostAsync(CreatePostDto createPostDto);
         Task<PostDto?> UpdatePostAsync(int id, UpdatePostDto updatePostDto);
         Task<bool> DeletePostAsync(int id);
-        Task ClearCacheAsync();
         Task<IEnumerable<PostDto>> GetPostsByOrganizationAsync(int organizationId, bool includeCategories = false, bool includeTags = false);
     }
 }

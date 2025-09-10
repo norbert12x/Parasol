@@ -82,25 +82,7 @@ namespace ParasolBackEnd.Controllers
             }
         }
 
-        /// <summary>
-        /// Pobiera tagi dla określonej kategorii
-        /// </summary>
-        /// <param name="categoryId">ID kategorii</param>
-        /// <returns>Lista tagów dla danej kategorii</returns>
-        [HttpGet("categories/{categoryId}/tags")]
-        public async Task<ActionResult<List<TagDto>>> GetTagsByCategory(int categoryId)
-        {
-            try
-            {
-                var tags = await _matchMakerService.GetTagsByCategoryAsync(categoryId);
-                return Ok(tags);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error in GetTagsByCategory with categoryId: {CategoryId}", categoryId);
-                return StatusCode(500, "Wystąpił błąd podczas pobierania tagów dla kategorii");
-            }
-        }
+
 
         /// <summary>
         /// Pobiera tag po ID
@@ -150,14 +132,7 @@ namespace ParasolBackEnd.Controllers
             {
                 List<PostDto> posts;
                 
-                if (includeDetails)
-                {
-                    posts = await _matchMakerService.GetPostsAsync(categoryId, tagId, searchTerm, true, true, true, page, pageSize);
-                }
-                else
-                {
-                    posts = await _matchMakerService.GetPostsSummaryAsync(categoryId, tagId, searchTerm, page, pageSize);
-                }
+                posts = await _matchMakerService.GetPostsSummaryAsync(categoryId, tagId, searchTerm, page, pageSize);
                 
                 return Ok(posts);
             }
@@ -454,26 +429,6 @@ namespace ParasolBackEnd.Controllers
             {
                 _logger.LogError(ex, "Error in DeletePost with id: {Id}", id);
                 return StatusCode(500, "Wystąpił błąd podczas usuwania posta");
-            }
-        }
-
-        /// <summary>
-        /// Czyści cache (tylko dla administratorów)
-        /// </summary>
-        /// <returns>Status operacji</returns>
-        [HttpPost("cache/clear")]
-        public async Task<ActionResult> ClearCache()
-        {
-            try
-            {
-                // Tu można dodać autoryzację dla administratorów
-                await _matchMakerService.ClearCacheAsync();
-                return Ok(new { message = "Cache został wyczyszczony" });
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error clearing cache");
-                return StatusCode(500, "Wystąpił błąd podczas czyszczenia cache");
             }
         }
     }

@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ParasolBackEnd.Data;
@@ -11,9 +12,11 @@ using ParasolBackEnd.Data;
 namespace ParasolBackEnd.Migrations.SecondDb
 {
     [DbContext(typeof(SecondDbContext))]
-    partial class SecondDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250910074557_FixCategoryTagRelationship")]
+    partial class FixCategoryTagRelationship
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -105,8 +108,8 @@ namespace ParasolBackEnd.Migrations.SecondDb
                         .HasColumnType("text")
                         .HasColumnName("contact_phone");
 
-                    b.Property<DateOnly>("CreatedAt")
-                        .HasColumnType("date")
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
 
                     b.Property<string>("Description")
@@ -132,8 +135,8 @@ namespace ParasolBackEnd.Migrations.SecondDb
                         .HasColumnType("text")
                         .HasColumnName("title");
 
-                    b.Property<DateOnly>("UpdatedAt")
-                        .HasColumnType("date")
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone")
                         .HasColumnName("updated_at");
 
                     b.HasKey("Id");

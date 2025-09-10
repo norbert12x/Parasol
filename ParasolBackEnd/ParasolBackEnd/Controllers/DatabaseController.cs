@@ -44,22 +44,6 @@ namespace ParasolBackEnd.Controllers
             }
         }
 
-        [HttpGet("organizacje")]
-        [ProducesResponseType(typeof(IEnumerable<Organizacja>), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<IEnumerable<Organizacja>>> GetOrganizacje()
-        {
-            try
-            {
-                var organizacje = await _databaseService.GetOrganizacjeAsync();
-                return Ok(organizacje);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error getting organizacje");
-                return StatusCode(500, new { message = "Error retrieving organizacje", error = ex.Message });
-            }
-        }
 
         [HttpGet("organizacje/{numerKrs}")]
         [ProducesResponseType(typeof(Organizacja), StatusCodes.Status200OK)]
@@ -85,37 +69,6 @@ namespace ParasolBackEnd.Controllers
             }
         }
 
-        [HttpPost("organizacje")]
-        [ProducesResponseType(typeof(Organizacja), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<Organizacja>> CreateOrganizacja([FromBody] Organizacja organizacja)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var success = await _databaseService.SaveOrganizacjaAsync(organizacja);
-                
-                if (success)
-                {
-                    return CreatedAtAction(nameof(GetOrganizacjaByKrs), 
-                        new { numerKrs = organizacja.NumerKrs }, organizacja);
-                }
-                else
-                {
-                    return BadRequest(new { message = "Failed to create organizacja" });
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error creating organizacja");
-                return StatusCode(500, new { message = "Error creating organizacja", error = ex.Message });
-            }
-        }
 
         [HttpPut("organizacje/{numerKrs}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
