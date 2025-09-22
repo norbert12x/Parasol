@@ -47,7 +47,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 
 // Dodaj SecondDbContext dla MatchMaker
 builder.Services.AddDbContext<SecondDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("SecondDb")), ServiceLifetime.Transient);
+    options.UseNpgsql(builder.Configuration.GetConnectionString("SecondDb")), ServiceLifetime.Scoped);
 
 // Dodaj DatabaseService
 builder.Services.AddScoped<IDatabaseService, DatabaseService>(provider =>
