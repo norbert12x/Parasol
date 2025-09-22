@@ -165,6 +165,14 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+// Middleware do wymuszenia zamknięcia połączeń HTTP
+app.Use(async (context, next) =>
+{
+    // Wymuś zamknięcie połączenia po każdym request
+    context.Response.Headers["Connection"] = "close";
+    await next();
+});
+
 app.UseHttpsRedirection();
 
 app.UseAuthentication();

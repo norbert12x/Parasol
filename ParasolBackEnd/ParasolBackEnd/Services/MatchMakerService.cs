@@ -378,11 +378,17 @@ namespace ParasolBackEnd.Services
                 var sql = $@"
                     SELECT p.id, p.title, p.description, p.contact_email, p.contact_phone, 
                            p.status, p.created_at, p.updated_at, p.expires_at, p.organization_id,
-                           o.organization_name
+                           o.organization_name,
+                           c.id as category_id, c.name as category_name,
+                           t.id as tag_id, t.name as tag_name
                     FROM posts p 
                     JOIN organizations o ON p.organization_id = o.id
+                    LEFT JOIN post_categories pc ON p.id = pc.post_id
+                    LEFT JOIN categories c ON pc.category_id = c.id
+                    LEFT JOIN post_tags pt ON p.id = pt.post_id
+                    LEFT JOIN tags t ON pt.tag_id = t.id
                     {whereClause}
-                    ORDER BY p.created_at DESC
+                    ORDER BY p.created_at DESC, p.id, c.id, t.id
                     LIMIT @pageSize OFFSET @offset";
 
                 parameters.Add(new NpgsqlParameter("@pageSize", pageSize));
@@ -394,41 +400,60 @@ namespace ParasolBackEnd.Services
                     command.Parameters.Add(param);
                 }
 
-                var posts = new List<PostDto>();
+                var posts = new Dictionary<int, PostDto>();
                 await using var reader = await command.ExecuteReaderAsync();
                 
                 while (await reader.ReadAsync())
                 {
-                    var postDto = new PostDto
+                    var postId = reader.GetInt32(0);
+                    
+                    // Twórz post tylko jeśli nie istnieje
+                    if (!posts.ContainsKey(postId))
                     {
-                        Id = reader.GetInt32(0),
-                        Title = reader.GetString(1),
-                        Description = reader.GetString(2),
-                        ContactEmail = reader.GetString(3),
-                        ContactPhone = reader.IsDBNull(4) ? null : reader.GetString(4),
-                        Status = reader.GetString(5),
-                        CreatedAt = DateOnly.FromDateTime(reader.GetDateTime(6)),
-                        UpdatedAt = DateOnly.FromDateTime(reader.GetDateTime(7)),
-                        ExpiresAt = reader.IsDBNull(8) ? null : DateOnly.FromDateTime(reader.GetDateTime(8)),
-                        OrganizationId = reader.GetInt32(9),
-                        OrganizationName = reader.GetString(10),
-                        Categories = new List<CategorySimpleDto>(),
-                        Tags = new List<TagDto>()
-                    };
-                    posts.Add(postDto);
+                        posts[postId] = new PostDto
+                        {
+                            Id = postId,
+                            Title = reader.GetString(1),
+                            Description = reader.GetString(2),
+                            ContactEmail = reader.GetString(3),
+                            ContactPhone = reader.IsDBNull(4) ? null : reader.GetString(4),
+                            Status = reader.GetString(5),
+                            CreatedAt = DateOnly.FromDateTime(reader.GetDateTime(6)),
+                            UpdatedAt = DateOnly.FromDateTime(reader.GetDateTime(7)),
+                            ExpiresAt = reader.IsDBNull(8) ? null : DateOnly.FromDateTime(reader.GetDateTime(8)),
+                            OrganizationId = reader.GetInt32(9),
+                            OrganizationName = reader.GetString(10),
+                            Categories = new List<CategorySimpleDto>(),
+                            Tags = new List<TagDto>()
+                        };
+                    }
+
+                    // Dodaj kategorię jeśli istnieje i nie została jeszcze dodana
+                    if (!reader.IsDBNull(11) && !posts[postId].Categories.Any(c => c.Id == reader.GetInt32(11)))
+                    {
+                        posts[postId].Categories.Add(new CategorySimpleDto
+                        {
+                            Id = reader.GetInt32(11),
+                            Name = reader.GetString(12)
+                        });
+                    }
+
+                    // Dodaj tag jeśli istnieje i nie został jeszcze dodany
+                    if (!reader.IsDBNull(13) && !posts[postId].Tags.Any(t => t.Id == reader.GetInt32(13)))
+                    {
+                        posts[postId].Tags.Add(new TagDto
+                        {
+                            Id = reader.GetInt32(13),
+                            Name = reader.GetString(14)
+                        });
+                    }
                 }
                 await reader.CloseAsync();
 
-                // Dla każdego posta pobierz kategorie i tagi
-                foreach (var post in posts)
-                {
-                    post.Categories = await LoadPostCategoriesAsync(connection, post.Id);
-                    post.Tags = await LoadPostTagsAsync(connection, post.Id);
-                }
-
-                _logger.LogInformation("Successfully loaded {Count} posts", posts.Count);
+                var postsList = posts.Values.ToList();
+                _logger.LogInformation("Successfully loaded {Count} posts", postsList.Count);
                 
-                return posts;
+                return postsList;
             }
             catch (Exception ex)
             {
