@@ -34,7 +34,8 @@ public class OrganizacjeController : ControllerBase
         [FromQuery] string? wojewodztwo,
         [FromQuery] string? powiat,
         [FromQuery] string? gmina,
-        [FromQuery] string? miejscowosc)
+        [FromQuery] string? miejscowosc,
+        [FromQuery] int? limit)
     {
         try
         {
@@ -56,6 +57,10 @@ public class OrganizacjeController : ControllerBase
             var krsEntities = await _geolocationService.GetEntitiesByLocationAsync(
                 wojewodztwo, powiat, gmina, miejscowosc);
 
+            // Wymuś maksymalny limit 45 rekordów na żądanie (domyślnie 45)
+            var effectiveLimit = Math.Min(limit ?? 45, 45);
+            krsEntities = krsEntities.Take(effectiveLimit).ToList();
+
             if (categories != null && categories.Length > 0)
             {
                 krsEntities = krsEntities.Where(e =>
@@ -66,21 +71,29 @@ public class OrganizacjeController : ControllerBase
             // Pobierz pełne dane z OrganizacjaService, żeby mieć geolokalizację
             var tasks = krsEntities.Select(async e =>
             {
-                var org = await _organizacjaService.LoadOrganizationAsync(e.KrsNumber);
-                if (org == null) return null;
-
-                // Jeśli nazwa w OrganizacjaService jest pusta, użyj nazwy z KRS
-                if (string.IsNullOrWhiteSpace(org.Nazwa))
-                    org.Nazwa = e.Name;
-
-                return new
+                try
                 {
-                    Krs = e.KrsNumber,
-                    Nazwa = org.Nazwa,
-                    Adresy = org.Adresy,
-                    Koordynaty = org.Koordynaty,
-                    CeleStatusowe = e.ActivityDescriptions
-                };
+                    var org = await _organizacjaService.LoadOrganizationAsync(e.KrsNumber);
+                    if (org == null) return null;
+
+                    // Jeśli nazwa w OrganizacjaService jest pusta, użyj nazwy z KRS
+                    if (string.IsNullOrWhiteSpace(org.Nazwa))
+                        org.Nazwa = e.Name;
+
+                    return new
+                    {
+                        Krs = e.KrsNumber,
+                        Nazwa = org.Nazwa,
+                        Adresy = org.Adresy,
+                        Koordynaty = org.Koordynaty,
+                        CeleStatusowe = e.ActivityDescriptions
+                    };
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to load organization details for KRS {Krs}", e.KrsNumber);
+                    return null;
+                }
             });
 
             var result = (await Task.WhenAll(tasks))

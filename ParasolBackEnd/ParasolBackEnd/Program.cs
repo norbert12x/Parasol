@@ -18,6 +18,9 @@ builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
 
+// Import job service
+builder.Services.AddSingleton<ImportJobService>();
+
 // Pobierz folder z danymi
 var dataFolder = builder.Configuration.GetValue<string>("DataFolder") ?? "dane";
 

@@ -17,7 +17,7 @@ namespace ParasolBackEnd.Services
         Task<List<Kategoria>> GetKategorieAsync();
         Task<bool> UpdateOrganizacjaAsync(Organizacja organizacja);
         Task<bool> DeleteOrganizacjaAsync(string numerKrs);
-        Task<ImportResult> ImportFromGeolokalizacjaAsync(string? wojewodztwo = null);
+        Task<ImportResult> ImportFromGeolokalizacjaAsync(string? wojewodztwo = null, int? limit = null);
         Task<List<Organizacja>> GetOrganizationsForMapAsync(string? kategoria = null, string? wojewodztwo = null, string? powiat = null, string? gmina = null, string? miejscowosc = null, string? krsNumber = null);
     }
 
@@ -412,7 +412,7 @@ namespace ParasolBackEnd.Services
             }
         }
 
-        public async Task<ImportResult> ImportFromGeolokalizacjaAsync(string? wojewodztwo = null)
+        public async Task<ImportResult> ImportFromGeolokalizacjaAsync(string? wojewodztwo = null, int? limit = null)
         {
             _logger.LogInformation("Starting import from geolokalizacja");
             
@@ -421,7 +421,12 @@ namespace ParasolBackEnd.Services
                 var organizacje = await GetOrganizacjeFromGeolokalizacjaAsync(wojewodztwo);
                 _logger.LogInformation("Found {Count} organizations to import", organizacje.Count);
 
-                // Ograniczenie do maksymalnie 4000 organizacji
+                // Twardy limit per request: maksymalnie 45 organizacji
+                var maxPerRequest = 45;
+                var effectiveLimit = Math.Min(limit ?? maxPerRequest, maxPerRequest);
+                organizacje = organizacje.Take(effectiveLimit).ToList();
+
+                // Ograniczenie globalne (istniejące) do maksymalnie 4000 organizacji – nadal zostawiamy jako safeguard dla innych ścieżek
                 if (organizacje.Count > 4000)
                 {
                     _logger.LogWarning("Too many organizations ({Count}), limiting to 4000", organizacje.Count);
@@ -449,19 +454,22 @@ namespace ParasolBackEnd.Services
                         // Użyj bezpośrednio Npgsql zamiast Entity Framework
                         await SaveOrganizacjaWithNpgsqlAsync(organizacja);
                         
-                        // Usuń plik JSON po zaimportowaniu
-                        var jsonFilePath = Path.Combine("..", "dane", $"{organizacja.NumerKrs}.json");
-                        if (System.IO.File.Exists(jsonFilePath))
+                        // Usuń plik JSON po zaimportowaniu TYLKO jeśli mamy koordynaty
+                        if (organizacja.Koordynaty != null && organizacja.Koordynaty.Any())
                         {
-                            try
+                            var jsonFilePath = Path.Combine("..", "dane", $"{organizacja.NumerKrs}.json");
+                            if (System.IO.File.Exists(jsonFilePath))
                             {
-                                System.IO.File.Delete(jsonFilePath);
-                                deletedFiles.Add(organizacja.NumerKrs);
-                                _logger.LogDebug("Deleted JSON file: {FilePath}", jsonFilePath);
-                            }
-                            catch (Exception deleteEx)
-                            {
-                                _logger.LogWarning(deleteEx, "Failed to delete JSON file: {FilePath}", jsonFilePath);
+                                try
+                                {
+                                    System.IO.File.Delete(jsonFilePath);
+                                    deletedFiles.Add(organizacja.NumerKrs);
+                                    _logger.LogDebug("Deleted JSON file: {FilePath}", jsonFilePath);
+                                }
+                                catch (Exception deleteEx)
+                                {
+                                    _logger.LogWarning(deleteEx, "Failed to delete JSON file: {FilePath}", jsonFilePath);
+                                }
                             }
                         }
                         
@@ -983,10 +991,14 @@ namespace ParasolBackEnd.Services
                     deleteAdresCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
                     await deleteAdresCommand.ExecuteNonQueryAsync();
                     
-                    string deleteKoordynatyQuery = "DELETE FROM koordynaty WHERE numerkrs = @numerKrs";
-                    await using var deleteKoordynatyCommand = new NpgsqlCommand(deleteKoordynatyQuery, connection, transaction);
-                    deleteKoordynatyCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
-                    await deleteKoordynatyCommand.ExecuteNonQueryAsync();
+                    // Usuń koordynaty TYLKO jeśli mamy nowe koordynaty do zapisania
+                    if (organizacja.Koordynaty != null && organizacja.Koordynaty.Any())
+                    {
+                        string deleteKoordynatyQuery = "DELETE FROM koordynaty WHERE numerkrs = @numerKrs";
+                        await using var deleteKoordynatyCommand = new NpgsqlCommand(deleteKoordynatyQuery, connection, transaction);
+                        deleteKoordynatyCommand.Parameters.AddWithValue("@numerKrs", organizacja.NumerKrs);
+                        await deleteKoordynatyCommand.ExecuteNonQueryAsync();
+                    }
                     
                     string deleteKategorieQuery = "DELETE FROM organizacjakategoria WHERE numerkrs = @numerKrs";
                     await using var deleteKategorieCommand = new NpgsqlCommand(deleteKategorieQuery, connection, transaction);
@@ -1032,19 +1044,22 @@ namespace ParasolBackEnd.Services
 
                 // 3. Zapisz koordynaty geograficzne organizacji (po wstawieniu/aktualizacji głównej tabeli)
                 _logger.LogDebug("Step 3: Inserting {Count} koordynaty for organizacja {NumerKrs}", organizacja.Koordynaty.Count, organizacja.NumerKrs);
-                foreach (var koordynaty in organizacja.Koordynaty)
+                if (organizacja.Koordynaty != null && organizacja.Koordynaty.Any())
                 {
-                    // Upewnij się, że koordynaty mają poprawny numerkrs
-                    koordynaty.NumerKrs = organizacja.NumerKrs;
-                    
-                    string insertKoordynatyQuery = "INSERT INTO koordynaty (numerkrs, latitude, longitude) VALUES (@numerKrs, @latitude, @longitude)";
-                    
-                    await using var koordynatyCommand = new NpgsqlCommand(insertKoordynatyQuery, connection, transaction);
-                    koordynatyCommand.Parameters.AddWithValue("@numerKrs", koordynaty.NumerKrs);
-                    koordynatyCommand.Parameters.AddWithValue("@latitude", koordynaty.Latitude);
-                    koordynatyCommand.Parameters.AddWithValue("@longitude", koordynaty.Longitude);
-                    
-                    await koordynatyCommand.ExecuteNonQueryAsync();
+                    foreach (var koordynaty in organizacja.Koordynaty)
+                    {
+                        // Upewnij się, że koordynaty mają poprawny numerkrs
+                        koordynaty.NumerKrs = organizacja.NumerKrs;
+                        
+                        string insertKoordynatyQuery = "INSERT INTO koordynaty (numerkrs, latitude, longitude) VALUES (@numerKrs, @latitude, @longitude)";
+                        
+                        await using var koordynatyCommand = new NpgsqlCommand(insertKoordynatyQuery, connection, transaction);
+                        koordynatyCommand.Parameters.AddWithValue("@numerKrs", koordynaty.NumerKrs);
+                        koordynatyCommand.Parameters.AddWithValue("@latitude", koordynaty.Latitude);
+                        koordynatyCommand.Parameters.AddWithValue("@longitude", koordynaty.Longitude);
+                        
+                        await koordynatyCommand.ExecuteNonQueryAsync();
+                    }
                 }
 
                 // 4. Przypisz kategorie na podstawie celów statutowych (po wstawieniu/aktualizacji głównej tabeli)

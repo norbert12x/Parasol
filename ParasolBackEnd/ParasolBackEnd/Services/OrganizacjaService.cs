@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using ParasolBackEnd.Models.MapOrganizations;
 using RestSharp;
+using System.Linq; // Added for FirstOrDefault
 
 namespace ParasolBackEnd.Services
 {
@@ -21,8 +22,8 @@ namespace ParasolBackEnd.Services
         private readonly ILogger<OrganizacjaService> _logger;
 
         // Throttling dla LocationIQ API - max 2 zapytania na sekundę
-        private static readonly SemaphoreSlim _throttle = new SemaphoreSlim(2, 2);
-        private static readonly TimeSpan _throttleDelay = TimeSpan.FromSeconds(1);
+        private static readonly SemaphoreSlim _throttle = new SemaphoreSlim(1, 1); // 1 zapytanie naraz
+        private static readonly TimeSpan _throttleDelay = TimeSpan.FromMilliseconds(600); // ~2 req/s (bezpieczny margines)
 
         public OrganizacjaService(string dataFolder, string apiKey, ILogger<OrganizacjaService> logger)
         {
@@ -50,7 +51,7 @@ namespace ParasolBackEnd.Services
             await _throttle.WaitAsync();
             try
             {
-                // Małe opóźnienie, żeby nie przekroczyć limitu API
+                // Małe opóźnienie między wywołaniami, aby nie przekroczyć limitu API
                 await Task.Delay(_throttleDelay);
 
                 var path = Path.Combine(_dataFolder, $"{krs}.json");
@@ -111,46 +112,61 @@ namespace ParasolBackEnd.Services
                 var request = new RestRequest($"?q={Uri.EscapeDataString(pelnyAdres)}&format=json");
                 request.AddHeader("accept", "application/json");
 
-                _logger.LogDebug("Wysyłanie zapytania do LocationIQ dla KRS: {Krs}", krs);
-                var response = await client.GetAsync(request);
-
                 List<Koordynaty> geolokalizacja = new();
 
-                if (!string.IsNullOrWhiteSpace(response?.Content))
+                // Retry/backoff dla 429 i 5xx
+                var maxAttempts = 3;
+                for (var attempt = 1; attempt <= maxAttempts; attempt++)
                 {
                     try
                     {
-                        var results = JsonSerializer.Deserialize<JsonElement[]>(response.Content);
+                        _logger.LogDebug("Wysyłanie zapytania do LocationIQ (attempt {Attempt}) dla KRS: {Krs}", attempt, krs);
+                        var response = await client.GetAsync(request);
 
-                        if (results != null && results.Length > 0)
+                        if (response != null && response.IsSuccessful && !string.IsNullOrWhiteSpace(response.Content))
                         {
-                            var first = results[0];
-                            var latitude = double.Parse(first.GetProperty("lat").GetString() ?? "0", CultureInfo.InvariantCulture);
-                            var longitude = double.Parse(first.GetProperty("lon").GetString() ?? "0", CultureInfo.InvariantCulture);
-                            
-                            geolokalizacja.Add(new Koordynaty
+                            try
                             {
-                                NumerKrs = krs,
-                                Latitude = latitude,
-                                Longitude = longitude
-                            });
+                                var results = JsonSerializer.Deserialize<JsonElement[]>(response.Content);
+                                if (results != null && results.Length > 0)
+                                {
+                                    var first = results[0];
+                                    var latitude = double.Parse(first.GetProperty("lat").GetString() ?? "0", CultureInfo.InvariantCulture);
+                                    var longitude = double.Parse(first.GetProperty("lon").GetString() ?? "0", CultureInfo.InvariantCulture);
+                                    geolokalizacja.Add(new Koordynaty { NumerKrs = krs, Latitude = latitude, Longitude = longitude });
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                _logger.LogError(ex, "Błąd parsowania odpowiedzi LocationIQ dla KRS: {Krs}", krs);
+                            }
+                            break; // sukces, wychodzimy z retry
+                        }
 
-                            _logger.LogDebug("Pobrano koordynaty dla KRS {Krs}: lat={Latitude}, lon={Longitude}", 
-                                krs, latitude, longitude);
-                        }
-                        else
+                        // Obsługa 429 / 5xx
+                        var status = (int?)response?.StatusCode;
+                        if (status == 429 || (status >= 500 && status < 600))
                         {
-                            _logger.LogWarning("Brak wyników geolokalizacji dla KRS: {Krs}", krs);
+                            TimeSpan delay = TimeSpan.FromSeconds(Math.Pow(2, attempt)); // 2s, 4s, 8s
+                            var retryAfter = response?.Headers?.FirstOrDefault(h => string.Equals(h.Name, "Retry-After", StringComparison.OrdinalIgnoreCase)).Value?.ToString();
+                            if (!string.IsNullOrWhiteSpace(retryAfter) && int.TryParse(retryAfter, out var retrySec))
+                            {
+                                delay = TimeSpan.FromSeconds(retrySec);
+                            }
+                            _logger.LogWarning("LocationIQ limit/awaria (status {Status}) dla KRS {Krs}. Próba {Attempt}/{MaxAttempts}, czekam {Delay}s", status, krs, attempt, maxAttempts, delay.TotalSeconds);
+                            await Task.Delay(delay);
+                            continue;
                         }
+
+                        // Inne błędy – log i przerwij retry
+                        _logger.LogWarning("Nieudane zapytanie do LocationIQ dla KRS {Krs}. Status: {Status}", krs, status);
+                        break;
                     }
-                    catch (Exception ex)
+                    catch (HttpRequestException httpEx)
                     {
-                        _logger.LogError(ex, "Błąd parsowania odpowiedzi LocationIQ dla KRS: {Krs}", krs);
+                        _logger.LogWarning(httpEx, "Błąd HTTP podczas pobierania geolokalizacji dla KRS {Krs} (attempt {Attempt})", krs, attempt);
+                        await Task.Delay(TimeSpan.FromSeconds(Math.Pow(2, attempt)));
                     }
-                }
-                else
-                {
-                    _logger.LogWarning("Pusta odpowiedź z LocationIQ dla KRS: {Krs}", krs);
                 }
 
                 var organizacja = new Organizacja
