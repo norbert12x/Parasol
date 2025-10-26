@@ -15,6 +15,8 @@ namespace ParasolBackEnd.Data
         public DbSet<Post> Posts { get; set; }
         public DbSet<PostCategory> PostCategories { get; set; }
         public DbSet<PostTag> PostTags { get; set; }
+        public DbSet<OrganizationCategory> OrganizationCategories { get; set; }
+        public DbSet<OrganizationTag> OrganizationTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -85,6 +87,10 @@ namespace ParasolBackEnd.Data
                 entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
                 entity.Property(e => e.OrganizationName).HasColumnName("organization_name");
                 entity.Property(e => e.KrsNumber).HasColumnName("krs_number");
+                entity.Property(e => e.AboutText).HasColumnName("about_text");
+                entity.Property(e => e.WebsiteUrl).HasColumnName("website_url");
+                entity.Property(e => e.Phone).HasColumnName("phone");
+                entity.Property(e => e.ContactEmail).HasColumnName("contact_email");
 
                 // Indeksy
                 entity.HasIndex(e => e.Email).HasDatabaseName("ix_organizations_email");
@@ -115,6 +121,54 @@ namespace ParasolBackEnd.Data
                 // Indeksy
                 entity.HasIndex(e => e.PostId).HasDatabaseName("ix_post_tags_post_id");
                 entity.HasIndex(e => e.TagId).HasDatabaseName("ix_post_tags_tag_id");
+            });
+
+            // Konfiguracja tabeli OrganizationCategory
+            modelBuilder.Entity<OrganizationCategory>(entity =>
+            {
+                entity.ToTable("organization_categories");
+                entity.HasKey(e => new { e.OrganizationId, e.CategoryId });
+                entity.Property(e => e.OrganizationId).HasColumnName("organization_id");
+                entity.Property(e => e.CategoryId).HasColumnName("category_id");
+
+                // Konfiguracja relacji
+                entity.HasOne(oc => oc.Organization)
+                    .WithMany(o => o.OrganizationCategories)
+                    .HasForeignKey(oc => oc.OrganizationId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(oc => oc.Category)
+                    .WithMany()
+                    .HasForeignKey(oc => oc.CategoryId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Indeksy
+                entity.HasIndex(e => e.OrganizationId).HasDatabaseName("ix_organization_categories_organization_id");
+                entity.HasIndex(e => e.CategoryId).HasDatabaseName("ix_organization_categories_category_id");
+            });
+
+            // Konfiguracja tabeli OrganizationTag
+            modelBuilder.Entity<OrganizationTag>(entity =>
+            {
+                entity.ToTable("organization_tags");
+                entity.HasKey(e => new { e.OrganizationId, e.TagId });
+                entity.Property(e => e.OrganizationId).HasColumnName("organization_id");
+                entity.Property(e => e.TagId).HasColumnName("tag_id");
+
+                // Konfiguracja relacji
+                entity.HasOne(ot => ot.Organization)
+                    .WithMany(o => o.OrganizationTags)
+                    .HasForeignKey(ot => ot.OrganizationId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(ot => ot.Tag)
+                    .WithMany()
+                    .HasForeignKey(ot => ot.TagId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                // Indeksy
+                entity.HasIndex(e => e.OrganizationId).HasDatabaseName("ix_organization_tags_organization_id");
+                entity.HasIndex(e => e.TagId).HasDatabaseName("ix_organization_tags_tag_id");
             });
         }
     }

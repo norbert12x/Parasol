@@ -131,6 +131,70 @@ namespace ParasolBackEnd.Controllers
             }
         }
 
+        [HttpPut("profile")]
+        public async Task<ActionResult<OrganizationProfileDto>> UpdateProfile([FromBody] UpdateProfileDto updateProfileDto)
+        {
+            try
+            {
+                if (!ModelState.IsValid)
+                {
+                    return BadRequest(ModelState);
+                }
+
+                // Pobierz token z nagłówka Authorization
+                var authHeader = Request.Headers["Authorization"].FirstOrDefault();
+                if (string.IsNullOrEmpty(authHeader) || !authHeader.StartsWith("Bearer "))
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby zaktualizować profil", requiresAuth = true });
+                }
+
+                var token = authHeader.Substring("Bearer ".Length);
+                
+                if (!_authService.ValidateToken(token))
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby zaktualizować profil", requiresAuth = true });
+                }
+
+                var organizationId = _authService.GetOrganizationIdFromToken(token);
+                if (!organizationId.HasValue)
+                {
+                    return Unauthorized(new { message = "Proszę się zalogować aby zaktualizować profil", requiresAuth = true });
+                }
+
+                // Walidacja kategorii i tagów
+                if (updateProfileDto.CategoryIds?.Any(id => id <= 0) == true)
+                {
+                    return BadRequest("ID kategorii muszą być większe od 0");
+                }
+
+                if (updateProfileDto.TagIds?.Any(id => id <= 0) == true)
+                {
+                    return BadRequest("ID tagów muszą być większe od 0");
+                }
+
+                var success = await _authService.UpdateProfileAsync(organizationId.Value, updateProfileDto);
+                
+                if (!success)
+                {
+                    return BadRequest("Wystąpił błąd podczas aktualizacji profilu");
+                }
+
+                // Zwróć zaktualizowany profil
+                var profile = await _authService.GetOrganizationProfileAsync(organizationId.Value);
+                
+                if (profile == null)
+                {
+                    return NotFound("Profil organizacji nie został znaleziony");
+                }
+
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating profile");
+                return StatusCode(500, "Wystąpił błąd podczas aktualizacji profilu");
+            }
+        }
 
         [HttpPost("change-password")]
         public async Task<ActionResult> ChangePassword([FromBody] ChangePasswordDto changePasswordDto)

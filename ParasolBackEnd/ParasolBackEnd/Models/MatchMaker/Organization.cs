@@ -22,7 +22,15 @@ namespace ParasolBackEnd.Models.MatchMaker
         [MaxLength(20)]
         public string? KrsNumber { get; set; }
         
+        // Profile fields
+        public string? AboutText { get; set; }
+        public string? WebsiteUrl { get; set; }
+        public string? Phone { get; set; }
+        public string? ContactEmail { get; set; }
+        
         // Navigation properties
         public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
+        public virtual ICollection<OrganizationCategory> OrganizationCategories { get; set; } = new List<OrganizationCategory>();
+        public virtual ICollection<OrganizationTag> OrganizationTags { get; set; } = new List<OrganizationTag>();
     }
 }

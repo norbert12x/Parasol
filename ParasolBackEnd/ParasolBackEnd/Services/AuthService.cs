@@ -23,6 +23,7 @@ namespace ParasolBackEnd.Services
         Task<AuthResponseDto?> RegisterAsync(RegisterDto registerDto);
         Task<AuthResponseDto?> LoginAsync(LoginDto loginDto);
         Task<OrganizationProfileDto?> GetOrganizationProfileAsync(int organizationId);
+        Task<bool> UpdateProfileAsync(int organizationId, UpdateProfileDto updateProfileDto);
         Task<bool> ChangePasswordAsync(int organizationId, string currentPassword, string newPassword);
         Task<string?> GeneratePasswordResetTokenAsync(string email, string krsNumber);
         Task<bool> ResetPasswordAsync(string token, string newPassword);
@@ -178,7 +179,7 @@ namespace ParasolBackEnd.Services
                 await connection.OpenAsync();
 
                 const string sql = @"
-                    SELECT id, email, organization_name, krs_number
+                    SELECT id, email, organization_name, krs_number, about_text, website_url, phone, contact_email
                     FROM organizations 
                     WHERE id = @organizationId";
 
@@ -194,8 +195,61 @@ namespace ParasolBackEnd.Services
                         Id = reader.GetInt32(0),
                         Email = reader.GetString(1),
                         OrganizationName = reader.GetString(2),
-                        KrsNumber = reader.GetString(3)
+                        KrsNumber = reader.IsDBNull(3) ? null : reader.GetString(3),
+                        AboutText = reader.IsDBNull(4) ? null : reader.GetString(4),
+                        WebsiteUrl = reader.IsDBNull(5) ? null : reader.GetString(5),
+                        Phone = reader.IsDBNull(6) ? null : reader.GetString(6),
+                        ContactEmail = reader.IsDBNull(7) ? null : reader.GetString(7),
+                        Categories = new List<CategorySimpleDto>(),
+                        Tags = new List<TagDto>()
                     };
+
+                    await reader.CloseAsync();
+
+                    // Pobierz kategorie organizacji
+                    const string categoriesSql = @"
+                        SELECT c.id, c.name 
+                        FROM organization_categories oc 
+                        JOIN categories c ON oc.category_id = c.id 
+                        WHERE oc.organization_id = @organizationId";
+                    
+                    await using var categoriesCommand = new NpgsqlCommand(categoriesSql, connection);
+                    categoriesCommand.Parameters.AddWithValue("@organizationId", organizationId);
+                    
+                    await using var categoriesReader = await categoriesCommand.ExecuteReaderAsync();
+                    while (await categoriesReader.ReadAsync())
+                    {
+                        profile.Categories.Add(new CategorySimpleDto
+                        {
+                            Id = categoriesReader.GetInt32(0),
+                            Name = categoriesReader.GetString(1)
+                        });
+                    }
+                    await categoriesReader.CloseAsync();
+
+                    // Pobierz tagi organizacji
+                    const string tagsSql = @"
+                        SELECT t.id, t.name, t.category_id, c.name as category_name
+                        FROM organization_tags ot 
+                        JOIN tags t ON ot.tag_id = t.id 
+                        JOIN categories c ON t.category_id = c.id
+                        WHERE ot.organization_id = @organizationId";
+                    
+                    await using var tagsCommand = new NpgsqlCommand(tagsSql, connection);
+                    tagsCommand.Parameters.AddWithValue("@organizationId", organizationId);
+                    
+                    await using var tagsReader = await tagsCommand.ExecuteReaderAsync();
+                    while (await tagsReader.ReadAsync())
+                    {
+                        profile.Tags.Add(new TagDto
+                        {
+                            Id = tagsReader.GetInt32(0),
+                            Name = tagsReader.GetString(1),
+                            CategoryId = tagsReader.GetInt32(2),
+                            CategoryName = tagsReader.GetString(3)
+                        });
+                    }
+                    await tagsReader.CloseAsync();
 
                     _logger.LogInformation("Successfully loaded organization profile for ID {Id}", organizationId);
                     return profile;
@@ -211,6 +265,161 @@ namespace ParasolBackEnd.Services
             }
         }
 
+        public async Task<bool> UpdateProfileAsync(int organizationId, UpdateProfileDto updateProfileDto)
+        {
+            try
+            {
+                _logger.LogInformation("Starting UpdateProfileAsync for organization {Id}", organizationId);
+
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                using var transaction = await connection.BeginTransactionAsync();
+
+                try
+                {
+                    // Sprawdź czy organizacja istnieje
+                    const string checkSql = "SELECT id FROM organizations WHERE id = @organizationId";
+                    await using var checkCommand = new NpgsqlCommand(checkSql, connection, transaction);
+                    checkCommand.Parameters.AddWithValue("@organizationId", organizationId);
+
+                    var exists = await checkCommand.ExecuteScalarAsync();
+                    if (exists == null)
+                    {
+                        _logger.LogWarning("Organization not found for ID {Id}", organizationId);
+                        await transaction.RollbackAsync();
+                        return false;
+                    }
+
+                    // Aktualizuj profile fields (tylko nie-null wartości)
+                    var updateFields = new List<string>();
+                    var parameters = new List<NpgsqlParameter>();
+
+                    if (updateProfileDto.AboutText != null)
+                    {
+                        updateFields.Add("about_text = @aboutText");
+                        parameters.Add(new NpgsqlParameter("@aboutText", updateProfileDto.AboutText));
+                    }
+
+                    if (updateProfileDto.WebsiteUrl != null)
+                    {
+                        updateFields.Add("website_url = @websiteUrl");
+                        parameters.Add(new NpgsqlParameter("@websiteUrl", updateProfileDto.WebsiteUrl));
+                    }
+
+                    if (updateProfileDto.Phone != null)
+                    {
+                        updateFields.Add("phone = @phone");
+                        parameters.Add(new NpgsqlParameter("@phone", updateProfileDto.Phone));
+                    }
+
+                    if (updateProfileDto.ContactEmail != null)
+                    {
+                        updateFields.Add("contact_email = @contactEmail");
+                        parameters.Add(new NpgsqlParameter("@contactEmail", updateProfileDto.ContactEmail));
+                    }
+
+                    if (updateFields.Any())
+                    {
+                        var updateSql = $"UPDATE organizations SET {string.Join(", ", updateFields)} WHERE id = @organizationId";
+                        await using var updateCommand = new NpgsqlCommand(updateSql, connection, transaction);
+                        foreach (var param in parameters)
+                        {
+                            updateCommand.Parameters.Add(param);
+                        }
+                        updateCommand.Parameters.AddWithValue("@organizationId", organizationId);
+                        await updateCommand.ExecuteNonQueryAsync();
+                    }
+
+                    // Walidacja kategorii jeśli podane
+                    if (updateProfileDto.CategoryIds != null)
+                    {
+                        var categoryIds = updateProfileDto.CategoryIds;
+                        if (categoryIds.Any())
+                        {
+                            const string categoryCheckSql = "SELECT COUNT(*) FROM categories WHERE id = ANY(@categoryIds)";
+                            await using var categoryCheckCommand = new NpgsqlCommand(categoryCheckSql, connection, transaction);
+                            categoryCheckCommand.Parameters.AddWithValue("@categoryIds", categoryIds.ToArray());
+                            var categoryCount = (long)await categoryCheckCommand.ExecuteScalarAsync();
+                            
+                            if (categoryCount != categoryIds.Count)
+                            {
+                                _logger.LogWarning("Some categories not found");
+                                await transaction.RollbackAsync();
+                                return false;
+                            }
+
+                            // Usuń stare kategorie
+                            const string deleteCategoriesSql = "DELETE FROM organization_categories WHERE organization_id = @organizationId";
+                            await using var deleteCategoriesCommand = new NpgsqlCommand(deleteCategoriesSql, connection, transaction);
+                            deleteCategoriesCommand.Parameters.AddWithValue("@organizationId", organizationId);
+                            await deleteCategoriesCommand.ExecuteNonQueryAsync();
+
+                            // Dodaj nowe kategorie
+                            foreach (var categoryId in categoryIds)
+                            {
+                                const string insertCategorySql = "INSERT INTO organization_categories (organization_id, category_id) VALUES (@organizationId, @categoryId)";
+                                await using var insertCategoryCommand = new NpgsqlCommand(insertCategorySql, connection, transaction);
+                                insertCategoryCommand.Parameters.AddWithValue("@organizationId", organizationId);
+                                insertCategoryCommand.Parameters.AddWithValue("@categoryId", categoryId);
+                                await insertCategoryCommand.ExecuteNonQueryAsync();
+                            }
+                        }
+                    }
+
+                    // Walidacja tagów jeśli podane
+                    if (updateProfileDto.TagIds != null)
+                    {
+                        var tagIds = updateProfileDto.TagIds;
+                        if (tagIds.Any())
+                        {
+                            const string tagCheckSql = "SELECT COUNT(*) FROM tags WHERE id = ANY(@tagIds)";
+                            await using var tagCheckCommand = new NpgsqlCommand(tagCheckSql, connection, transaction);
+                            tagCheckCommand.Parameters.AddWithValue("@tagIds", tagIds.ToArray());
+                            var tagCount = (long)await tagCheckCommand.ExecuteScalarAsync();
+                            
+                            if (tagCount != tagIds.Count)
+                            {
+                                _logger.LogWarning("Some tags not found");
+                                await transaction.RollbackAsync();
+                                return false;
+                            }
+
+                            // Usuń stare tagi
+                            const string deleteTagsSql = "DELETE FROM organization_tags WHERE organization_id = @organizationId";
+                            await using var deleteTagsCommand = new NpgsqlCommand(deleteTagsSql, connection, transaction);
+                            deleteTagsCommand.Parameters.AddWithValue("@organizationId", organizationId);
+                            await deleteTagsCommand.ExecuteNonQueryAsync();
+
+                            // Dodaj nowe tagi
+                            foreach (var tagId in tagIds)
+                            {
+                                const string insertTagSql = "INSERT INTO organization_tags (organization_id, tag_id) VALUES (@organizationId, @tagId)";
+                                await using var insertTagCommand = new NpgsqlCommand(insertTagSql, connection, transaction);
+                                insertTagCommand.Parameters.AddWithValue("@organizationId", organizationId);
+                                insertTagCommand.Parameters.AddWithValue("@tagId", tagId);
+                                await insertTagCommand.ExecuteNonQueryAsync();
+                            }
+                        }
+                    }
+
+                    await transaction.CommitAsync();
+
+                    _logger.LogInformation("Profile updated successfully for organization {Id}", organizationId);
+                    return true;
+                }
+                catch
+                {
+                    await transaction.RollbackAsync();
+                    throw;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error updating profile for organizationId: {OrganizationId}", organizationId);
+                return false;
+            }
+        }
 
         public async Task<bool> ChangePasswordAsync(int organizationId, string currentPassword, string newPassword)
         {

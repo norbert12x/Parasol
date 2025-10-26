@@ -19,5 +19,6 @@ namespace ParasolBackEnd.Services
         Task<PostDto?> UpdatePostAsync(int id, UpdatePostDto updatePostDto);
         Task<bool> DeletePostAsync(int id);
         Task<IEnumerable<PostDto>> GetPostsByOrganizationAsync(int organizationId, bool includeCategories = false, bool includeTags = false);
+        Task<OrganizationPublicProfileDto?> GetOrganizationPublicProfileAsync(int organizationId);
     }
 }

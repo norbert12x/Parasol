@@ -431,5 +431,29 @@ namespace ParasolBackEnd.Controllers
                 return StatusCode(500, "Wystąpił błąd podczas usuwania posta");
             }
         }
+
+        /// <summary>
+        /// Pobiera publiczny profil organizacji po ID
+        /// </summary>
+        /// <param name="id">ID organizacji</param>
+        /// <returns>Profil organizacji (bez emaila loginowego)</returns>
+        [HttpGet("organizations/{id}")]
+        public async Task<ActionResult<OrganizationPublicProfileDto>> GetOrganizationProfile(int id)
+        {
+            try
+            {
+                var profile = await _matchMakerService.GetOrganizationPublicProfileAsync(id);
+                if (profile == null)
+                {
+                    return NotFound($"Organizacja o ID {id} nie została znaleziona");
+                }
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting organization profile with id: {Id}", id);
+                return StatusCode(500, "Wystąpił błąd podczas pobierania profilu organizacji");
+            }
+        }
     }
 }

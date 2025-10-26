@@ -882,6 +882,100 @@ namespace ParasolBackEnd.Services
             }
         }
 
+        public async Task<OrganizationPublicProfileDto?> GetOrganizationPublicProfileAsync(int organizationId)
+        {
+            try
+            {
+                _logger.LogInformation("Starting GetOrganizationPublicProfileAsync for organization {Id}", organizationId);
 
+                await using var connection = new NpgsqlConnection(_connectionString);
+                await connection.OpenAsync();
+
+                // Pobierz podstawowe dane organizacji
+                const string orgSql = @"
+                    SELECT id, organization_name, krs_number, about_text, website_url, phone, contact_email
+                    FROM organizations 
+                    WHERE id = @organizationId";
+
+                await using var orgCommand = new NpgsqlCommand(orgSql, connection);
+                orgCommand.Parameters.AddWithValue("@organizationId", organizationId);
+
+                await using var orgReader = await orgCommand.ExecuteReaderAsync();
+
+                if (!await orgReader.ReadAsync())
+                {
+                    _logger.LogWarning("Organization not found for ID {Id}", organizationId);
+                    return null;
+                }
+
+                var profile = new OrganizationPublicProfileDto
+                {
+                    Id = orgReader.GetInt32(0),
+                    OrganizationName = orgReader.GetString(1),
+                    KrsNumber = orgReader.IsDBNull(2) ? null : orgReader.GetString(2),
+                    AboutText = orgReader.IsDBNull(3) ? null : orgReader.GetString(3),
+                    WebsiteUrl = orgReader.IsDBNull(4) ? null : orgReader.GetString(4),
+                    Phone = orgReader.IsDBNull(5) ? null : orgReader.GetString(5),
+                    ContactEmail = orgReader.IsDBNull(6) ? null : orgReader.GetString(6),
+                    Categories = new List<CategorySimpleDto>(),
+                    Tags = new List<TagDto>()
+                };
+
+                await orgReader.CloseAsync();
+
+                // Pobierz kategorie organizacji
+                const string categoriesSql = @"
+                    SELECT c.id, c.name 
+                    FROM organization_categories oc 
+                    JOIN categories c ON oc.category_id = c.id 
+                    WHERE oc.organization_id = @organizationId";
+                
+                await using var categoriesCommand = new NpgsqlCommand(categoriesSql, connection);
+                categoriesCommand.Parameters.AddWithValue("@organizationId", organizationId);
+                
+                await using var categoriesReader = await categoriesCommand.ExecuteReaderAsync();
+                while (await categoriesReader.ReadAsync())
+                {
+                    profile.Categories.Add(new CategorySimpleDto
+                    {
+                        Id = categoriesReader.GetInt32(0),
+                        Name = categoriesReader.GetString(1)
+                    });
+                }
+                await categoriesReader.CloseAsync();
+
+                // Pobierz tagi organizacji
+                const string tagsSql = @"
+                    SELECT t.id, t.name, t.category_id, c.name as category_name
+                    FROM organization_tags ot 
+                    JOIN tags t ON ot.tag_id = t.id 
+                    JOIN categories c ON t.category_id = c.id
+                    WHERE ot.organization_id = @organizationId";
+                
+                await using var tagsCommand = new NpgsqlCommand(tagsSql, connection);
+                tagsCommand.Parameters.AddWithValue("@organizationId", organizationId);
+                
+                await using var tagsReader = await tagsCommand.ExecuteReaderAsync();
+                while (await tagsReader.ReadAsync())
+                {
+                    profile.Tags.Add(new TagDto
+                    {
+                        Id = tagsReader.GetInt32(0),
+                        Name = tagsReader.GetString(1),
+                        CategoryId = tagsReader.GetInt32(2),
+                        CategoryName = tagsReader.GetString(3)
+                    });
+                }
+                await tagsReader.CloseAsync();
+
+                _logger.LogInformation("Successfully loaded public profile for organization {Id}", organizationId);
+                return profile;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error getting organization public profile for organizationId: {OrganizationId}", organizationId);
+                return null;
+            }
+        }
     }
 }
