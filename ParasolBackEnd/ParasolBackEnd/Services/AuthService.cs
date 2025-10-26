@@ -79,8 +79,8 @@ namespace ParasolBackEnd.Services
 
                     // Wstaw organizację
                     const string insertSql = @"
-                        INSERT INTO organizations (email, password_hash, organization_name, krs_number)
-                        VALUES (@email, @passwordHash, @organizationName, @krsNumber)
+                        INSERT INTO organizations (email, password_hash, organization_name, krs_number, role)
+                        VALUES (@email, @passwordHash, @organizationName, @krsNumber, @role)
                         RETURNING id";
 
                     await using var insertCommand = new NpgsqlCommand(insertSql, connection, transaction);
@@ -88,6 +88,7 @@ namespace ParasolBackEnd.Services
                     insertCommand.Parameters.AddWithValue("@passwordHash", passwordHash);
                     insertCommand.Parameters.AddWithValue("@organizationName", registerDto.OrganizationName);
                     insertCommand.Parameters.AddWithValue("@krsNumber", registerDto.KrsNumber);
+                    insertCommand.Parameters.AddWithValue("@role", "user");
 
                     var organizationId = (int)await insertCommand.ExecuteScalarAsync();
 
@@ -129,7 +130,7 @@ namespace ParasolBackEnd.Services
                 await connection.OpenAsync();
 
                 const string sql = @"
-                    SELECT id, email, password_hash, organization_name, krs_number
+                    SELECT id, email, password_hash, organization_name, krs_number, role
                     FROM organizations 
                     WHERE LOWER(email) = LOWER(@email)";
 
@@ -146,7 +147,8 @@ namespace ParasolBackEnd.Services
                         Email = reader.GetString(1),
                         PasswordHash = reader.GetString(2),
                         OrganizationName = reader.GetString(3),
-                        KrsNumber = reader.GetString(4)
+                        KrsNumber = reader.GetString(4),
+                        Role = reader.GetString(5)
                     };
 
                     if (!VerifyPassword(loginDto.Password, organization.PasswordHash))
@@ -179,7 +181,7 @@ namespace ParasolBackEnd.Services
                 await connection.OpenAsync();
 
                 const string sql = @"
-                    SELECT id, email, organization_name, krs_number, about_text, website_url, phone, contact_email
+                    SELECT id, email, organization_name, krs_number, role, about_text, website_url, phone, contact_email
                     FROM organizations 
                     WHERE id = @organizationId";
 
@@ -196,10 +198,11 @@ namespace ParasolBackEnd.Services
                         Email = reader.GetString(1),
                         OrganizationName = reader.GetString(2),
                         KrsNumber = reader.IsDBNull(3) ? null : reader.GetString(3),
-                        AboutText = reader.IsDBNull(4) ? null : reader.GetString(4),
-                        WebsiteUrl = reader.IsDBNull(5) ? null : reader.GetString(5),
-                        Phone = reader.IsDBNull(6) ? null : reader.GetString(6),
-                        ContactEmail = reader.IsDBNull(7) ? null : reader.GetString(7),
+                        Role = reader.GetString(4),
+                        AboutText = reader.IsDBNull(5) ? null : reader.GetString(5),
+                        WebsiteUrl = reader.IsDBNull(6) ? null : reader.GetString(6),
+                        Phone = reader.IsDBNull(7) ? null : reader.GetString(7),
+                        ContactEmail = reader.IsDBNull(8) ? null : reader.GetString(8),
                         Categories = new List<CategorySimpleDto>(),
                         Tags = new List<TagDto>()
                     };
@@ -679,7 +682,8 @@ namespace ParasolBackEnd.Services
                     new Claim(ClaimTypes.NameIdentifier, organization.Id.ToString()),
                     new Claim(ClaimTypes.Email, organization.Email),
                     new Claim(ClaimTypes.Name, organization.OrganizationName),
-                    new Claim("OrganizationId", organization.Id.ToString())
+                    new Claim("OrganizationId", organization.Id.ToString()),
+                    new Claim(ClaimTypes.Role, organization.Role)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 Issuer = _configuration["Jwt:Issuer"] ?? "ParasolBackEnd",
@@ -695,6 +699,7 @@ namespace ParasolBackEnd.Services
                 Email = organization.Email,
                 OrganizationName = organization.OrganizationName,
                 OrganizationId = organization.Id,
+                Role = organization.Role,
                 ExpiresAt = tokenDescriptor.Expires ?? DateTime.UtcNow.AddDays(7)
             };
         }

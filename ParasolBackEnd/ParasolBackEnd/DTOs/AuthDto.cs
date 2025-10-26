@@ -20,6 +20,7 @@ namespace ParasolBackEnd.DTOs
         public string Email { get; set; } = string.Empty;
         public string OrganizationName { get; set; } = string.Empty;
         public int OrganizationId { get; set; }
+        public string Role { get; set; } = "user";
         public DateTime ExpiresAt { get; set; }
     }
 
@@ -29,6 +30,7 @@ namespace ParasolBackEnd.DTOs
         public string Email { get; set; } = string.Empty;
         public string OrganizationName { get; set; } = string.Empty;
         public string? KrsNumber { get; set; }
+        public string Role { get; set; } = "user";
         public string? AboutText { get; set; }
         public string? WebsiteUrl { get; set; }
         public string? Phone { get; set; }

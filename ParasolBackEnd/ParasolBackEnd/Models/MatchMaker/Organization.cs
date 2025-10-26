@@ -22,6 +22,9 @@ namespace ParasolBackEnd.Models.MatchMaker
         [MaxLength(20)]
         public string? KrsNumber { get; set; }
         
+        // Role
+        public string Role { get; set; } = "user";
+        
         // Profile fields
         public string? AboutText { get; set; }
         public string? WebsiteUrl { get; set; }

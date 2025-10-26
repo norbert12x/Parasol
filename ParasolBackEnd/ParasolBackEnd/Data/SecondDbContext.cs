@@ -87,6 +87,7 @@ namespace ParasolBackEnd.Data
                 entity.Property(e => e.PasswordHash).HasColumnName("password_hash");
                 entity.Property(e => e.OrganizationName).HasColumnName("organization_name");
                 entity.Property(e => e.KrsNumber).HasColumnName("krs_number");
+                entity.Property(e => e.Role).HasColumnName("role");
                 entity.Property(e => e.AboutText).HasColumnName("about_text");
                 entity.Property(e => e.WebsiteUrl).HasColumnName("website_url");
                 entity.Property(e => e.Phone).HasColumnName("phone");
