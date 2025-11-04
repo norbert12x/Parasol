@@ -341,7 +341,7 @@ namespace ParasolBackEnd.Services
 
 
         public async Task<List<PostDto>> GetPostsSummaryAsync(int? categoryId = null, int? tagId = null, string? searchTerm = null, 
-            int page = 1, int pageSize = 20)
+            int page = 1, int pageSize = 10)
         {
             try
             {
@@ -354,6 +354,12 @@ namespace ParasolBackEnd.Services
                 // Buduj zapytanie SQL z filtrami
                 var whereConditions = new List<string>();
                 var parameters = new List<NpgsqlParameter>();
+
+                // Zawsze filtruj tylko aktywne posty
+                whereConditions.Add("p.status = 'active'");
+
+                // Filtruj tylko posty które nie wygasły lub nie mają ustawionej daty wygaśnięcia
+                whereConditions.Add("(p.expires_at IS NULL OR p.expires_at >= CURRENT_DATE)");
 
                 if (categoryId.HasValue)
                 {
@@ -373,8 +379,42 @@ namespace ParasolBackEnd.Services
                     parameters.Add(new NpgsqlParameter("@searchTerm", $"%{searchTerm}%"));
                 }
 
-                var whereClause = whereConditions.Any() ? "WHERE " + string.Join(" AND ", whereConditions) : "";
+                var whereClause = "WHERE " + string.Join(" AND ", whereConditions);
 
+                // Najpierw pobierz unikalne ID postów z paginacją (bez LEFT JOIN żeby uniknąć duplikatów)
+                var baseSql = $@"
+                    SELECT p.id
+                    FROM posts p 
+                    JOIN organizations o ON p.organization_id = o.id
+                    {whereClause}
+                    ORDER BY p.created_at DESC, p.id
+                    LIMIT @pageSize OFFSET @offset";
+
+                parameters.Add(new NpgsqlParameter("@pageSize", pageSize));
+                parameters.Add(new NpgsqlParameter("@offset", (page - 1) * pageSize));
+
+                // Pobierz ID postów do pobrania
+                await using var baseCommand = new NpgsqlCommand(baseSql, connection);
+                foreach (var param in parameters)
+                {
+                    baseCommand.Parameters.Add(param);
+                }
+
+                var postIds = new List<int>();
+                await using var baseReader = await baseCommand.ExecuteReaderAsync();
+                while (await baseReader.ReadAsync())
+                {
+                    postIds.Add(baseReader.GetInt32(0));
+                }
+                await baseReader.CloseAsync();
+
+                if (!postIds.Any())
+                {
+                    _logger.LogInformation("No posts found matching criteria");
+                    return new List<PostDto>();
+                }
+
+                // Teraz pobierz pełne dane postów wraz z kategoriami i tagami
                 var sql = $@"
                     SELECT p.id, p.title, p.description, p.contact_email, p.contact_phone, 
                            p.status, p.created_at, p.updated_at, p.expires_at, p.organization_id,
@@ -387,18 +427,11 @@ namespace ParasolBackEnd.Services
                     LEFT JOIN categories c ON pc.category_id = c.id
                     LEFT JOIN post_tags pt ON p.id = pt.post_id
                     LEFT JOIN tags t ON pt.tag_id = t.id
-                    {whereClause}
-                    ORDER BY p.created_at DESC, p.id, c.id, t.id
-                    LIMIT @pageSize OFFSET @offset";
-
-                parameters.Add(new NpgsqlParameter("@pageSize", pageSize));
-                parameters.Add(new NpgsqlParameter("@offset", (page - 1) * pageSize));
+                    WHERE p.id = ANY(@postIds)
+                    ORDER BY p.created_at DESC, p.id, c.id, t.id";
 
                 await using var command = new NpgsqlCommand(sql, connection);
-                foreach (var param in parameters)
-                {
-                    command.Parameters.Add(param);
-                }
+                command.Parameters.AddWithValue("@postIds", postIds.ToArray());
 
                 var posts = new Dictionary<int, PostDto>();
                 await using var reader = await command.ExecuteReaderAsync();

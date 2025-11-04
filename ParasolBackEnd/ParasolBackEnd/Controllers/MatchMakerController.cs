@@ -125,7 +125,7 @@ namespace ParasolBackEnd.Controllers
             int? tagId = null, 
             string? searchTerm = null,
             int page = 1,
-            int pageSize = 20,
+            int pageSize = 10,
             bool includeDetails = false)
         {
             try
