@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.IO;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,11 +19,58 @@ builder.Services.AddControllers();
 builder.Services.AddMemoryCache();
 builder.Services.AddHttpClient();
 
+// Konfiguracja CORS
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Import job service
 builder.Services.AddSingleton<ImportJobService>();
 
-// Pobierz folder z danymi
-var dataFolder = builder.Configuration.GetValue<string>("DataFolder") ?? "dane";
+// Pobierz folder z danymi i rozwiąż względną ścieżkę
+var dataFolderConfig = builder.Configuration.GetValue<string>("DataFolder") ?? "dane";
+var dataFolder = dataFolderConfig;
+
+// Jeśli ścieżka jest względna i nie istnieje, spróbuj znaleźć folder w katalogu nadrzędnym
+if (!Path.IsPathRooted(dataFolder) && !Directory.Exists(dataFolder))
+{
+    var parentFolder = Path.Combine("..", dataFolder);
+    if (Directory.Exists(parentFolder))
+    {
+        dataFolder = Path.GetFullPath(parentFolder);
+    }
+    else
+    {
+        // Spróbuj znaleźć folder dane w katalogu głównym projektu
+        var currentDir = Directory.GetCurrentDirectory();
+        var rootFolder = Path.Combine(currentDir, "..", dataFolder);
+        if (Directory.Exists(rootFolder))
+        {
+            dataFolder = Path.GetFullPath(rootFolder);
+        }
+    }
+}
+
+// Upewnij się, że używamy pełnej ścieżki
+if (!Path.IsPathRooted(dataFolder))
+{
+    dataFolder = Path.GetFullPath(dataFolder);
+}
+
+// Loguj używaną ścieżkę do folderu danych
+Console.WriteLine($"[Program] Using data folder: {dataFolder}");
+Console.WriteLine($"[Program] Data folder exists: {Directory.Exists(dataFolder)}");
+if (Directory.Exists(dataFolder))
+{
+    var fileCount = Directory.GetFiles(dataFolder, "*.json").Length;
+    Console.WriteLine($"[Program] Found {fileCount} JSON files in data folder");
+}
 
 // Dodaj usługę geolokalizacji z kluczem API
 var apiKey = builder.Configuration["AppSettings:ApiKey"] ?? throw new InvalidOperationException("API key not configured");
@@ -57,7 +105,9 @@ builder.Services.AddScoped<IDatabaseService, DatabaseService>(provider =>
     new DatabaseService(
         provider.GetService<AppDbContext>()!,
         provider.GetService<ILogger<DatabaseService>>()!,
-        builder.Configuration));
+        builder.Configuration,
+        provider.GetService<IGeolocationService>(),
+        provider.GetService<OrganizacjaService>()));
 
 // Dodaj MatchMakerService
 builder.Services.AddScoped<IMatchMakerService, MatchMakerService>();
@@ -175,6 +225,8 @@ app.Use(async (context, next) =>
     context.Response.Headers["Connection"] = "close";
     await next();
 });
+
+app.UseCors();
 
 app.UseHttpsRedirection();
 

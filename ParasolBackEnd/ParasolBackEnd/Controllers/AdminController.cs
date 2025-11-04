@@ -682,6 +682,7 @@ namespace ParasolBackEnd.Controllers
                         SELECT p.id, p.title, p.contact_email, p.created_at, o.organization_name
                         FROM posts p
                         JOIN organizations o ON p.organization_id = o.id
+                        WHERE p.status = 'active'
                         ORDER BY p.id DESC
                         LIMIT 1";
                     

@@ -1,6 +1,7 @@
 ﻿#pragma warning disable CS8619, CS8602
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 using ParasolBackEnd.Services;
 
 namespace ParasolBackEnd.Controllers;
@@ -13,13 +14,52 @@ public class OrganizacjeController : ControllerBase
     private readonly IGeolocationService _geolocationService;
     private readonly HttpClient _httpClient;
     private readonly ILogger<OrganizacjeController> _logger;
+    private readonly IConfiguration _configuration;
 
-    public OrganizacjeController(OrganizacjaService organizacjaService, IGeolocationService geolocationService, HttpClient httpClient, ILogger<OrganizacjeController> logger)
+    public OrganizacjeController(OrganizacjaService organizacjaService, IGeolocationService geolocationService, HttpClient httpClient, ILogger<OrganizacjeController> logger, IConfiguration configuration)
     {
         _organizacjaService = organizacjaService;
         _geolocationService = geolocationService;
         _httpClient = httpClient;
         _logger = logger;
+        _configuration = configuration;
+    }
+
+    /// <summary>
+    /// Rozwiązuje ścieżkę do folderu danych używając tej samej logiki co Program.cs
+    /// </summary>
+    private string ResolveDataFolder()
+    {
+        var dataFolderConfig = _configuration.GetValue<string>("DataFolder") ?? "dane";
+        var dataFolder = dataFolderConfig;
+
+        // Jeśli ścieżka jest względna i nie istnieje, spróbuj znaleźć folder w katalogu nadrzędnym
+        if (!System.IO.Path.IsPathRooted(dataFolder) && !System.IO.Directory.Exists(dataFolder))
+        {
+            var parentFolder = System.IO.Path.Combine("..", dataFolder);
+            if (System.IO.Directory.Exists(parentFolder))
+            {
+                dataFolder = System.IO.Path.GetFullPath(parentFolder);
+            }
+            else
+            {
+                // Spróbuj znaleźć folder dane w katalogu głównym projektu
+                var currentDir = System.IO.Directory.GetCurrentDirectory();
+                var rootFolder = System.IO.Path.Combine(currentDir, "..", dataFolder);
+                if (System.IO.Directory.Exists(rootFolder))
+                {
+                    dataFolder = System.IO.Path.GetFullPath(rootFolder);
+                }
+            }
+        }
+
+        // Upewnij się, że używamy pełnej ścieżki
+        if (!System.IO.Path.IsPathRooted(dataFolder))
+        {
+            dataFolder = System.IO.Path.GetFullPath(dataFolder);
+        }
+
+        return dataFolder;
     }
 
     /// <summary>
@@ -153,7 +193,7 @@ public class OrganizacjeController : ControllerBase
 
             _logger.LogInformation("Pobieranie danych KRS dla {Count} organizacji, rejestr: {Rejestr}", krsNumbers.Count, rejestr);
 
-            var dataFolder = Path.Combine("..", "dane");
+            var dataFolder = ResolveDataFolder();
             Directory.CreateDirectory(dataFolder);
 
             var tasks = krsNumbers.Select(async krsNumber =>
@@ -239,7 +279,7 @@ public class OrganizacjeController : ControllerBase
     {
         try
         {
-            var dataFolder = Path.Combine("..", "dane");
+            var dataFolder = ResolveDataFolder();
             
             if (!Directory.Exists(dataFolder))
             {

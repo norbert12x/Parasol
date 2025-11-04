@@ -26,12 +26,56 @@ namespace ParasolBackEnd.Services
         private readonly AppDbContext _context;
         private readonly ILogger<DatabaseService> _logger;
         private readonly string _connectionString;
+        private readonly IConfiguration _configuration;
+        private readonly IGeolocationService? _geolocationService;
+        private readonly OrganizacjaService? _organizacjaService;
 
-        public DatabaseService(AppDbContext context, ILogger<DatabaseService> logger, IConfiguration configuration)
+        public DatabaseService(AppDbContext context, ILogger<DatabaseService> logger, IConfiguration configuration, 
+            IGeolocationService? geolocationService = null, OrganizacjaService? organizacjaService = null)
         {
             _context = context;
             _logger = logger;
+            _configuration = configuration;
             _connectionString = configuration.GetConnectionString("DefaultConnection") + ";Multiplexing=false;Pooling=false";
+            _geolocationService = geolocationService;
+            _organizacjaService = organizacjaService;
+        }
+
+        /// <summary>
+        /// Rozwiązuje ścieżkę do folderu danych używając tej samej logiki co Program.cs
+        /// </summary>
+        private string ResolveDataFolder()
+        {
+            var dataFolderConfig = _configuration.GetValue<string>("DataFolder") ?? "dane";
+            var dataFolder = dataFolderConfig;
+
+            // Jeśli ścieżka jest względna i nie istnieje, spróbuj znaleźć folder w katalogu nadrzędnym
+            if (!System.IO.Path.IsPathRooted(dataFolder) && !System.IO.Directory.Exists(dataFolder))
+            {
+                var parentFolder = System.IO.Path.Combine("..", dataFolder);
+                if (System.IO.Directory.Exists(parentFolder))
+                {
+                    dataFolder = System.IO.Path.GetFullPath(parentFolder);
+                }
+                else
+                {
+                    // Spróbuj znaleźć folder dane w katalogu głównym projektu
+                    var currentDir = System.IO.Directory.GetCurrentDirectory();
+                    var rootFolder = System.IO.Path.Combine(currentDir, "..", dataFolder);
+                    if (System.IO.Directory.Exists(rootFolder))
+                    {
+                        dataFolder = System.IO.Path.GetFullPath(rootFolder);
+                    }
+                }
+            }
+
+            // Upewnij się, że używamy pełnej ścieżki
+            if (!System.IO.Path.IsPathRooted(dataFolder))
+            {
+                dataFolder = System.IO.Path.GetFullPath(dataFolder);
+            }
+
+            return dataFolder;
         }
 
         public async Task<bool> TestConnectionAsync()
@@ -457,7 +501,8 @@ namespace ParasolBackEnd.Services
                         // Usuń plik JSON po zaimportowaniu TYLKO jeśli mamy koordynaty
                         if (organizacja.Koordynaty != null && organizacja.Koordynaty.Any())
                         {
-                            var jsonFilePath = Path.Combine("..", "dane", $"{organizacja.NumerKrs}.json");
+                            var dataFolder = ResolveDataFolder();
+                            var jsonFilePath = Path.Combine(dataFolder, $"{organizacja.NumerKrs}.json");
                             if (System.IO.File.Exists(jsonFilePath))
                             {
                                 try
@@ -517,7 +562,11 @@ namespace ParasolBackEnd.Services
                 // Filtrowanie po kategorii
                 if (!string.IsNullOrWhiteSpace(kategoria))
                 {
-                    whereConditions.Add("cat.nazwa ILIKE @kategoria");
+                    whereConditions.Add(@"EXISTS (
+                        SELECT 1 FROM organizacjakategoria ok 
+                        INNER JOIN kategoria cat ON ok.kategoriaid = cat.id 
+                        WHERE ok.numerkrs = o.numerkrs AND cat.nazwa ILIKE @kategoria
+                    )");
                     parameters.Add(new NpgsqlParameter("@kategoria", $"%{kategoria}%"));
                 }
                 
@@ -556,37 +605,20 @@ namespace ParasolBackEnd.Services
                     parameters.Add(new NpgsqlParameter("@krsNumber", $"%{krsNumber}%"));
                 }
                 
+                var whereClause = whereConditions.Any() ? "WHERE " + string.Join(" AND ", whereConditions) : "";
+                
                 // ZOPTYMALIZOWANE ZAPYTANIE: Jeden SQL zamiast 3 osobnych!
-                string optimizedQuery;
-                if (whereConditions.Count > 0)
-                {
-                    // Z filtrami - wszystkie dane w jednym zapytaniu
-                    optimizedQuery = @"
-                        SELECT DISTINCT 
-                            o.numerkrs, o.nazwa,
-                            a.ulica, a.nrdomu, a.nrlokalu, a.miejscowosc, a.kodpocztowy, a.poczta, a.gmina, a.powiat, a.wojewodztwo, a.kraj,
-                            k.latitude, k.longitude
-                        FROM organizacja o
-                        INNER JOIN organizacjakategoria ok ON o.numerkrs = ok.numerkrs
-                        INNER JOIN kategoria cat ON ok.kategoriaid = cat.id
-                        INNER JOIN adres a ON o.numerkrs = a.numerkrs
-                        INNER JOIN koordynaty k ON o.numerkrs = k.numerkrs
-                        WHERE " + string.Join(" AND ", whereConditions);
-                }
-                else
-                {
-                    // Bez filtrów - wszystkie dane w jednym zapytaniu
-                    optimizedQuery = @"
-                        SELECT DISTINCT 
-                            o.numerkrs, o.nazwa,
-                            a.ulica, a.nrdomu, a.nrlokalu, a.miejscowosc, a.kodpocztowy, a.poczta, a.gmina, a.powiat, a.wojewodztwo, a.kraj,
-                            k.latitude, k.longitude
-                        FROM organizacja o
-                        INNER JOIN organizacjakategoria ok ON o.numerkrs = ok.numerkrs
-                        INNER JOIN kategoria cat ON ok.kategoriaid = cat.id
-                        INNER JOIN adres a ON o.numerkrs = a.numerkrs
-                        INNER JOIN koordynaty k ON o.numerkrs = k.numerkrs";
-                }
+                var optimizedQuery = @"
+                    SELECT DISTINCT 
+                        o.numerkrs, o.nazwa,
+                        a.ulica, a.nrdomu, a.nrlokalu, a.miejscowosc, a.kodpocztowy, a.poczta, a.gmina, a.powiat, a.wojewodztwo, a.kraj,
+                        k.latitude, k.longitude
+                    FROM organizacja o
+                    INNER JOIN adres a ON o.numerkrs = a.numerkrs
+                    INNER JOIN koordynaty k ON o.numerkrs = k.numerkrs" +
+                    (string.IsNullOrEmpty(whereClause) 
+                        ? " WHERE EXISTS (SELECT 1 FROM organizacjakategoria ok WHERE ok.numerkrs = o.numerkrs)" 
+                        : " " + whereClause);
                 
                 var command = new NpgsqlCommand(optimizedQuery, connection);
                 foreach (var param in parameters)
@@ -676,15 +708,70 @@ namespace ParasolBackEnd.Services
         {
             try
             {
-                var url = "https://localhost:7170/api/Organizacje";
+                // Jeśli serwisy są dostępne, użyj ich bezpośrednio zamiast HTTP request
+                if (_geolocationService != null && _organizacjaService != null)
+                {
+                    _logger.LogDebug("Using direct service calls instead of HTTP request");
+                    
+                    // Pobierz organizacje z geolokalizacji według lokalizacji (tak jak endpoint /api/Organizacje)
+                    var krsEntities = await _geolocationService.GetEntitiesByLocationAsync(
+                        wojewodztwo, null, null, null);
+
+                    var organizacje = new List<Organizacja>();
+
+                    // Pobierz pełne dane z OrganizacjaService dla każdej organizacji
+                    foreach (var entity in krsEntities)
+                    {
+                        try
+                        {
+                            var org = await _organizacjaService.LoadOrganizationAsync(entity.KrsNumber);
+                            if (org == null)
+                            {
+                                _logger.LogWarning("Failed to load organization for KRS {Krs}", entity.KrsNumber);
+                                continue;
+                            }
+
+                            // Jeśli nazwa jest pusta, użyj nazwy z KRS
+                            if (string.IsNullOrWhiteSpace(org.Nazwa))
+                                org.Nazwa = entity.Name;
+
+                            // Dodaj cele statutowe jeśli są dostępne
+                            if (entity.ActivityDescriptions != null && entity.ActivityDescriptions.Any())
+                            {
+                                org.CeleStatusowe = entity.ActivityDescriptions.ToList();
+                            }
+
+                            organizacje.Add(org);
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger.LogWarning(ex, "Failed to load organization details for KRS {Krs}", entity.KrsNumber);
+                        }
+                    }
+
+                    _logger.LogDebug("Loaded {Count} organizacje using direct service calls", organizacje.Count);
+                    return organizacje;
+                }
+
+                // Fallback: użyj HTTP request (stara metoda)
+                _logger.LogWarning("Services not available, falling back to HTTP request");
+                var baseUrl = _configuration["AppSettings:GeolokalizacjaApiUrl"] ?? "https://localhost:7170/api/Organizacje";
+                var url = baseUrl;
+                
                 if (!string.IsNullOrEmpty(wojewodztwo))
                 {
-                    url += $"?wojewodztwo={Uri.EscapeDataString(wojewodztwo)}";
+                    url += (url.Contains("?") ? "&" : "?") + $"wojewodztwo={Uri.EscapeDataString(wojewodztwo)}";
                 }
 
                 _logger.LogDebug("Fetching data from: {Url}", url);
 
-                using var client = new HttpClient();
+                var handler = new HttpClientHandler();
+                handler.ServerCertificateCustomValidationCallback = 
+                    (message, cert, chain, sslPolicyErrors) => true;
+                
+                using var client = new HttpClient(handler);
+                client.Timeout = TimeSpan.FromSeconds(30);
+                
                 var response = await client.GetStringAsync(url);
                 
                 if (string.IsNullOrEmpty(response))
@@ -693,58 +780,47 @@ namespace ParasolBackEnd.Services
                     return new List<Organizacja>();
                 }
 
-                var organizacjeDto = JsonSerializer.Deserialize<List<OrganizacjaImportDto>>(response, new JsonSerializerOptions
+                // Deserializuj odpowiedź JSON z endpointu
+                var responseData = JsonSerializer.Deserialize<List<JsonElement>>(response, new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 });
 
-                if (organizacjeDto == null)
+                if (responseData == null)
                 {
                     _logger.LogWarning("Failed to deserialize response from geolokalizacja endpoint");
                     return new List<Organizacja>();
                 }
 
-                _logger.LogDebug("Deserialized {Count} organizacje from geolokalizacja endpoint", organizacjeDto.Count);
-
-                var organizacje = new List<Organizacja>();
-                foreach (var dto in organizacjeDto)
+                var organizacjeFromHttp = new List<Organizacja>();
+                foreach (var item in responseData)
                 {
-                    var organizacja = new Organizacja
+                    try
                     {
-                        NumerKrs = dto.Krs,
-                        Nazwa = dto.Nazwa,
-                        CeleStatusowe = dto.CeleStatusowe,
-                        Adresy = dto.Adresy.Select(a => new Adres
-                        {
-                            NumerKrs = a.NumerKrs,
-                            Ulica = a.Ulica,
-                            NrDomu = a.NrDomu,
-                            NrLokalu = a.NrLokalu,
-                            Miejscowosc = a.Miejscowosc,
-                            KodPocztowy = a.KodPocztowy,
-                            Poczta = a.Poczta,
-                            Gmina = a.Gmina,
-                            Powiat = a.Powiat,
-                            Wojewodztwo = a.Wojewodztwo,
-                            Kraj = a.Kraj ?? string.Empty
-                        }).ToList(),
-                        Koordynaty = dto.Koordynaty.Select(k => new Koordynaty
-                        {
-                            NumerKrs = k.NumerKrs,
-                            Latitude = k.Latitude,
-                            Longitude = k.Longitude
-                        }).ToList()
-                    };
+                        var krs = item.GetProperty("Krs").GetString();
+                        if (string.IsNullOrEmpty(krs)) continue;
 
-                    organizacje.Add(organizacja);
+                        if (_organizacjaService == null) continue;
+                        
+                        var org = await _organizacjaService.LoadOrganizationAsync(krs);
+                        if (org == null) continue;
+
+                        if (item.TryGetProperty("Nazwa", out var nazwaProp))
+                            org.Nazwa = nazwaProp.GetString() ?? org.Nazwa;
+
+                        organizacjeFromHttp.Add(org);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning(ex, "Failed to process organization from HTTP response");
+                    }
                 }
 
-                _logger.LogDebug("Mapped {Count} organizacje with addresses and coordinates", organizacje.Count);
-                return organizacje;
+                return organizacjeFromHttp;
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error fetching organizacje from geolokalizacja endpoint");
+                _logger.LogError(ex, "Error fetching organizacje from geolokalizacja");
                 throw;
             }
         }
